@@ -13,7 +13,8 @@ class PemeriksaanController extends Controller
      */
     public function index()
     {
-        //
+        $data = Pemeriksaan::all();
+        return view('antrian.dashboard', compact('data'));
     }
 
     /**

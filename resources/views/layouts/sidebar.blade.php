@@ -33,6 +33,16 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarDashboards" aria-controls="sidebarDashboards">
+                        <i class="las la-tachometer-alt"></i> <span>@lang('translation.dashboards')</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarApps" aria-controls="sidebarApps">
+                        <i class="lab la-delicious"></i> <span>@lang('TTD')</span>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="las la-tachometer-alt"></i> <span>@lang('translation.dashboards')</span>
                     </a>
@@ -61,7 +71,7 @@
                             </li>
                         </ul>
                     </div>
-                </li> <!-- end Dashboard Menu -->
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
                         <i class="lab la-delicious"></i> <span>@lang('translation.apps')</span>
@@ -388,7 +398,7 @@
                             </li>
                         </ul>
                     </div>
-                </li> <!-- end Dashboard Menu -->
+                </li> 
 
                 <li class="menu-title"><i class="ri-more-fill"></i> <span>@lang('translation.pages')</span></li>
 
@@ -996,7 +1006,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> -->
 
             </ul>
         </div>

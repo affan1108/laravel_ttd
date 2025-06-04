@@ -1,227 +1,87 @@
-@extends('layouts.master-without-nav')
-@section('title')
-    @lang('translation.signin')
+@extends('layouts.layouts-horizontal')
+@section('title') @lang('translation.datatables') @endsection
+@section('css')
+<!--datatable css-->
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<!--datatable responsive css-->
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
+    type="text/css" />
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 @endsection
 @section('content')
+@component('components.breadcrumb')
+@slot('li_1') Tables @endslot
+@slot('title')Datatables @endslot
+@endcomponent
 
-    <!-- auth-page wrapper -->
-    <div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
-        <div class="bg-overlay"></div>
-        <!-- auth-page content -->
-        <div class="auth-page-content overflow-hidden pt-lg-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card overflow-hidden">
-                            <div class="row g-0">
-                                <div class="col-lg-6">
-                                    <div class="p-lg-5 p-4 auth-one-bg h-100">
-                                        <div class="bg-overlay"></div>
-                                        <div class="position-relative h-100 d-flex flex-column">
-                                            <div class="mb-4">
-                                                <!-- <a href="index" class="d-block">
-                                                    <img src="{{ URL::asset('build/images/logo-light.png') }}" alt="" height="18">
-                                                </a> -->
-                                            </div>
-                                            <div class="mt-auto">
-                                                <div class="mb-3">
-                                                    <i class="ri-double-quotes-l display-4 text-success"></i>
-                                                </div>
-
-                                                <div id="qoutescarouselIndicators" class="carousel slide"
-                                                    data-bs-ride="carousel">
-                                                    <div class="carousel-indicators">
-                                                        <button type="button" data-bs-target="#qoutescarouselIndicators"
-                                                            data-bs-slide-to="0" class="active" aria-current="true"
-                                                            aria-label="Slide 1"></button>
-                                                        <button type="button" data-bs-target="#qoutescarouselIndicators"
-                                                            data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                                        <button type="button" data-bs-target="#qoutescarouselIndicators"
-                                                            data-bs-slide-to="2" aria-label="Slide 3"></button>
-                                                    </div>
-                                                    <div class="carousel-inner text-center text-white-50 pb-5">
-                                                        <div class="carousel-item active">
-                                                            <p class="fs-15 fst-italic">" Lorem ipsum dolor sit amet consectetur adipisicing elit. "</p>
-                                                        </div>
-                                                        <div class="carousel-item">
-                                                            <p class="fs-15 fst-italic">" Alias dolorum voluptatum incidunt fugit maxime illo quam velit nihil "</p>
-                                                        </div>
-                                                        <div class="carousel-item">
-                                                            <p class="fs-15 fst-italic">" excepturi deserunt quo nesciunt ipsum, error inventore corrupti accusamus itaque magni sequi. "</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- end carousel -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-
-                                <div class="col-lg-6">
-                                    <div class="p-lg-5 p-4">
-                                        <div>
-                                            <h5 class="text-primary text-center">Menu Pemeriksaan HB</h5>
-                                            <!-- <p class="text-muted">Sign in to continue to Velzon.</p> -->
-                                        </div>
-
-                                        <div class="mt-4">
-                                            <form action="index">
-
-                                                <div class="mb-3">
-                                                    <label for="nik" class="form-label">NIK</label>
-                                                    <input type="text" class="form-control" id="nik" name="nik"
-                                                        placeholder="Masukkan NIK">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="nama" class="form-label">Nama Lengkap</label>
-                                                    <input type="text" class="form-control" id="nama" name="nama"
-                                                        placeholder="Masukkan Nama Lengkap">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="nomer" class="form-label">No HP</label>
-                                                    <input type="text" class="form-control" id="nomer" name="nomer"
-                                                        placeholder="Masukkan No HP">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
-                                                        placeholder="Masukkan Tempat Lahir">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                                                    <input type="text" class="form-control" id="tgl_lahir" name="tgl_lahir"
-                                                        placeholder="Masukkan Tanggal Lahir">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="alamat" class="form-label">Alamat Lengkap</label>
-                                                    <input type="text" class="form-control" id="alamat" name="alamat"
-                                                        placeholder="Masukkan Alamat Lengkap">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="puskesmas" class="form-label">Puskesmas Domisili</label>
-                                                    <input type="text" class="form-control" id="puskesmas" name="puskesmas"
-                                                        placeholder="Masukkan Puskesmas Domisili">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                                    <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah"
-                                                        placeholder="Masukkan Nama Sekolah">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="alamat_sekolah" class="form-label">Alamat Sekolah</label>
-                                                    <input type="text" class="form-control" id="alamat_sekolah" name="alamat_sekolah"
-                                                        placeholder="Masukkan Alamat Sekolah">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="kelas" class="form-label">Kelas</label>
-                                                    <input type="text" class="form-control" id="kelas" name="kelas"
-                                                        placeholder="Masukkan Kelas">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                                    <input type="text" class="form-control" id="jenis_kelamin" name="jenis_kelamin"
-                                                        placeholder="Masukkan Jenis Kelamin">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label for="nama_ortu" class="form-label">Nama Orang Tua</label>
-                                                    <input type="text" class="form-control" id="nama_ortu" name="nama_ortu"
-                                                        placeholder="Masukkan Nama Orang Tua">
-                                                </div>
-
-                                                <!-- <div class="mb-3">
-                                                    <div class="float-end">
-                                                        <a href="auth-pass-reset-cover" class="text-muted">Forgot
-                                                            password?</a>
-                                                    </div>
-                                                    <label class="form-label" for="password-input">Password</label>
-                                                    <div class="position-relative auth-pass-inputgroup mb-3">
-                                                        <input type="password" class="form-control pe-5 password-input"
-                                                            placeholder="Enter password" id="password-input">
-                                                        <button
-                                                            class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon"
-                                                            type="button" id="password-addon"><i
-                                                                class="ri-eye-fill align-middle"></i></button>
-                                                    </div>
-                                                </div> -->
-
-                                                <!-- <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value=""
-                                                        id="auth-remember-check">
-                                                    <label class="form-check-label" for="auth-remember-check">Remember
-                                                        me</label>
-                                                </div> -->
-
-                                                <div class="mt-4">
-                                                    <button class="btn btn-success w-100" type="submit">Kirim</button>
-                                                </div>
-
-                                                <!-- <div class="mt-4 text-center">
-                                                    <div class="signin-other-title">
-                                                        <h5 class="fs-13 mb-4 title">Sign In with</h5>
-                                                    </div>
-
-                                                    <div>
-                                                        <button type="button"
-                                                            class="btn btn-primary btn-icon waves-effect waves-light"><i
-                                                                class="ri-facebook-fill fs-16"></i></button>
-                                                        <button type="button"
-                                                            class="btn btn-danger btn-icon waves-effect waves-light"><i
-                                                                class="ri-google-fill fs-16"></i></button>
-                                                        <button type="button"
-                                                            class="btn btn-dark btn-icon waves-effect waves-light"><i
-                                                                class="ri-github-fill fs-16"></i></button>
-                                                        <button type="button"
-                                                            class="btn btn-info btn-icon waves-effect waves-light"><i
-                                                                class="ri-twitter-fill fs-16"></i></button>
-                                                    </div>
-                                                </div> -->
-
-                                            </form>
-                                        </div>
-
-                                        <div class="mt-5 text-center">
-                                            <p class="mb-0">
-                                                <a class="btn btn-primary w-100" href="{{ route('login') }}">Login</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                            </div>
-                            <!-- end row -->
-                        </div>
-                        <!-- end card -->
-                    </div>
-                    <!-- end col -->
-
-                </div>
-                <!-- end row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Buttons Datatables</h5>
             </div>
-            <!-- end container -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="buttons-datatables" class="display table table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>NIK</th>
+                                <th>Nama</th>
+                                <th>Nomer</th>
+                                <th>Tempat Lahir</th>
+                                <th>Tanggal Lahir</th>
+                                <th>Alamat</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Puskesmas</th>
+                                <th>Nama Sekolah</th>
+                                <th>Alamat Sekolah</th>
+                                <th>Kelas</th>
+                                <th>Nama Orang Tua</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $row)
+                            <tr>
+                                <td>{{$row->nik}}</td>
+                                <td>{{$row->nama}}</td>
+                                <td>{{$row->nomer}}</td>
+                                <td>{{$row->tempat_lahir}}</td>
+                                <td>{{$row->tgl_lahir}}</td>
+                                <td>{{$row->alamat}}</td>
+                                <td>{{$row->jenis_kelamin}}</td>
+                                <td>{{$row->puskesmas}}</td>
+                                <td>{{$row->nama_sekolah}}</td>
+                                <td>{{$row->alamat_sekolah}}</td>
+                                <td>{{$row->kelas}}</td>
+                                <td>{{$row->nama_ortu}}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <!-- end auth page content -->
-
-        <!-- footer -->
-        <!-- <footer class="footer start-0">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="text-center">
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script> Velzon. Crafted with <i
-                                    class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer> -->
-        <!-- end Footer -->
     </div>
-    <!-- end auth-page-wrapper -->
+</div>
 
 @endsection
 @section('script')
-    <script src="{{ URL::asset('build/js/pages/password-addon.init.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+<script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
+
+<script src="{{ URL::asset('build/js/app.js') }}"></script>
+
 @endsection
