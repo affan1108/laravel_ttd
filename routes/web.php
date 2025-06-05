@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\TTD\PemeriksaanController;
+use App\Http\Controllers\TTD\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,8 +54,8 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
                 ->name('password.store');
-            });
-            Route::resource('pemeriksaan/hb', PemeriksaanController::class);
+    });
+            
             
 Route::middleware('auth')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)
@@ -80,10 +81,11 @@ Route::middleware('auth')->group(function () {
     // Route::get('/dashboard', [TTD])
 });
 
-Route::get('/', function () {
-    // Auth::logout();
-    return view('antrian.welcome');
-});
+// Route::get('/', function () {
+//     return view('antrian.dashboard');
+// });
+Route::resource('/', PemeriksaanController::class);
+Route::resource('user', UserController::class);
 
 // Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any', '.*');

@@ -1,0 +1,226 @@
+@extends('layouts.layouts-horizontal')
+@section('title') @lang('translation.datatables') @endsection
+@section('css')
+<!--datatable css-->
+<link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+<!--datatable responsive css-->
+<link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" rel="stylesheet"
+    type="text/css" />
+<link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"
+    type="text/css" />
+@endsection
+@section('content')
+@component('components.breadcrumb')
+@slot('li_1') Tables @endslot
+@slot('title')Datatables @endslot
+@endcomponent
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <!-- <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Input Example</h4>
+                <div class="flex-shrink-0">
+                    <div class="form-check form-switch form-switch-right form-switch-md">
+                        <label for="form-grid-showcode" class="form-label text-muted">Show
+                            Code</label>
+                        <input class="form-check-input code-switcher" type="checkbox" id="form-grid-showcode">
+                    </div>
+                </div>
+            </div> -->
+            <form action="{{route('store')}}" method="post" enctype="multipart/form-data">
+            @csrf
+                <div class="card-body">
+                    <div class="live-preview">
+                        <div class="row gy-4">
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="nik" class="form-label">NIK</label>
+                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK"
+                                        required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="nama" class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="nama" name="nama"
+                                        placeholder="Masukkan Nama Lengkap" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="nomer" class="form-label">No HP</label>
+                                    <input type="text" class="form-control" id="nomer" name="nomer"
+                                        placeholder="Masukkan No HP" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
+                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
+                                        placeholder="Masukkan Tempat Lahir" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
+                                    <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir"
+                                        placeholder="Masukkan Tanggal Lahir" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="alamat" class="form-label">Alamat Lengkap</label>
+                                    <input type="text" class="form-control" id="alamat" name="alamat"
+                                        placeholder="Masukkan Alamat Lengkap" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="puskesmas" class="form-label">Puskesmas Domisili</label>
+                                    <select class="js-example-basic-single" name="puskesmas" required>
+                                        <option value="puskesmas_puspo">Puskemas Puspo</option>
+                                        <option value="puskesmas_tosari">Puskemas Tosari</option>
+                                        <option value="puskesmas_pandaan">Puskemas Pandaan</option>
+                                        <option value="puskesmas_kejayan">Puskemas Kejayan</option>
+                                        <option value="puskesmas_bangil">Puskemas Bangil</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
+                                    <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah"
+                                        placeholder="Masukkan Nama Sekolah">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="alamat_sekolah" class="form-label">Alamat Sekolah</label>
+                                    <input type="text" class="form-control" id="alamat_sekolah" name="alamat_sekolah"
+                                        placeholder="Masukkan Alamat Sekolah">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="kelas" class="form-label">Kelas</label>
+                                    <input type="text" class="form-control" id="kelas" name="kelas"
+                                        placeholder="Masukkan Kelas">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                                    <input type="text" class="form-control" id="jenis_kelamin" name="jenis_kelamin"
+                                        placeholder="Masukkan Jenis Kelamin" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="nama_ortu" class="form-label">Nama Orang Tua</label>
+                                    <input type="text" class="form-control" id="nama_ortu" name="nama_ortu"
+                                        placeholder="Masukkan Nama Orang Tua" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </div>
+                </div>
+                <div class="card-footer align-items-right">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--end col-->
+</div>
+<!--end row-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Buttons Datatables</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="buttons-datatables" class="display table table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>NIK</th>
+                                <th>Nama</th>
+                                <th>Nomer</th>
+                                <th>Tempat Lahir</th>
+                                <th>Tanggal Lahir</th>
+                                <th>Alamat</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Puskesmas</th>
+                                <th>Nama Sekolah</th>
+                                <th>Alamat Sekolah</th>
+                                <th>Kelas</th>
+                                <th>Nama Orang Tua</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $row)
+                            <tr>
+                                <td>{{$row->nik}}</td>
+                                <td>{{$row->nama}}</td>
+                                <td>{{$row->nomer}}</td>
+                                <td>{{$row->tempat_lahir}}</td>
+                                <td>{{$row->tgl_lahir}}</td>
+                                <td>{{$row->alamat}}</td>
+                                <td>{{$row->jenis_kelamin}}</td>
+                                <td>{{$row->puskesmas}}</td>
+                                <td>{{$row->nama_sekolah}}</td>
+                                <td>{{$row->alamat_sekolah}}</td>
+                                <td>{{$row->kelas}}</td>
+                                <td>{{$row->nama_ortu}}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+@section('script')
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+<!--select2 cdn-->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="{{ URL::asset('build/js/pages/select2.init.js') }}"></script>
+
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+<script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
+
+<script src="{{ URL::asset('build/js/app.js') }}"></script>
+
+@endsection

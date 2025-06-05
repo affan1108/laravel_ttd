@@ -4,17 +4,18 @@ namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pemeriksaan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class PemeriksaanController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Pemeriksaan::all();
-        return view('ttd.dashboard.pemeriksaan_hb', compact('data'));
+        $data = User::all();
+        return view('ttd.master.user', compact('data'));
     }
 
     /**
@@ -30,11 +31,7 @@ class PemeriksaanController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
-
-        Pemeriksaan::create($request->all());
-
-        return redirect()->back();
+        //
     }
 
     /**

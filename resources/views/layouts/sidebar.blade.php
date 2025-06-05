@@ -33,16 +33,34 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarDashboards" aria-controls="sidebarDashboards">
-                        <i class="las la-tachometer-alt"></i> <span>@lang('translation.dashboards')</span>
+                    <a class="nav-link menu-link" href="{{route('index')}}">
+                        <i class="las la-tachometer-alt"></i> <span>Pemeriksaan HB</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarApps" aria-controls="sidebarApps">
-                        <i class="lab la-delicious"></i> <span>@lang('TTD')</span>
+                    <a class="nav-link menu-link" href="#sidebarApps">
+                        <i class="lab la-delicious"></i> <span>Tablet Tambah Darah</span>
                     </a>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <i class="las la-tachometer-alt"></i> <span>Master Data</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarData">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{route('user.index')}}" class="nav-link">User</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="dashboard-crm" class="nav-link">Tablet Tambah Darah</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="index" class="nav-link">Puskesmas</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="las la-tachometer-alt"></i> <span>@lang('translation.dashboards')</span>
                     </a>
@@ -1006,7 +1024,7 @@
                             </li>
                         </ul>
                     </div>
-                </li> -->
+                </li>
 
             </ul>
         </div>
