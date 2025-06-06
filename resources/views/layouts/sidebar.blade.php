@@ -52,10 +52,10 @@
                                 <a href="{{route('user.index')}}" class="nav-link">User</a>
                             </li>
                             <li class="nav-item">
-                                <a href="dashboard-crm" class="nav-link">Tablet Tambah Darah</a>
+                                <a href="{{route('kecamatan.index')}}" class="nav-link">Kecamatan</a>
                             </li>
                             <li class="nav-item">
-                                <a href="index" class="nav-link">Puskesmas</a>
+                                <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
                             </li>
                         </ul>
                     </div>

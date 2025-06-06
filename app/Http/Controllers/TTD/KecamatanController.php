@@ -3,21 +3,19 @@
 namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pemeriksaan;
-use App\Models\User;
+use App\Models\Kecamatan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class KecamatanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = User::all();
-        return view('ttd.master.user', compact('data'));
+        $data = Kecamatan::all();
+        return view('ttd.master.kecamatan', compact('data'));
     }
 
     /**
@@ -36,9 +34,7 @@ class UserController extends Controller
         try {
             // Validasi data
             $validator = Validator::make($request->all(), [
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8'],
+                'nama' => ['required', 'string', 'max:255'],
             ]);
 
             // dd($validator, $validator->fails());
@@ -48,14 +44,11 @@ class UserController extends Controller
             }
 
             // Simpan user ke database
-            User::create([
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'password' => Hash::make($request->input('password')),
-                'role' => $request->input('role'),
+            Kecamatan::create([
+                'nama' => $request->input('nama'),
             ]);
 
-            return redirect()->back()->with('success', 'User berhasil ditambahkan');
+            return redirect()->back()->with('success', 'Data berhasil ditambahkan');
         } catch (\Exception $e) {
             // dd($e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -86,22 +79,20 @@ class UserController extends Controller
         // dd($request->all());
         try{
             $request->validate([
-                'name' => 'string|max:255',
-                'role' => 'string|max:255',
+                'nama' => 'string|max:255',
             ]);
 
             // Cari data berdasarkan ID
-            $user = User::findOrFail($id);
+            $data = Kecamatan::findOrFail($id);
 
             // Update data
-            $user->update([
-                'name' => $request->name,
-                'role' => $request->role,
+            $data->update([
+                'nama' => $request->nama,
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui!');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -113,10 +104,10 @@ class UserController extends Controller
     {
         try {
             // Cari data berdasarkan ID
-            $user = User::findOrFail($id);
+            $data = Kecamatan::findOrFail($id);
 
             // Hapus data
-            $user->delete();
+            $data->delete();
 
             // Redirect dengan pesan sukses
             return redirect()->back()->with('success', 'Data berhasil dihapus.');

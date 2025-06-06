@@ -31,20 +31,14 @@
                 <table id="add-rows" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Tanggal Daftar</th>
+                            <th>Nama Puskesmas</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($data as $row)
                         <tr>
-                            <td>{{@$row->name}}</td>
-                            <td>{{@$row->email}}</td>
-                            <td>{{@$row->role}}</td>
-                            <td>{{@$row->created_at}}</td>
+                            <td>{{@$row->nama}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Edit</a>
@@ -61,29 +55,17 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="close-modal"></button>
                                     </div>
-                                    <form method="POST" action="{{route('user.update', @$row->id)}}" autocomplete="off"
+                                    <form method="POST" action="{{route('puskesmas.update', @$row->id)}}" autocomplete="off"
                                         enctype="multipart/form-data">
                                         @method('PUT')
                                         @csrf
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label for="customername-field" class="form-label">Username</label>
+                                                <label for="customername-field" class="form-label">Puskesmas</label>
                                                 <input type="text" id="customername-field" class="form-control"
-                                                    placeholder="Masukkan Username" name="name"
-                                                    value="{{ old('name', @$row->name) }}" required />
-                                                <div class="invalid-feedback">Masukkan Username</div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="customername-field" class="form-label">Role</label>
-                                                <div class="col-lg-12">
-                                                    <select class="js-example-basic-single" name="role">
-                                                        <option value="{{old('name', @$row->role)}}" selected>
-                                                            {{@$row->role}}</option>
-                                                        <option value="superadmin">Super Admin</option>
-                                                        <option value="admin">Admin</option>
-                                                        <option value="user">User</option>
-                                                    </select>
-                                                </div>
+                                                    placeholder="Masukkan Puskesmas" name="nama"
+                                                    value="{{ old('nama', @$row->nama) }}" required />
+                                                <div class="invalid-feedback">Masukkan Puskesmas</div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -108,7 +90,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="btn-close"></button>
                                     </div>
-                                    <form action="{{ route('user.destroy', @$row->id) }}" method="post">
+                                    <form action="{{ route('puskesmas.destroy', @$row->id) }}" method="post">
                                         @csrf
                                         @method('DELETE')
                                         <div class="modal-body">
@@ -150,65 +132,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     id="close-modal"></button>
             </div>
-            <form method="POST" action="{{route('user.store')}}" autocomplete="off" enctype="multipart/form-data">
+            <form method="POST" action="{{route('puskesmas.store')}}" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                            value="{{ old('email') }}" id="useremail" placeholder="Enter email address" required>
-                        @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                        <div class="invalid-feedback">
-                            Please enter email
-                        </div>
-                    </div>
 
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                            value="{{ old('name') }}" id="username" placeholder="Enter username" required>
-                        @error('name')
+                        <label for="puskesmas" class="form-label">Puskesmas <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('puskesmas') is-invalid @enderror" name="nama"
+                            value="{{ old('nama') }}" id="puskesmas" placeholder="Masukkan Nama Puskesmas" required>
+                        @error('puskesmas')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
                         <div class="invalid-feedback">
-                            Please enter username
+                            Please enter Puskesmas
                         </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="userpassword" class="form-label">Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror"
-                            name="password" id="userpassword" placeholder="Enter password" required>
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                        <div class="invalid-feedback">
-                            Please enter password
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="input-password">Confirm Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
-                            name="password_confirmation" id="input-password" placeholder="Enter Confirm Password"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="customername-field" class="form-label">Role</label>
-                        <div class="col-lg-12">
-                            <select class="js-example-basic-single" name="role">
-                                <option value="superadmin">Super Admin</option>
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
-                            </select>
-                        </div>
-                        <div class="invalid-feedback">Pilih Role</div>
                     </div>
                 </div>
                 <div class="modal-footer">

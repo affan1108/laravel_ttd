@@ -11,7 +11,9 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\TTD\KecamatanController;
 use App\Http\Controllers\TTD\PemeriksaanController;
+use App\Http\Controllers\TTD\PuskesmasController;
 use App\Http\Controllers\TTD\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -86,6 +88,8 @@ Route::middleware('auth')->group(function () {
 // });
 Route::resource('/', PemeriksaanController::class);
 Route::resource('user', UserController::class);
+Route::resource('puskesmas', PuskesmasController::class);
+Route::resource('kecamatan', KecamatanController::class);
 
 // Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->where('any', '.*');
