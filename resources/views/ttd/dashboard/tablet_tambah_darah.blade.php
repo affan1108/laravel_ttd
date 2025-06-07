@@ -12,11 +12,136 @@
 @endsection
 @section('content')
 @component('components.breadcrumb')
-@slot('li_1') Tables @endslot
-@slot('title')Datatables @endslot
+@slot('li_1') Entry Data @endslot
+@slot('title')Tablet Tambah Darah @endslot
 @endcomponent
 
 <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <!-- <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Input Example</h4>
+                <div class="flex-shrink-0">
+                    <div class="form-check form-switch form-switch-right form-switch-md">
+                        <label for="form-grid-showcode" class="form-label text-muted">Show
+                            Code</label>
+                        <input class="form-check-input code-switcher" type="checkbox" id="form-grid-showcode">
+                    </div>
+                </div>
+            </div> -->
+            <form action="{{route('store')}}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="card-body">
+                    <div class="live-preview">
+                        <div class="row gy-4">
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="nik" class="form-label">NIK</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK"
+                                        required>
+                                    <button type="button" class="btn btn-primary" id="btn_cari">Cari</button>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="nama" class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="nama" name="nama"
+                                        placeholder="Masukkan Nama Lengkap" required readonly>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="nomer" class="form-label">No HP</label>
+                                    <input type="text" class="form-control" id="nomer" name="nomer"
+                                        placeholder="Masukkan No HP" required readonly>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
+                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
+                                        placeholder="Masukkan Tempat Lahir" required readonly>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
+                                    <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir"
+                                        placeholder="Masukkan Tanggal Lahir" required readonly>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="alamat" class="form-label">Alamat Lengkap</label>
+                                    <input type="text" class="form-control" id="alamat" name="alamat"
+                                        placeholder="Masukkan Alamat Lengkap" required readonly>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="tgl_minum" class="form-label">Tanggal Minum</label>
+                                    <input type="date" class="form-control" id="tgl_minum" name="tgl_minum"
+                                        placeholder="Masukkan Tanggal Minum">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="jml_tablet" class="form-label">Jumlah Tablet</label>
+                                    <input type="number" class="form-control" id="jml_tablet" name="jml_tablet"
+                                        placeholder="Masukkan Jumlah Tablet">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="pengawas" class="form-label">Nama Pengawas</label>
+                                    <input type="text" class="form-control" id="pengawas" name="pengawas"
+                                        placeholder="Masukkan Pengawas Minum Tablet Tambah Darah">
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="no_pengawas" class="form-label">No Telp Pengawas</label>
+                                    <input type="text" class="form-control" id="no_pengawas" name="no_pengawas"
+                                        placeholder="Masukkan No Telp Pengawas" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="tgl_periksa_ulang" class="form-label">Tanggal diperiksa HB ulang</label>
+                                    <input type="date" class="form-control" id="tgl_periksa_ulang" name="tgl_periksa_ulang"
+                                        placeholder="Masukkan Tanggal diperiksa HB ulang" required>
+                                </div>
+                            </div>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-md-6">
+                                <div>
+                                    <label for="keterangan" class="form-label">Keterangan</label>
+                                    <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan" rows="3"></textarea>
+                                    <!-- <input type="text" class="form-control" id="keterangan" name="keterangan"
+                                        placeholder="Masukkan Keterangan" required> -->
+                                </div>
+                            </div>
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </div>
+                </div>
+                <div class="card-footer align-items-right">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
@@ -33,19 +158,27 @@
                         <tr>
                             <th>NIK</th>
                             <th>Nama</th>
-                            <th>Column 3</th>
-                            <th>Column 4</th>
-                            <th>Column 5</th>
+                            <th>Tgl Lahir</th>
+                            <th>Jumlah Tablet TTD</th>
+                            <th>Pegawai Minum TTD</th>
+                            <th>No Hp PMT</th>
+                            <th>Tgl diperiksa HB Ulang</th>
+                            <th>Keterangan</th>
+                            <th>Pegawai Minum TTD</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($data as $row)
                         <tr>
-                            <td>asd</td>
-                            <td>awd</td>
-                            <td>ada</td>
-                            <td>ada</td>
-                            <td>drg</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         @endforeach
                     </tbody>
