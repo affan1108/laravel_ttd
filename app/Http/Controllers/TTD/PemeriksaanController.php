@@ -4,7 +4,9 @@ namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pemeriksaan;
+use App\Models\Puskesmas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PemeriksaanController extends Controller
 {
@@ -14,7 +16,8 @@ class PemeriksaanController extends Controller
     public function index()
     {
         $data = Pemeriksaan::all();
-        return view('ttd.dashboard.pemeriksaan_hb', compact('data'));
+        $puskesmass = Puskesmas::all();
+        return view('ttd.dashboard.pemeriksaan_hb', compact('data','puskesmass'));
     }
 
     /**
@@ -30,11 +33,29 @@ class PemeriksaanController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        // Validasi input dasar, bisa dikembangkan sesuai kebutuhan
+        $request->validate([
+            'nik' => 'required|unique:pemeriksaans,nik',
+            // tambahkan validasi lainnya di sini
+        ]);
 
-        Pemeriksaan::create($request->all());
+        DB::beginTransaction();
 
-        return redirect()->back();
+        try {
+            if (Pemeriksaan::where('nik', $request->nik)->exists()) {
+                return redirect()->back()->with('error', 'Nomor NIK sudah terdaftar');
+            } else {
+                Pemeriksaan::create($request->all());
+                return redirect()->back()->with('success', 'Berhasil disimpan');
+            }
+
+            DB::commit();
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
     }
 
     /**

@@ -85,12 +85,10 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="puskesmas" class="form-label">Puskesmas Domisili</label>
-                                    <select class="js-example-basic-single" name="puskesmas" required>
-                                        <option value="puskesmas_puspo">Puskemas Puspo</option>
-                                        <option value="puskesmas_tosari">Puskemas Tosari</option>
-                                        <option value="puskesmas_pandaan">Puskemas Pandaan</option>
-                                        <option value="puskesmas_kejayan">Puskemas Kejayan</option>
-                                        <option value="puskesmas_bangil">Puskemas Bangil</option>
+                                    <select class="js-example-basic-single" name="puskesmas_id" required>
+                                        @foreach($puskesmass as $puskesmas)
+                                        <option value="{{$puskesmas->id}}">{{$puskesmas->nama}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -122,8 +120,11 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                    <input type="text" class="form-control" id="jenis_kelamin" name="jenis_kelamin"
-                                        placeholder="Masukkan Jenis Kelamin" required>
+                                    <select class="js-example-basic-single" name="jenis_kelamin" id="jenis_kelamin">
+                                        <!-- <option value="0" selected>Pilih Jenis Kelamin</option> -->
+                                        <option value="1">Laki - laki</option>
+                                        <option value="2">Perempuan</option>
+                                    </select>
                                 </div>
                             </div>
                             <!--end col-->
@@ -148,55 +149,6 @@
     <!--end col-->
 </div>
 <!--end row-->
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Buttons Datatables</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="buttons-datatables" class="display table table-bordered" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>NIK</th>
-                                <th>Nama</th>
-                                <th>Nomer</th>
-                                <th>Tempat Lahir</th>
-                                <th>Tanggal Lahir</th>
-                                <th>Alamat</th>
-                                <th>Jenis Kelamin</th>
-                                <th>Puskesmas</th>
-                                <th>Nama Sekolah</th>
-                                <th>Alamat Sekolah</th>
-                                <th>Kelas</th>
-                                <th>Nama Orang Tua</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($data as $row)
-                            <tr>
-                                <td>{{$row->nik}}</td>
-                                <td>{{$row->nama}}</td>
-                                <td>{{$row->nomer}}</td>
-                                <td>{{$row->tempat_lahir}}</td>
-                                <td>{{$row->tgl_lahir}}</td>
-                                <td>{{$row->alamat}}</td>
-                                <td>{{$row->jenis_kelamin}}</td>
-                                <td>{{$row->puskesmas}}</td>
-                                <td>{{$row->nama_sekolah}}</td>
-                                <td>{{$row->alamat_sekolah}}</td>
-                                <td>{{$row->kelas}}</td>
-                                <td>{{$row->nama_ortu}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @endsection
 @section('script')

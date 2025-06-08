@@ -112,7 +112,7 @@
 
             <div class="d-flex align-items-center">
 
-                <div class="dropdown d-md-none topbar-head-dropdown header-item">
+                <!-- <div class="dropdown d-md-none topbar-head-dropdown header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
                         id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false">
@@ -131,7 +131,7 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- <div class="dropdown ms-1 topbar-head-dropdown header-item">
                     <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -703,7 +703,7 @@
                     </div>
                 </div> -->
 
-                <div class="dropdown ms-sm-3 header-item topbar-user">
+                <div class="topbar-user">
                     @if(Auth::user())
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">

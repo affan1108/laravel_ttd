@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('pemeriksaans', function (Blueprint $table) {
             $table->id();
-            $table->string('nik');
+            $table->string('nik')->unique();
             $table->string('nama');
             $table->string('nomer');
             $table->string('tempat_lahir');
             $table->string('tgl_lahir');
             $table->string('alamat');
-            $table->string('puskesmas');
+            $table->foreignId('puskesmas_id')->constrained('puskesmas')->onUpdate('restrict')->onDelete('restrict');
             $table->string('nama_sekolah');
             $table->string('alamat_sekolah');
             $table->string('kelas');
