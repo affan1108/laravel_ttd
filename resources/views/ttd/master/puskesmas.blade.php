@@ -31,14 +31,20 @@
                 <table id="add-rows" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Nama Puskesmas</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Tanggal Daftar</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($data as $row)
                         <tr>
-                            <td>{{@$row->nama}}</td>
+                            <td>{{@$row->name}}</td>
+                            <td>{{@$row->email}}</td>
+                            <td>{{@$row->role}}</td>
+                            <td>{{@$row->created_at}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Edit</a>
@@ -55,17 +61,29 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="close-modal"></button>
                                     </div>
-                                    <form method="POST" action="{{route('puskesmas.update', @$row->id)}}" autocomplete="off"
+                                    <form method="POST" action="{{route('user.update', @$row->id)}}" autocomplete="off"
                                         enctype="multipart/form-data">
                                         @method('PUT')
                                         @csrf
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label for="customername-field" class="form-label">Puskesmas</label>
+                                                <label for="customername-field" class="form-label">Username</label>
                                                 <input type="text" id="customername-field" class="form-control"
-                                                    placeholder="Masukkan Puskesmas" name="nama"
-                                                    value="{{ old('nama', @$row->nama) }}" required />
-                                                <div class="invalid-feedback">Masukkan Puskesmas</div>
+                                                    placeholder="Masukkan Username" name="name"
+                                                    value="{{ old('name', @$row->name) }}" required />
+                                                <div class="invalid-feedback">Masukkan Username</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="customername-field" class="form-label">Role</label>
+                                                <div class="col-lg-12">
+                                                    <select class="js-example-basic-single" name="role">
+                                                        <option value="{{old('name', @$row->role)}}" selected>
+                                                            {{@$row->role}}</option>
+                                                        <option value="superadmin">Super Admin</option>
+                                                        <option value="admin">Admin</option>
+                                                        <option value="user">User</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -90,7 +108,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="btn-close"></button>
                                     </div>
-                                    <form action="{{ route('puskesmas.destroy', @$row->id) }}" method="post">
+                                    <form action="{{ route('user.destroy', @$row->id) }}" method="post">
                                         @csrf
                                         @method('DELETE')
                                         <div class="modal-body">

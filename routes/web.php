@@ -82,16 +82,16 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+    
+    Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
+    Route::resource('pemeriksaan', PemeriksaanController::class);
+    Route::resource('user', UserController::class);
+    Route::resource('puskesmas', PuskesmasController::class);
+    Route::resource('kecamatan', KecamatanController::class);
     // Route::get('/dashboard', [TTD])
 });
 
-// Route::get('/', function () {
-//     return view('antrian.dashboard');
-// });
-Route::resource('/', PemeriksaanController::class);
-Route::resource('user', UserController::class);
-Route::resource('puskesmas', PuskesmasController::class);
-Route::resource('kecamatan', KecamatanController::class);
+Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
 Route::resource('tambah-darah',TambahDarahController::class);
 
 

@@ -57,6 +57,9 @@
                             <li class="nav-item">
                                 <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('pemeriksaan.create')}}" class="nav-link">Pemeriksaan</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

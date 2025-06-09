@@ -12,10 +12,47 @@
 @endsection
 @section('content')
 @component('components.breadcrumb')
-@slot('li_1') Tables @endslot
-@slot('title')Datatables @endslot
+@slot('li_1') {!! Auth::check() ? 'Dashboard' : 'Grafik' !!} @endslot
+@slot('title')Dashboard @endslot
 @endcomponent
 
+@if(Auth::user())
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title mt-2">Grafik</h3>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown card-header-dropdown">
+                            <select id="bulanFilter" class="form-select w-auto">
+                                <option value="00">Semua Bulan</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="chart" height="100px"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@else
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -30,15 +67,15 @@
                 </div>
             </div> -->
             <form action="{{route('store')}}" method="post" enctype="multipart/form-data">
-            @csrf
+                @csrf
                 <div class="card-body">
                     <div class="live-preview">
                         <div class="row gy-4">
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nik" class="form-label">NIK</label>
-                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK"
-                                        required>
+                                    <input type="text" class="form-control" id="nik" name="nik"
+                                        placeholder="Masukkan NIK" required>
                                 </div>
                             </div>
                             <!--end col-->
@@ -150,6 +187,8 @@
 </div>
 <!--end row-->
 
+@endif
+
 @endsection
 @section('script')
 
@@ -161,6 +200,7 @@
 
 <script src="{{ URL::asset('build/js/pages/select2.init.js') }}"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
@@ -174,5 +214,84 @@
 <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
+
+<script>
+    const dataByMonth = {!! json_encode($monthlyPuskesmasData) !!};
+    const ctx = document.getElementById('chart').getContext('2d');
+    let chart; // Simpan chart instance global
+
+    // console.log(dataByMonth);
+
+    function renderChart(month = '00') {
+        let labels = [];
+        let values = [];
+        let colors = [];
+
+        if (month === '00') {
+            // Gabungkan semua bulan
+            const temp = {};
+
+            // Loop semua bulan
+            for (const m in dataByMonth) {
+                dataByMonth[m].forEach(item => {
+                    if (!item.name) return;
+
+                    if (!temp[item.name]) {
+                        temp[item.name] = {
+                            value: 0,
+                            color: item.color
+                        };
+                    }
+                    temp[item.name].value += item.value;
+                });
+            }
+
+            // Setelah gabung, masukkan ke array chart
+            for (const name in temp) {
+                labels.push(name);
+                values.push(temp[name].value);
+                colors.push(temp[name].color);
+            }
+        } else {
+            const selectedData = dataByMonth[month];
+            selectedData.forEach(item => {
+                if (!item.name) return;
+                labels.push(item.name);
+                values.push(item.value);
+                colors.push(item.color);
+            });
+        }
+
+        if (chart) chart.destroy(); // Hapus chart lama sebelum render baru
+
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '',
+                    data: values,
+                    backgroundColor: colors
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false } // Menyembunyikan legend
+                },
+            }
+        });
+    }
+
+
+    document.getElementById('bulanFilter').addEventListener('change', function () {
+        const bulan = this.value;
+        renderChart(bulan);
+    });
+
+    // Load default chart (optional)
+    renderChart('00'); // atau 'all'
+</script>
+
 
 @endsection
