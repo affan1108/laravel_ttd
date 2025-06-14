@@ -6,13 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Pemeriksaan;
 use App\Models\TambahDarah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TambahDarahController extends Controller
 {
 
     public function index()
     {
-        return view('ttd.dashboard.tablet_tambah_darah');
+       
+        
+        if (Auth::check()) {
+            // Jika sudah login, arahkan ke view admin/master
+            return view('tambah-darah.tambah-darah.index');
+        } 
+        $data = TambahDarah::all();
+        
+
     }
     public function create() {}
     public function store(Request $request)
