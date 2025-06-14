@@ -1,5 +1,5 @@
 @extends('layouts.layouts-horizontal')
-@section('title') @lang('translation.datatables') @endsection
+@section('title') Dashboard @endsection
 @section('css')
 <!--datatable css-->
 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
@@ -223,65 +223,77 @@
     // console.log(dataByMonth);
 
     function renderChart(month = '00') {
-        let labels = [];
-        let values = [];
-        let colors = [];
+        let labels = []; // Nama Puskesmas
+        let dataLaki = []; // Nilai laki-laki
+        let dataPerempuan = []; // Nilai perempuan
 
-        if (month === '00') {
-            // Gabungkan semua bulan
-            const temp = {};
+        const isCombined = (month === '00');
 
-            // Loop semua bulan
-            for (const m in dataByMonth) {
-                dataByMonth[m].forEach(item => {
-                    if (!item.name) return;
+        const temp = {};
 
-                    if (!temp[item.name]) {
-                        temp[item.name] = {
-                            value: 0,
-                            color: item.color
-                        };
-                    }
-                    temp[item.name].value += item.value;
-                });
+        // Gabung data (semua bulan) atau 1 bulan
+        const loopData = isCombined ? Object.values(dataByMonth).flat() : dataByMonth[month];
+
+        loopData.forEach(item => {
+            // Pisah nama dan gender
+            const match = item.name.match(/^(.*) \((L|P)\)$/);
+            if (!match) return;
+
+            const namaPuskesmas = match[1];
+            const gender = match[2]; // 'L' atau 'P'
+
+            if (!temp[namaPuskesmas]) {
+                temp[namaPuskesmas] = { L: 0, P: 0 };
             }
 
-            // Setelah gabung, masukkan ke array chart
-            for (const name in temp) {
-                labels.push(name);
-                values.push(temp[name].value);
-                colors.push(temp[name].color);
-            }
-        } else {
-            const selectedData = dataByMonth[month];
-            selectedData.forEach(item => {
-                if (!item.name) return;
-                labels.push(item.name);
-                values.push(item.value);
-                colors.push(item.color);
-            });
+            temp[namaPuskesmas][gender] += item.value;
+        });
+
+        // Susun labels dan nilai laki/perempuan
+        for (const puskesmas in temp) {
+            labels.push(puskesmas);
+            dataLaki.push(temp[puskesmas]['L']);
+            dataPerempuan.push(temp[puskesmas]['P']);
         }
 
-        if (chart) chart.destroy(); // Hapus chart lama sebelum render baru
+        if (chart) chart.destroy();
 
         chart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: '',
-                    data: values,
-                    backgroundColor: colors
-                }]
+                datasets: [
+                    {
+                        label: 'Laki-laki',
+                        data: dataLaki,
+                        backgroundColor: 'blue'
+                    },
+                    {
+                        label: 'Perempuan',
+                        data: dataPerempuan,
+                        backgroundColor: 'pink'
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false } // Menyembunyikan legend
+                    legend: {
+                        display: true,
+                        labels: {
+                            usePointStyle: true
+                        }
+                    }
                 },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
         });
     }
+
 
 
     document.getElementById('bulanFilter').addEventListener('change', function () {

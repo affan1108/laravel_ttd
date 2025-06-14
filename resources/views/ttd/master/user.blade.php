@@ -1,5 +1,5 @@
 @extends('layouts.layouts-horizontal')
-@section('title') @lang('translation.datatables') @endsection
+@section('title') Master User @endsection
 @section('css')
 <!--datatable css-->
 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
@@ -13,14 +13,14 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1') Tables @endslot
-@slot('title')Datatables @endslot
+@slot('title') Master User @endslot
 @endcomponent
 
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Add Rows</h5>
+                <h5 class="card-title mb-0 flex-grow-1">Data Master User</h5>
                 <div>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add New
                         Data</button>
@@ -56,8 +56,8 @@
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header bg-light p-3">
-                                        <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                                    <div class="modal-header bg-secondary p-3">
+                                        <h5 class="modal-title text-light" id="exampleModalLabel">Edit Data</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="close-modal"></button>
                                     </div>
@@ -90,7 +90,7 @@
                                             <div class="hstack gap-2 justify-content-end">
                                                 <button type="button" class="btn btn-light"
                                                     data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-success" id="add-btn">Add
+                                                <button type="submit" class="btn btn-secondary" id="add-btn">Edit
                                                     Data</button>
                                                 <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
                                             </div>
@@ -145,8 +145,8 @@
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="exampleModalLabel">Add Data</h5>
+            <div class="modal-header bg-primary p-3">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Add New Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     id="close-modal"></button>
             </div>
@@ -214,7 +214,7 @@
                 <div class="modal-footer">
                     <div class="hstack gap-2 justify-content-end">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Add Data</button>
+                        <button type="submit" class="btn btn-primary">Add Data</button>
                         <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
                     </div>
                 </div>
