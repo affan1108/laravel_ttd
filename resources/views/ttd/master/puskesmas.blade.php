@@ -1,5 +1,5 @@
 @extends('layouts.layouts-horizontal')
-@section('title') @lang('translation.datatables') @endsection
+@section('title') Master Puskesmas @endsection
 @section('css')
 <!--datatable css-->
 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
@@ -13,14 +13,14 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1') Tables @endslot
-@slot('title')Datatables @endslot
+@slot('title') Master Puskesmas @endslot
 @endcomponent
 
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Add Rows</h5>
+                <h5 class="card-title mb-0 flex-grow-1">Data Master Puskesmas</h5>
                 <div>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add New
                         Data</button>
@@ -31,20 +31,14 @@
                 <table id="add-rows" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Tanggal Daftar</th>
+                            <th>Nama Puskesmas</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($data as $row)
                         <tr>
-                            <td>{{@$row->name}}</td>
-                            <td>{{@$row->email}}</td>
-                            <td>{{@$row->role}}</td>
-                            <td>{{@$row->created_at}}</td>
+                            <td>{{@$row->nama}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Edit</a>
@@ -56,41 +50,29 @@
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header bg-light p-3">
-                                        <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                                    <div class="modal-header bg-secondary p-3">
+                                        <h5 class="modal-title text-light" id="exampleModalLabel">Edit Data</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="close-modal"></button>
                                     </div>
-                                    <form method="POST" action="{{route('user.update', @$row->id)}}" autocomplete="off"
+                                    <form method="POST" action="{{route('puskesmas.update', @$row->id)}}" autocomplete="off"
                                         enctype="multipart/form-data">
                                         @method('PUT')
                                         @csrf
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <label for="customername-field" class="form-label">Username</label>
+                                                <label for="customername-field" class="form-label">Puskesmas</label>
                                                 <input type="text" id="customername-field" class="form-control"
-                                                    placeholder="Masukkan Username" name="name"
-                                                    value="{{ old('name', @$row->name) }}" required />
-                                                <div class="invalid-feedback">Masukkan Username</div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="customername-field" class="form-label">Role</label>
-                                                <div class="col-lg-12">
-                                                    <select class="js-example-basic-single" name="role">
-                                                        <option value="{{old('name', @$row->role)}}" selected>
-                                                            {{@$row->role}}</option>
-                                                        <option value="superadmin">Super Admin</option>
-                                                        <option value="admin">Admin</option>
-                                                        <option value="user">User</option>
-                                                    </select>
-                                                </div>
+                                                    placeholder="Masukkan Puskesmas" name="nama"
+                                                    value="{{ old('nama', @$row->nama) }}" required />
+                                                <div class="invalid-feedback">Masukkan Puskesmas</div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <div class="hstack gap-2 justify-content-end">
                                                 <button type="button" class="btn btn-light"
                                                     data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-success" id="add-btn">Add
+                                                <button type="submit" class="btn btn-secondary" id="add-btn">Edit
                                                     Data</button>
                                                 <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
                                             </div>
@@ -108,7 +90,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="btn-close"></button>
                                     </div>
-                                    <form action="{{ route('user.destroy', @$row->id) }}" method="post">
+                                    <form action="{{ route('puskesmas.destroy', @$row->id) }}" method="post">
                                         @csrf
                                         @method('DELETE')
                                         <div class="modal-body">
@@ -145,8 +127,8 @@
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="exampleModalLabel">Add Data</h5>
+            <div class="modal-header bg-primary p-3">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Add Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     id="close-modal"></button>
             </div>
@@ -171,7 +153,7 @@
                 <div class="modal-footer">
                     <div class="hstack gap-2 justify-content-end">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Add Data</button>
+                        <button type="submit" class="btn btn-primary">Add Data</button>
                         <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
                     </div>
                 </div>

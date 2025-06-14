@@ -1,5 +1,5 @@
 @extends('layouts.layouts-horizontal')
-@section('title') @lang('translation.datatables') @endsection
+@section('title') Master Pemeriksaan HB @endsection
 @section('css')
 <!--datatable css-->
 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
@@ -20,7 +20,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Add Rows</h5>
+                <h5 class="card-title mb-0 flex-grow-1">Data Master Pemeriksaan HB</h5>
                 <div>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add New
                         Data</button>
@@ -58,8 +58,8 @@
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-xl modal-dialog-centered">
                                 <div class="modal-content">
-                                    <div class="modal-header bg-light p-3">
-                                        <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+                                    <div class="modal-header bg-secondary p-3">
+                                        <h5 class="modal-title text-light" id="exampleModalLabel">Edit Data</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close" id="close-modal"></button>
                                     </div>
@@ -179,7 +179,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer align-items-right">
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <button type="submit" class="btn btn-secondary">Simpan</button>
                                         </div>
                                     </form>
                                 </div>
@@ -232,7 +232,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Add Rows</h5>
+                <h5 class="card-title mb-0 flex-grow-1">Data Master Pemeriksaan HB (Deleted)</h5>
             </div>
             <div class="card-body">
 
@@ -437,8 +437,8 @@
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="exampleModalLabel">Add Data</h5>
+            <div class="modal-header bg-primary p-3">
+                <h5 class="modal-title text-light" id="exampleModalLabel">Add Data</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     id="close-modal"></button>
             </div>
@@ -588,6 +588,16 @@
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script>
     $(document).ready(function() {
+        $('#myModal').on('shown.bs.modal', function () {
+            console.log("Select2 initialized!"); // Debugging
+
+            // Pastikan Select2 di dalam modal diinisialisasi ulang
+            $(this).find('.js-example-basic-single').select2({
+                dropdownParent: $(this),
+                width: '100%',
+                placeholder: "Pilih opsi"
+            });
+        });
         $('body').on('shown.bs.modal', '[id^="editModal"]', function () {
             console.log("Select2 initialized!");
             $(this).find('.js-example-basic-single').select2({
@@ -604,7 +614,7 @@
             "lengthChange": false,
             "autoWidth": false,
             "search": true,
-            "buttons": ["copy", "csv", "excel", "pdf"]
+            "buttons": ["copy", "csv", "excel", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
 
@@ -614,7 +624,7 @@
             "lengthChange": false,
             "autoWidth": false,
             "search": true,
-            "buttons": ["copy", "csv", "excel", "pdf"]
+            "buttons": ["copy", "csv", "excel", "print", "colvis"]
         }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
     });
 </script>

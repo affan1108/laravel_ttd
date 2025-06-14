@@ -703,15 +703,14 @@
                     </div>
                 </div> -->
 
-                <div class="topbar-user">
                     @if(Auth::user())
-                    <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
+                    <button type="button" class="btn btn-primary" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             <img class="rounded-circle header-profile-user"
                                 src="{{ URL::asset('images/account.png') }}" alt="Header Avatar">
                             <span class="text-start ms-xl-2">
-                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">
+                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text text-light">
                                     {{ Auth::user()->name }}
                                 </span>
                                 <!-- <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">Founder</span> -->
@@ -734,7 +733,6 @@
                             @csrf
                         </form>
                     </div>
-                </div>
             </div>
         </div>
     </div>
