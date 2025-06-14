@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
+Route::post('/pemeriksaan', [PemeriksaanController::class, 'store'])->name('pemeriksaan.store');
 Route::resource('tambah-darah',TambahDarahController::class);
 Route::get('/tambah-darah/cari-nik/{nik}', [TambahDarahController::class, 'cariByNik']);
 
