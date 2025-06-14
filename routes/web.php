@@ -93,6 +93,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
 Route::resource('tambah-darah',TambahDarahController::class);
+Route::get('/tambah-darah/cari-nik/{nik}', [TambahDarahController::class, 'cariByNik']);
+
+
 
 
 // Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');

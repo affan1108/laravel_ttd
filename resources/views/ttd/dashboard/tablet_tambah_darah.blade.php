@@ -29,15 +29,16 @@
                     </div>
                 </div>
             </div> -->
-            <form action="{{route('store')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('tambah-darah.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="id_pemeriksaan" value="{{ $data->id ?? ''}}">
                 <div class="card-body">
                     <div class="live-preview">
                         <div class="row gy-4">
                             <div class="col-xxl-3 col-md-6">
                                 <label for="nik" class="form-label">NIK</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK"
+                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK" value="{{ $data->nik ?? ''}}"
                                         required>
                                     <button type="button" class="btn btn-primary" id="btn_cari">Cari</button>
                                 </div>
@@ -47,7 +48,7 @@
                                 <div>
                                     <label for="nama" class="form-label">Nama Lengkap</label>
                                     <input type="text" class="form-control" id="nama" name="nama"
-                                        placeholder="Masukkan Nama Lengkap" required readonly>
+                                        placeholder="Masukkan Nama Lengkap" value="{{ $data->nama ?? ''}}" required readonly>
                                 </div>
                             </div>
                             <!--end col-->
@@ -55,7 +56,7 @@
                                 <div>
                                     <label for="nomer" class="form-label">No HP</label>
                                     <input type="text" class="form-control" id="nomer" name="nomer"
-                                        placeholder="Masukkan No HP" required readonly>
+                                        placeholder="Masukkan No HP" value="{{ $data->nomer ?? ''}}" required readonly>
                                 </div>
                             </div>
                             <!--end col-->
@@ -63,7 +64,7 @@
                                 <div>
                                     <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
                                     <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
-                                        placeholder="Masukkan Tempat Lahir" required readonly>
+                                        placeholder="Masukkan Tempat Lahir" value="{{ $data->tempat_lahir ?? ''}}" required readonly>
                                 </div>
                             </div>
                             <!--end col-->
@@ -71,7 +72,7 @@
                                 <div>
                                     <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
                                     <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir"
-                                        placeholder="Masukkan Tanggal Lahir" required readonly>
+                                        placeholder="Masukkan Tanggal Lahir" value="{{ $data->tgl_lahir ?? ''}}" required readonly>
                                 </div>
                             </div>
                             <!--end col-->
@@ -79,7 +80,7 @@
                                 <div>
                                     <label for="alamat" class="form-label">Alamat Lengkap</label>
                                     <input type="text" class="form-control" id="alamat" name="alamat"
-                                        placeholder="Masukkan Alamat Lengkap" required readonly>
+                                        placeholder="Masukkan Alamat Lengkap" value="{{ $data->alamat ?? ''}}" required readonly>
                                 </div>
                             </div>
                             <!--end col-->
@@ -142,78 +143,25 @@
             </form>
         </div>
     </div>
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Add Rows</h5>
-                <div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add New
-                        Row</button>
-                </div>
-            </div>
-            <div class="card-body">
 
-                <table id="add-rows" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>NIK</th>
-                            <th>Nama</th>
-                            <th>Tgl Lahir</th>
-                            <th>Jumlah Tablet TTD</th>
-                            <th>Pegawai Minum TTD</th>
-                            <th>No Hp PMT</th>
-                            <th>Tgl diperiksa HB Ulang</th>
-                            <th>Keterangan</th>
-                            <th>Pegawai Minum TTD</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($data as $row)
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 </div>
 
-<!-- Default Modals -->
-<div id="myModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true"
+<!-- Result Modals -->
+<div id="resultModal" class="modal fade" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true"
     style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="myModalLabel">Modal Heading</h5>
+                <h5 class="modal-title" id="resultModalLabel">Hasil Pencarian</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
             </div>
             <div class="modal-body">
                 <h5 class="fs-15">
-                    Overflowing text to show scroll behavior
+                    Hasil ditemukan
                 </h5>
-                <p class="text-muted">One morning, when Gregor Samsa woke from troubled dreams, he found himself
-                    transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his
-                    head a little he could see his brown belly, slightly domed and divided by arches into stiff
-                    sections.</p>
-                <p class="text-muted">The bedding was hardly able to cover it and seemed ready to slide off any moment.
-                    His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as
-                    he looked. "What's happened to me?" he thought.</p>
-                <p class="text-muted">It wasn't a dream. His room, a proper human room although a little too small, lay
-                    peacefully between its four familiar walls.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary ">Save Changes</button>
             </div>
 
         </div><!-- /.modal-content -->
@@ -244,5 +192,40 @@
 <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
+
+<script>
+    document.getElementById('btn_cari').addEventListener('click', function() {
+        const nik = document.getElementById('nik').value;
+
+        fetch(`/tambah-darah/cari-nik/${nik}`)
+            .then(response => response.json())
+            .then(data => {
+                const modalBody = document.querySelector('#resultModal .modal-body');
+                modalBody.innerHTML = ''; // reset
+
+                if (data.status === 'success') {
+                    const items = data.data;
+                    modalBody.innerHTML = '<h5 class="fs-15">Hasil ditemukan</h5>';
+                    items.forEach(darah => {
+                        modalBody.innerHTML += `
+                            <p class="text-muted">${darah.nik}</p>
+                            <p class="text-muted">${darah.nama}</p>
+                            <a href="/tambah-darah/${darah.id}" class="btn btn-info btn-sm mb-2">Detail</a>
+                        `;
+                    });
+                } else {
+                    modalBody.innerHTML = '<h5 class="text-danger">Data tidak ditemukan</h5>';
+                }
+
+                let modal = new bootstrap.Modal(document.getElementById('resultModal'));
+                modal.show();
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan saat pencarian.');
+                console.error(error);
+            });
+    });
+</script>
+
 
 @endsection
