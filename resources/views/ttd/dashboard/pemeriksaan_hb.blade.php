@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div> -->
-            <form action="{{route('store')}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('pemeriksaan.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
                     <div class="live-preview">

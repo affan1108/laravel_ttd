@@ -29,7 +29,20 @@
                     </div>
                 </div>
             </div> -->
-            <form action="{{route('tambah-darah.store')}}" method="post" enctype="multipart/form-data">
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show material-shadow" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+
+            @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show material-shadow" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
+            <form action="{{route('tambah-darah.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="id_pemeriksaan" value="{{ $data->id ?? ''}}">
                 <div class="card-body">
@@ -87,7 +100,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="tgl_minum" class="form-label">Tanggal Minum</label>
-                                    <input type="date" class="form-control" id="tgl_minum" name="tgl_minum"
+                                    <input type="date" class="form-control" id="tgl_minum" name="tgl_minum" required
                                         placeholder="Masukkan Tanggal Minum">
                                 </div>
                             </div>
@@ -95,7 +108,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="jml_tablet" class="form-label">Jumlah Tablet</label>
-                                    <input type="number" class="form-control" id="jml_tablet" name="jml_tablet"
+                                    <input type="number" class="form-control" id="jml_tablet" name="jml_tablet" required
                                         placeholder="Masukkan Jumlah Tablet">
                                 </div>
                             </div>
@@ -103,7 +116,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="pengawas" class="form-label">Nama Pengawas</label>
-                                    <input type="text" class="form-control" id="pengawas" name="pengawas"
+                                    <input type="text" class="form-control" id="pengawas" name="pengawas" required
                                         placeholder="Masukkan Pengawas Minum Tablet Tambah Darah">
                                 </div>
                             </div>
@@ -111,7 +124,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="no_pengawas" class="form-label">No Telp Pengawas</label>
-                                    <input type="text" class="form-control" id="no_pengawas" name="no_pengawas"
+                                    <input type="text" class="form-control" id="no_pengawas" name="no_pengawas" required
                                         placeholder="Masukkan No Telp Pengawas" required>
                                 </div>
                             </div>
@@ -128,8 +141,6 @@
                                 <div>
                                     <label for="keterangan" class="form-label">Keterangan</label>
                                     <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan" rows="3"></textarea>
-                                    <!-- <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                        placeholder="Masukkan Keterangan" required> -->
                                 </div>
                             </div>
                             <!--end col-->
@@ -205,23 +216,106 @@
 
                 if (data.status === 'success') {
                     const items = data.data;
-                    modalBody.innerHTML = '<h5 class="fs-15">Hasil ditemukan</h5>';
+
+                    // Header modal
+                    modalBody.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fs-4 fw-semibold text-primary">
+                        <i class="bi bi-person-check-fill me-2"></i>Hasil Pencarian
+                    </h5>
+                    <span class="badge bg-success">${items.length} Data Ditemukan</span>
+                </div>
+            `;
+
                     items.forEach(darah => {
+                        // Format tanggal lahir
+                        const tglLahir = new Date(darah.tgl_lahir);
+                        const formattedDate = tglLahir.toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+
+                        // Format jenis kelamin
+                        const jenisKelamin = darah.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan';
+
                         modalBody.innerHTML += `
-                            <p class="text-muted">${darah.nik}</p>
-                            <p class="text-muted">${darah.nama}</p>
-                            <a href="/tambah-darah/${darah.id}" class="btn btn-info btn-sm mb-2">Detail</a>
-                        `;
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6 class="card-title text-dark mb-3">
+                                        <i class="bi bi-person-circle me-2"></i>${darah.nama}
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p class="mb-1"><small class="text-muted">NIK:</small></p>
+                                            <p class="fw-medium">${darah.nik}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="mb-1"><small class="text-muted">Jenis Kelamin:</small></p>
+                                            <p class="fw-medium">${jenisKelamin}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="mb-1"><small class="text-muted">Tanggal Lahir:</small></p>
+                                            <p class="fw-medium">${formattedDate}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="mb-1"><small class="text-muted">No. Telepon:</small></p>
+                                            <p class="fw-medium">${darah.nomer || '-'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 border-start">
+                                    <div class="d-flex flex-column h-100 justify-content-between">
+                                        <div>
+                                            <p class="mb-1"><small class="text-muted">Sekolah:</small></p>
+                                            <p class="fw-medium">${darah.nama_sekolah || '-'}</p>
+                                        </div>
+                                        <div class="mt-2">
+                                            <a href="/tambah-darah/${darah.id}" class="btn btn-primary w-100">
+                                                <i class="bi bi-eye-fill me-2"></i>Pilih
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
                     });
                 } else {
-                    modalBody.innerHTML = '<h5 class="text-danger">Data tidak ditemukan</h5>';
+                    modalBody.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="text-danger mb-2">Data Tidak Ditemukan</h5>
+                    <p class="text-muted">Tidak ada data yang sesuai dengan NIK yang dicari</p>
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            `;
                 }
 
                 let modal = new bootstrap.Modal(document.getElementById('resultModal'));
                 modal.show();
             })
             .catch(error => {
-                alert('Terjadi kesalahan saat pencarian.');
+                // Error handling yang lebih elegan
+                const modalBody = document.querySelector('#resultModal .modal-body');
+                modalBody.innerHTML = `
+            <div class="text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-x-circle text-danger" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="text-danger mb-2">Terjadi Kesalahan</h5>
+                <p class="text-muted">Gagal memproses permintaan pencarian</p>
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        `;
+
+                let modal = new bootstrap.Modal(document.getElementById('resultModal'));
+                modal.show();
                 console.error(error);
             });
     });

@@ -60,6 +60,9 @@
                             <li class="nav-item">
                                 <a href="{{route('pemeriksaan.create')}}" class="nav-link">Pemeriksaan</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

@@ -13,15 +13,21 @@ class TambahDarahController extends Controller
 
     public function index()
     {
-       
-        
+
+
+
         if (Auth::check()) {
             // Jika sudah login, arahkan ke view admin/master
-            return view('tambah-darah.tambah-darah.index');
-        } 
-        $data = TambahDarah::all();
-        
 
+
+            $data = TambahDarah::with('pemeriksaan')->get();
+
+
+            return view('ttd.master.tambah_darah', compact('data'));
+        } else {
+
+            return view('ttd.dashboard.tablet_tambah_darah');
+        }
     }
     public function create() {}
     public function store(Request $request)
@@ -37,6 +43,8 @@ class TambahDarahController extends Controller
             'tgl_periksa_ulang' => 'required|date',
             'keterangan' => 'nullable|string',
         ]);
+        // dd($validated);
+
 
         // Simpan ke database
         TambahDarah::create([
@@ -59,8 +67,48 @@ class TambahDarahController extends Controller
         return view('ttd.dashboard.tablet_tambah_darah', compact('data'));
     }
     public function edit($id) {}
-    public function update(Request $request, $id) {}
-    public function destroy($id) {}
+    public function update(Request $request, $id)
+    {
+        // Validasi data
+        $validated = $request->validate([
+            'nik' => 'required|string|max:20',
+            'tgl_minum' => 'required|date',
+            'jumlah_tablet' => 'required|integer|min:1',
+            'pengawas' => 'required|string|max:100',
+            'nomor_pengawas' => 'required|string|max:20',
+            'tgl_periksa_ulang' => 'required|date',
+            'keterangan' => 'nullable|string',
+        ]);
+        // dd($validated);
+
+        // Cari data berdasarkan ID
+        $data = TambahDarah::findOrFail($id);
+
+        // Update data
+        $data->update([
+            'tgl_minum' => $validated['tgl_minum'],
+            'jumlah_tablet' => $validated['jumlah_tablet'],
+            'pengawas' => $validated['pengawas'],
+            'nomor_pengawas' => $validated['nomor_pengawas'],
+            'tgl_periksa_ulang' => $validated['tgl_periksa_ulang'],
+            'keterangan' => $validated['keterangan'],
+        ]);
+
+        return redirect()->route('tambah-darah.index')->with('success', 'Data berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        // Cari data berdasarkan ID
+        $data = TambahDarah::findOrFail($id);
+
+        // Hapus data
+        $data->delete();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('tambah-darah.index')->with('success', 'Data berhasil dihapus.');
+    }
+
     public function cariByNik($nik)
     {
         $data = Pemeriksaan::where('nik', $nik)->get();

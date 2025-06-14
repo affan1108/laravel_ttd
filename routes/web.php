@@ -90,14 +90,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('kecamatan', KecamatanController::class);
     // Route::get('/dashboard', [TTD])
     // Route::resource('tambah-darah', TambahDarahController::class);
-    Route::get('tambah-darah', [TambahDarahController::class, 'indexMaster'])->name('tambah-darah.indexmaster');
     Route::get('tambah-darah/{tambah_darah}/edit', [TambahDarahController::class, 'edit'])->name('tambah-darah.edit');
+    Route::put('tambah-darah/{tambah_darah}/update', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
     Route::delete('tambah-darah/{tambah_darah}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
 });
 
 Route::resource('pemeriksaan', PemeriksaanController::class);
-Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
-Route::get('tambah-darah/input', [TambahDarahController::class, 'index'])->name('tambah-darah.index');
+Route::get('/', [PemeriksaanController::class, 'index'])->name(name: 'index');
+Route::get('tambah-darah', [TambahDarahController::class, 'index'])->name('tambah-darah.index');
+Route::get('tambah-darah/{id}', [TambahDarahController::class, 'show'])->name('tambah-darah.show');
 Route::post('tambah-darah', [TambahDarahController::class, 'store'])->name('tambah-darah.store');
 Route::get('tambah-darah/cari-nik/{nik}', [TambahDarahController::class, 'cariByNik']);
 
