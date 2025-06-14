@@ -52,6 +52,7 @@
                             <th>Tgl Minum TTD</th>
                             <th>Pengawas TTD</th>
                             <th>No HP Pengawas TTD</th>
+                            <th>Jumlah Tablet</th>
                             <th>Tgl Minum TTD</th>
                             <th>Tgl Periksa Ulang</th>
                             <th>Keterangan</th>
@@ -69,6 +70,7 @@
                             <td>{{@$row->tgl_minum}}</td>
                             <td>{{@$row->pengawas}}</td>
                             <td>{{@$row->nomor_pengawas}}</td>
+                            <td>{{@$row->jumlah_tablet}}</td>
                             <td>{{@$row->tgl_minum}}</td>
                             <td>{{@$row->tgl_periksa_ulang}}</td>
                             <td>{{@$row->keterangan}}</td>
@@ -359,158 +361,7 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Add Rows</h5>
-            </div>
-            <div class="card-body">
 
-                <table id="example2" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>NIK</th>
-                            <th>Nomer HP</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Puskesmas</th>
-                            <th>Nama Orang Tua</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="myModal" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="exampleModalLabel">Add Data</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close" id="close-modal"></button>
-            </div>
-            <form action="{{route('tambah-darah.store')}}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" id="id_pemeriksaan_add" name="id_pemeriksaan">
-                <div class="modal-body">
-                    <div class="live-preview">
-                        <div class="row gy-4">
-                            <div class="col-xxl-3 col-md-6">
-                                <label for="nik" class="form-label">NIK</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="nik_add" name="nik" value="{{old('nik')}}" placeholder="Masukkan NIK" required>
-                                    <button type="button" class="btn btn-primary" id="btn_cari">Cari</button>
-                                </div>
-                                <span id="nik_feedback"></span>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="nama" class="form-label">Nama Lengkap</label>
-                                    <input type="text" class="form-control" id="nama_add" name="nama"
-                                        placeholder="Masukkan Nama Lengkap" value="{{old('nama')}}" disabled required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="nomer" class="form-label">No HP</label>
-                                    <input type="text" class="form-control" id="nomer_add" name="nomer"
-                                        placeholder="Masukkan No HP" value="{{old('nomer')}}" disabled>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                                    <input type="text" class="form-control" id="tempat_lahir_add" name="tempat_lahir"
-                                        placeholder="Masukkan Tempat Lahir" value="{{old('tempat_lahir')}}" disabled required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" id="tgl_lahir_add" name="tgl_lahir"
-                                        placeholder="Masukkan Tanggal Lahir" value="{{old('tgl_lahir')}}" disabled required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="alamat" class="form-label">Alamat Lengkap</label>
-                                    <input type="text" class="form-control" id="alamat_add" name="alamat"
-                                        placeholder="Masukkan Alamat Lengkap" value="{{old('alamat')}}" disabled required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tgl_minum" class="form-label">Tanggal Minum</label>
-                                    <input type="date" class="form-control" id="tgl_minum_add" name="tgl_minum" value="{{old('tgl_minum')}}" required
-                                        placeholder="Masukkan Tanggal Minum">
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="jumlah_tablet" class="form-label">Jumlah Tablet</label>
-                                    <input type="number" class="form-control" id="jumlah_tablet_add" name="jml_tablet" value="{{old('jml_tablet')}}" required
-                                        placeholder="Masukkan Jumlah Tablet">
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="pengawas" class="form-label">Nama Pengawas</label>
-                                    <input type="text" class="form-control" id="pengawas_add" name="pengawas" value="{{old('pengawas')}}" required
-                                        placeholder="Masukkan Pengawas Minum Tablet Tambah Darah">
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="nomor_pengawas" class="form-label">No Telp Pengawas</label>
-                                    <input type="text" class="form-control" id="nomor_pengawas_add" name="no_pengawas" value="{{old('no_pengawas')}}" required
-                                        placeholder="Masukkan No Telp Pengawas" required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tgl_periksa_ulang" class="form-label">Tanggal diperiksa HB ulang</label>
-                                    <input type="date" class="form-control" id="tgl_periksa_ulang_add" name="tgl_periksa_ulang" value="{{old('tgl_periksa_ulang')}}" required
-                                        placeholder="Masukkan Tanggal diperiksa HB ulang" required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="keterangan" class="form-label">Keterangan</label>
-                                    <textarea class="form-control" name="keterangan" id="keterangan_add" placeholder="Masukkan Keterangan" rows="3">{{old('keterangan')}}</textarea>
-                                    <!-- <input type="text" class="form-control" id="keterangan" name="keterangan"
-                                        placeholder="Masukkan Keterangan" required> -->
-                                </div>
-                            </div>
-                            <!--end col-->
-                        </div>
-                        <!--end row-->
-                    </div>
-                </div>
-                <div class="modal-footer align-items-right">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 @endsection
 @section('script')

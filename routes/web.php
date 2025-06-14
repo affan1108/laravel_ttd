@@ -83,7 +83,12 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
+    Route::get('/pemeriksaan', [PemeriksaanController::class, 'create'])->name('pemeriksaan.create');
     Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
+
+
+    Route::put('tambah-darah/{id}', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
+    Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
 
     Route::resource('user', UserController::class);
     Route::resource('puskesmas', PuskesmasController::class);
