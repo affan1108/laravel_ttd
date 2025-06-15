@@ -13,8 +13,7 @@ class TambahDarahController extends Controller
 
     public function index()
     {
-
-
+        $layout = Auth::check() ? 'layouts.layouts-horizontal' : 'layouts.layouts-detached';
 
         if (Auth::check()) {
             // Jika sudah login, arahkan ke view admin/master
@@ -26,7 +25,7 @@ class TambahDarahController extends Controller
             return view('ttd.master.tambah_darah', compact('data'));
         } else {
 
-            return view('ttd.dashboard.tablet_tambah_darah');
+            return view('ttd.dashboard.tablet_tambah_darah', compact('layout'));
         }
     }
     public function create() {}

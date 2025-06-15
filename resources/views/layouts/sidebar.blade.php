@@ -34,17 +34,19 @@
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('index')}}">
-                        <i class="las la-tachometer-alt"></i> <span>Pemeriksaan HB</span>
+                        <i class="las la-tachometer-alt"></i> <span>{{ Auth::user() ? 'Dashboard' : 'Pemeriksaan HB' }}</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+                @if(!Auth::user())
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('tambah-darah.index')}}">
                         <i class="lab la-delicious"></i> <span>Tablet Tambah Darah</span>
                     </a>
                 </li>
+                @else
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
-                        <i class="las la-tachometer-alt"></i> <span>Master Data</span>
+                        <i class="las la-pager"></i> <span>Master Data</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarData">
                         <ul class="nav nav-sm flex-column">
@@ -1031,7 +1033,8 @@
                         </ul>
                     </div>
                 </li>
-
+                
+                @endif
             </ul>
         </div>
         <!-- Sidebar -->

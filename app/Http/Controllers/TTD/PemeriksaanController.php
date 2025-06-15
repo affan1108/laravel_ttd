@@ -7,6 +7,7 @@ use App\Models\Pemeriksaan;
 use App\Models\Puskesmas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PemeriksaanController extends Controller
@@ -16,6 +17,7 @@ class PemeriksaanController extends Controller
      */
     public function index()
     {
+        $layout = Auth::check() ? 'layouts.layouts-horizontal' : 'layouts.layouts-detached';
         $data = Pemeriksaan::all();
         $puskesmass = Puskesmas::all();
 
@@ -67,7 +69,7 @@ class PemeriksaanController extends Controller
 
         // dd($dataPerPuskesmas, $colorPerPuskesmas, $monthlyPuskesmasData);
 
-        return view('ttd.dashboard.pemeriksaan_hb', compact('data','puskesmass','monthlyPuskesmasData'));
+        return view('ttd.dashboard.pemeriksaan_hb', compact('data','puskesmass','monthlyPuskesmasData','layout'));
 
 
     }

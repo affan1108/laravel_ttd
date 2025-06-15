@@ -1,4 +1,4 @@
-@extends('layouts.layouts-horizontal')
+@extends($layout)
 @section('title') @lang('translation.datatables') @endsection
 @section('css')
 <!--datatable css-->

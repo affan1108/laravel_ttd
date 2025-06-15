@@ -1,4 +1,4 @@
-@extends('layouts.layouts-horizontal')
+@extends($layout)
 @section('title') Dashboard @endsection
 @section('css')
 <!--datatable css-->
@@ -12,8 +12,8 @@
 @endsection
 @section('content')
 @component('components.breadcrumb')
-@slot('li_1') {!! Auth::check() ? 'Dashboard' : 'Grafik' !!} @endslot
-@slot('title')Dashboard @endslot
+@slot('li_1') {!! Auth::check() ? 'Dashboard' : 'Entry Data' !!} @endslot
+@slot('title'){!! Auth::check() ? 'Dashboard' : 'Pemeriksaan HB' !!} @endslot
 @endcomponent
 
 @if(Auth::user())
