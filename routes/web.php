@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-    Route::get('/pemeriksaan', [PemeriksaanController::class, 'create'])->name('pemeriksaan.create');
+    Route::resource('pemeriksaan', PemeriksaanController::class);
     Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
 
 

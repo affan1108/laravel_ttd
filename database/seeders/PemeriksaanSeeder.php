@@ -1,0 +1,26 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Pemeriksaan;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class PemeriksaanSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $pemeriksaan = [
+            ['id' => 1, 'nik' => '05648216564894451', 'nama' => 'Bambang', 'nomer' => '081654987561','tempat_lahir' => 'Pasuruan', 'tgl_lahir' => '2005-12-05', 'alamat' => 'Bangil',  'puskesmas_id' => 2, 'nama_sekolah' => 'SD', 'alamat_sekolah' => 'lekok', 'kelas' => '6', 'jenis_kelamin' => '1', 'nama_ortu' => 'fahmi'],
+            ['id' => 2, 'nik' => '05648216076911135', 'nama' => 'Nana', 'nomer' => '087632165498','tempat_lahir' => 'Pasuruan', 'tgl_lahir' => '2005-02-18', 'alamat' => 'Bangil',  'puskesmas_id' => 5, 'nama_sekolah' => 'SD', 'alamat_sekolah' => 'bangil', 'kelas' => '5', 'jenis_kelamin' => '2', 'nama_ortu' => 'novan'],
+            ['id' => 3, 'nik' => '54354216564643543', 'nama' => 'Bambang Nana', 'nomer' => '085641235987','tempat_lahir' => 'Pasuruan', 'tgl_lahir' => '2005-10-25', 'alamat' => 'Bangil',  'puskesmas_id' => 8, 'nama_sekolah' => 'SD', 'alamat_sekolah' => 'kota', 'kelas' => '4', 'jenis_kelamin' => '1', 'nama_ortu' => 'angga'],
+        ];
+
+        foreach ($pemeriksaan as $data) {
+            Pemeriksaan::create($data); 
+        }
+    }
+}
