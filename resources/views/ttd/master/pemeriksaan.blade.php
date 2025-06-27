@@ -1,5 +1,5 @@
 @extends('layouts.layouts-horizontal')
-@section('title') Master Pemeriksaan HB @endsection
+@section('title') Master Data Pribadi @endsection
 @section('css')
 <!--datatable css-->
 <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
@@ -13,14 +13,14 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1') Tabel @endslot
-@slot('title') Master Pemeriksaan HB @endslot
+@slot('title') Master Data Pribadi @endslot
 @endcomponent
 
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Data Master Pemeriksaan HB</h5>
+                <h5 class="card-title mb-0 flex-grow-1">Data Master Data Pribadi</h5>
                 <div>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add New
                         Data</button>
@@ -32,6 +32,7 @@
                     <thead>
                         <tr>
                             <th>NIK</th>
+                            <th>Nama</th>
                             <th>Nomer HP</th>
                             <th>Jenis Kelamin</th>
                             <th>Puskesmas</th>
@@ -43,6 +44,7 @@
                         @foreach($data as $row)
                         <tr>
                             <td>{{@$row->nik}}</td>
+                            <td>{{@$row->nama}}</td>
                             <td>{{@$row->nomer}}</td>
                             <td>{{@$row->jenis_kelamin == '1' ? 'Laki - laki' : 'Perempuan'}}</td>
                             <td>{{@$row->puskesmas->nama}}</td>
@@ -232,7 +234,7 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0 flex-grow-1">Data Master Pemeriksaan HB (Deleted)</h5>
+                <h5 class="card-title mb-0 flex-grow-1">Data Master Data Pribadi (Deleted)</h5>
             </div>
             <div class="card-body">
 
@@ -240,6 +242,7 @@
                     <thead>
                         <tr>
                             <th>NIK</th>
+                            <th>NAMA</th>
                             <th>Nomer HP</th>
                             <th>Jenis Kelamin</th>
                             <th>Puskesmas</th>
@@ -251,6 +254,7 @@
                         @foreach($deletes as $row)
                         <tr>
                             <td>{{@$row->nik}}</td>
+                            <td>{{@$row->nama}}</td>
                             <td>{{@$row->nomer}}</td>
                             <td>{{@$row->jenis_kelamin == '1' ? 'Laki - laki' : 'Perempuan'}}</td>
                             <td>{{@$row->puskesmas->nama}}</td>
@@ -387,7 +391,11 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer align-items-right">
+                                            @if(@$row->deleted_at)
+                                            <button type="submit" class="btn btn-primary" disabled>Simpan</button>
+                                            @else
                                             <button type="submit" class="btn btn-primary">Simpan</button>
+                                            @endif
                                         </div>
                                     </form>
                                 </div>
@@ -608,14 +616,36 @@
         });
     });
 
-    $(function () {
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "search": true,
-            "buttons": ["copy", "csv", "excel", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $(function() {
+        $('#example1').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: [0,1,2,3,4] // hanya kolom NIK sampai Orang Tua (tanpa Aksi)
+                    }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: [0,1,2,3,4] // hanya kolom NIK sampai Orang Tua (tanpa Aksi)
+                    }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: [0,1,2,3,4]
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: [0,1,2,3,4]
+                    }
+                }
+            ]
+        });
     });
 
     $(function () {

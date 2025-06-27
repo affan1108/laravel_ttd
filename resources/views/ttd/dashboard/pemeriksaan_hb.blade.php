@@ -12,47 +12,10 @@
 @endsection
 @section('content')
 @component('components.breadcrumb')
-@slot('li_1') {!! Auth::check() ? 'Dashboard' : 'Entry Data' !!} @endslot
-@slot('title'){!! Auth::check() ? 'Dashboard' : 'Pemeriksaan HB' !!} @endslot
+@slot('li_1') Entry Data @endslot
+@slot('title')Form Data Pribadi @endslot
 @endcomponent
 
-@if(Auth::user())
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header border-0">
-                <div class="d-flex justify-content-between">
-                    <h3 class="card-title mt-2">Grafik</h3>
-                    <div class="flex-shrink-0">
-                        <div class="dropdown card-header-dropdown">
-                            <select id="bulanFilter" class="form-select w-auto">
-                                <option value="00">Semua Bulan</option>
-                                <option value="01">Januari</option>
-                                <option value="02">Februari</option>
-                                <option value="03">Maret</option>
-                                <option value="04">April</option>
-                                <option value="05">Mei</option>
-                                <option value="06">Juni</option>
-                                <option value="07">Juli</option>
-                                <option value="08">Agustus</option>
-                                <option value="09">September</option>
-                                <option value="10">Oktober</option>
-                                <option value="11">November</option>
-                                <option value="12">Desember</option>
-                            </select>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <canvas id="chart" height="100px"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-@else
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -173,6 +136,12 @@
                                 </div>
                             </div>
                             <!--end col-->
+                            <div class="mb-3">
+                                {!! NoCaptcha::display() !!}
+                                @error('g-recaptcha-response')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
                         <!--end row-->
                     </div>
@@ -186,8 +155,7 @@
     <!--end col-->
 </div>
 <!--end row-->
-
-@endif
+{!! NoCaptcha::renderJs() !!}
 
 @endsection
 @section('script')
@@ -214,96 +182,5 @@
 <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
-
-<script>
-    const dataByMonth = {!! json_encode($monthlyPuskesmasData) !!};
-    const ctx = document.getElementById('chart').getContext('2d');
-    let chart; // Simpan chart instance global
-
-    // console.log(dataByMonth);
-
-    function renderChart(month = '00') {
-        let labels = []; // Nama Puskesmas
-        let dataLaki = []; // Nilai laki-laki
-        let dataPerempuan = []; // Nilai perempuan
-
-        const isCombined = (month === '00');
-
-        const temp = {};
-
-        // Gabung data (semua bulan) atau 1 bulan
-        const loopData = isCombined ? Object.values(dataByMonth).flat() : dataByMonth[month];
-
-        loopData.forEach(item => {
-            // Pisah nama dan gender
-            const match = item.name.match(/^(.*) \((L|P)\)$/);
-            if (!match) return;
-
-            const namaPuskesmas = match[1];
-            const gender = match[2]; // 'L' atau 'P'
-
-            if (!temp[namaPuskesmas]) {
-                temp[namaPuskesmas] = { L: 0, P: 0 };
-            }
-
-            temp[namaPuskesmas][gender] += item.value;
-        });
-
-        // Susun labels dan nilai laki/perempuan
-        for (const puskesmas in temp) {
-            labels.push(puskesmas);
-            dataLaki.push(temp[puskesmas]['L']);
-            dataPerempuan.push(temp[puskesmas]['P']);
-        }
-
-        if (chart) chart.destroy();
-
-        chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Laki-laki',
-                        data: dataLaki,
-                        backgroundColor: 'blue'
-                    },
-                    {
-                        label: 'Perempuan',
-                        data: dataPerempuan,
-                        backgroundColor: 'pink'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        labels: {
-                            usePointStyle: true
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
-
-
-    document.getElementById('bulanFilter').addEventListener('change', function () {
-        const bulan = this.value;
-        renderChart(bulan);
-    });
-
-    // Load default chart (optional)
-    renderChart('00'); // atau 'all'
-</script>
-
 
 @endsection

@@ -20,11 +20,12 @@ return new class extends Migration
             $table->string('tgl_lahir');
             $table->string('alamat');
             $table->foreignId('puskesmas_id')->constrained('puskesmas')->onUpdate('restrict')->onDelete('restrict');
-            $table->string('nama_sekolah');
-            $table->string('alamat_sekolah');
-            $table->string('kelas');
+            $table->string('nama_sekolah')->nullable();
+            $table->string('alamat_sekolah')->nullable();
+            $table->string('kelas')->nullable();
             $table->string('jenis_kelamin');
             $table->string('nama_ortu');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

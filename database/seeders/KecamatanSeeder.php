@@ -6,45 +6,28 @@ use App\Models\Kecamatan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class KecamatanSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run()
     {
-        // DB::table('kecamatans')->truncate();
+        $path = public_path('35.14_kecamatan.geojson');
+        $geojson = json_decode(File::get($path), true);
 
-        $kecamatans = [
-            ['nama' => 'Kraton'],
-            ['nama' => 'Grati'],
-            ['nama' => 'Pandaan'],
-            ['nama' => 'Pasrepan'],
-            ['nama' => 'Purwodadi'],
-            ['nama' => 'Kejayan'],
-            ['nama' => 'Wonorejo'],
-            ['nama' => 'Purwosari'],
-            ['nama' => 'Winongan'],
-            ['nama' => 'Lekok'],
-            ['nama' => 'Gempol'],
-            ['nama' => 'Prigen'],
-            ['nama' => 'Bangil'],
-            ['nama' => 'Sukorejo'],
-            ['nama' => 'Beji'],
-            ['nama' => 'Lumbang'],
-            ['nama' => 'Rembang'],
-            ['nama' => 'Gondang Wetan'],
-            ['nama' => 'Pohjentrek'],
-            ['nama' => 'Nguling'],
-            ['nama' => 'Rejoso'],
-            ['nama' => 'Puspo'],
-            ['nama' => 'Tutur'],
-            ['nama' => 'Tosari'],
-        ];
+        foreach ($geojson['features'] as $feature) {
+            $nama = $feature['properties']['nm_kecamatan'] ?? 'Tanpa Nama';
+            $geometry = json_encode($feature['geometry']);
 
-        foreach ($kecamatans as $data) {
-            Kecamatan::create($data); 
+            DB::table('kecamatans')->insert([
+                'nama' => $nama,
+                'geometry' => DB::raw("ST_GeomFromGeoJSON('$geometry')"),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
         }
     }
 }

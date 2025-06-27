@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TTD\KecamatanController;
 use App\Http\Controllers\TTD\PemeriksaanController;
 use App\Http\Controllers\TTD\PuskesmasController;
@@ -85,7 +86,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('pemeriksaan', PemeriksaanController::class);
     Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
-
+    Route::get('dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::put('tambah-darah/{id}', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
     Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
@@ -102,8 +103,7 @@ Route::get('tambah-darah', [TambahDarahController::class, 'index'])->name('tamba
 Route::get('tambah-darah/{id}', [TambahDarahController::class, 'show'])->name('tambah-darah.show');
 Route::post('tambah-darah', [TambahDarahController::class, 'store'])->name('tambah-darah.store');
 Route::get('tambah-darah/cari-nik/{nik}', [TambahDarahController::class, 'cariByNik']);
-
-
+Route::get('/geo-kecamatan', [KecamatanController::class, 'geojson'])->name('geojson');
 
 
 // Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');

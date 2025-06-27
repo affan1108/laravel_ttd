@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TTD;
 use App\Http\Controllers\Controller;
 use App\Models\Kecamatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class KecamatanController extends Controller
@@ -115,4 +116,29 @@ class KecamatanController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
+
+    public function geojson()
+{
+    $features = [];
+
+    $data = DB::table('kecamatans')->select('id', 'nama', DB::raw('ST_AsGeoJSON(geometry) as geometry'))->get();
+
+    foreach ($data as $row) {
+        $features[] = [
+            'type' => 'Feature',
+            'geometry' => json_decode($row->geometry),
+            'properties' => [
+                'id' => $row->id,
+                'kecamatan' => $row->nama,
+                // tambahkan nilai dummy persentase
+                'persen_ttd' => rand(10, 90)
+            ]
+        ];
+    }
+
+    return response()->json([
+        'type' => 'FeatureCollection',
+        'features' => $features
+    ]);
+}
 }

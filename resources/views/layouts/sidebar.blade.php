@@ -32,18 +32,23 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
+                @if(!Auth::user())
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('index')}}">
-                        <i class="las la-tachometer-alt"></i> <span>{{ Auth::user() ? 'Dashboard' : 'Pemeriksaan HB' }}</span>
+                        <i class="las la-folder-minus"></i> <span>Data Pribadi</span>
                     </a>
-                </li> <!-- end Dashboard Menu -->
-                @if(!Auth::user())
+                </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('tambah-darah.index')}}">
                         <i class="lab la-delicious"></i> <span>Tablet Tambah Darah</span>
                     </a>
                 </li>
                 @else
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('index')}}">
+                        <i class="las la-tachometer-alt"></i> <span>Dashboard</span>
+                    </a>
+                </li> <!-- end Dashboard Menu -->
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="las la-pager"></i> <span>Master Data</span>
@@ -60,7 +65,7 @@
                                 <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('pemeriksaan.create')}}" class="nav-link">Pemeriksaan</a>
+                                <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
