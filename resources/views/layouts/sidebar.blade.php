@@ -62,6 +62,9 @@
                                 <a href="{{route('kecamatan.index')}}" class="nav-link">Kecamatan</a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{route('sekolah.index')}}" class="nav-link">Sekolah</a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
                             </li>
                             <li class="nav-item">

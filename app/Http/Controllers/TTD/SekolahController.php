@@ -3,28 +3,35 @@
 namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pemeriksaan;
-use App\Models\Puskesmas;
+use App\Models\Kecamatan;
 use App\Models\Sekolah;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class PemeriksaanController extends Controller
+class SekolahController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $layout = Auth::check() ? 'layouts.layouts-horizontal' : 'layouts.layouts-detached';
-        $puskesmass = Puskesmas::all();
-        $sekolahs = Sekolah::all();
+        $data = Sekolah::all();
+        $kecamatans = Kecamatan::all();
+        return view('ttd.master.sekolah', compact('data','kecamatans'));
+    }
 
-        return view('ttd.dashboard.pemeriksaan_hb', compact('puskesmass','layout','sekolahs'));
+    public function data(Request $request)
+    {
+        $data = Sekolah::with('kecamatan');
 
-
+        return datatables()->eloquent($data)
+        ->addIndexColumn()
+        ->addColumn('action', function($row) {
+            return '<a data-bs-toggle="modal" data-bs-target="#editModal'.$row->id.'" class="btn btn-secondary">Edit</a> ' .
+                   '<a data-bs-toggle="modal" data-bs-target="#deleteRecordModal'.$row->id.'" class="btn btn-danger">Hapus</a>';
+        })
+        ->rawColumns(['action'])
+        ->toJson();
     }
 
     /**
@@ -32,12 +39,7 @@ class PemeriksaanController extends Controller
      */
     public function create()
     {
-        $data = Pemeriksaan::all();
-        $puskesmass = Puskesmas::all();
-        $deletes = Pemeriksaan::onlyTrashed()->get();
-        // dd($deletes);
-
-        return view('ttd.master.pemeriksaan', compact('data','puskesmass','deletes'));
+        //
     }
 
     /**
@@ -45,19 +47,13 @@ class PemeriksaanController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input dasar, bisa dikembangkan sesuai kebutuhan
-        $request->validate([
-            'nik' => 'required|unique:pemeriksaans,nik',
-            'g-recaptcha-response' => 'required|captcha',
-        ]);
-
         DB::beginTransaction();
 
         try {
-            if (Pemeriksaan::where('nik', $request->nik)->exists()) {
-                return redirect()->back()->with('error', 'Nomor NIK sudah terdaftar');
+            if (Sekolah::where('npsn', $request->npsn)->exists()) {
+                return redirect()->back()->with('error', 'Nomor NPSN sudah terdaftar');
             } else {
-                Pemeriksaan::create($request->except('g-recaptcha-response'));
+                Sekolah::create($request->all());
                 DB::commit();
                 return redirect()->back()->with('success', 'Berhasil disimpan');
             }
@@ -92,11 +88,10 @@ class PemeriksaanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
 
-            $data = Pemeriksaan::findOrFail($id);
+            $data = Sekolah::findOrFail($id);
             $data->update($request->all());
 
             DB::commit();
@@ -106,7 +101,6 @@ class PemeriksaanController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
-        
     }
 
     /**
@@ -117,7 +111,7 @@ class PemeriksaanController extends Controller
         try{
             DB::beginTransaction();
 
-            $data = Pemeriksaan::findOrFail($id);
+            $data = Sekolah::findOrFail($id);
             $data->delete();
 
             DB::commit();
@@ -127,12 +121,5 @@ class PemeriksaanController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
-    }
-
-    public function restore($id)
-    {
-        $pemeriksaan = Pemeriksaan::withTrashed()->findOrFail($id);
-        $pemeriksaan->restore();
-        return redirect()->back()->with('success', 'Data berhasil dikembalikan.');
     }
 }

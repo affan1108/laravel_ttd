@@ -96,18 +96,21 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                    <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah"
-                                        placeholder="Masukkan Nama Sekolah">
+                                    <select class="js-example-basic-single" name="nama_Sekolah" required>
+                                        @foreach($sekolahs as $sekolah)
+                                        <option value="{{$sekolah->id}}">{{$sekolah->nama}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
+                            <!-- <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="alamat_sekolah" class="form-label">Alamat Sekolah</label>
                                     <input type="text" class="form-control" id="alamat_sekolah" name="alamat_sekolah"
                                         placeholder="Masukkan Alamat Sekolah">
                                 </div>
-                            </div>
+                            </div> -->
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
                                 <div>

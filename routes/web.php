@@ -15,6 +15,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TTD\KecamatanController;
 use App\Http\Controllers\TTD\PemeriksaanController;
 use App\Http\Controllers\TTD\PuskesmasController;
+use App\Http\Controllers\TTD\SekolahController;
 use App\Http\Controllers\TTD\TambahDarahController;
 use App\Http\Controllers\TTD\UserController;
 use App\Models\TambahDarah;
@@ -94,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('puskesmas', PuskesmasController::class);
     Route::resource('kecamatan', KecamatanController::class);
+    Route::resource('sekolah', SekolahController::class);
     // Route::get('/dashboard', [TTD])
 });
 
@@ -104,6 +106,7 @@ Route::get('tambah-darah/{id}', [TambahDarahController::class, 'show'])->name('t
 Route::post('tambah-darah', [TambahDarahController::class, 'store'])->name('tambah-darah.store');
 Route::get('tambah-darah/cari-nik/{nik}', [TambahDarahController::class, 'cariByNik']);
 Route::get('/geo-kecamatan', [KecamatanController::class, 'geojson'])->name('geojson');
+Route::get('/get-data-sekolah', [SekolahController::class, 'data'])->name('sekolah.data');
 
 
 // Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');

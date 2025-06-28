@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             KecamatanSeeder::class,
             PuskesmasSeeder::class,
             PemeriksaanSeeder::class,
+            SekolahSeeder::class,
         ]);
     }
 }
