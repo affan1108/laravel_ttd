@@ -7,6 +7,7 @@ use App\Models\Kecamatan;
 use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class SekolahController extends Controller
 {
@@ -20,18 +21,17 @@ class SekolahController extends Controller
         return view('ttd.master.sekolah', compact('data','kecamatans'));
     }
 
-    public function data(Request $request)
+    public function data()
     {
-        $data = Sekolah::with('kecamatan');
-
-        return datatables()->eloquent($data)
-        ->addIndexColumn()
-        ->addColumn('action', function($row) {
-            return '<a data-bs-toggle="modal" data-bs-target="#editModal'.$row->id.'" class="btn btn-secondary">Edit</a> ' .
-                   '<a data-bs-toggle="modal" data-bs-target="#deleteRecordModal'.$row->id.'" class="btn btn-danger">Hapus</a>';
-        })
-        ->rawColumns(['action'])
-        ->toJson();
+        $query = Sekolah::with('kecamatan')->select('sekolahs.*'); // Sesuaikan nama tabel
+        
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('action', function($row) {
+                return ''; // Aksi akan di-generate oleh DataTables
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     /**
@@ -78,9 +78,10 @@ class SekolahController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $sekolah = Sekolah::findOrFail($id);
+        return response()->json($sekolah);
     }
 
     /**
@@ -121,5 +122,10 @@ class SekolahController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
         }
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new SekolahExport($request->all()), 'sekolah.xlsx');
     }
 }

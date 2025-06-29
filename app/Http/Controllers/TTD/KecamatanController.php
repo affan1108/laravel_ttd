@@ -118,27 +118,27 @@ class KecamatanController extends Controller
     }
 
     public function geojson()
-{
-    $features = [];
+    {
+        $features = [];
 
-    $data = DB::table('kecamatans')->select('id', 'nama', DB::raw('ST_AsGeoJSON(geometry) as geometry'))->get();
+        $data = DB::table('kecamatans')->select('id', 'nama', DB::raw('ST_AsGeoJSON(geometry) as geometry'))->get();
 
-    foreach ($data as $row) {
-        $features[] = [
-            'type' => 'Feature',
-            'geometry' => json_decode($row->geometry),
-            'properties' => [
-                'id' => $row->id,
-                'kecamatan' => $row->nama,
-                // tambahkan nilai dummy persentase
-                'persen_ttd' => rand(10, 90)
-            ]
-        ];
+        foreach ($data as $row) {
+            $features[] = [
+                'type' => 'Feature',
+                'geometry' => json_decode($row->geometry),
+                'properties' => [
+                    'id' => $row->id,
+                    'kecamatan' => $row->nama,
+                    // tambahkan nilai dummy persentase
+                    'persen_ttd' => rand(10, 90)
+                ]
+            ];
+        }
+
+        return response()->json([
+            'type' => 'FeatureCollection',
+            'features' => $features
+        ]);
     }
-
-    return response()->json([
-        'type' => 'FeatureCollection',
-        'features' => $features
-    ]);
-}
 }

@@ -1,4 +1,4 @@
-@extends($layout)
+@extends('layouts.layouts-detached')
 @section('title') Dashboard @endsection
 @section('css')
 <!--datatable css-->

@@ -45,7 +45,7 @@
                 </li>
                 @else
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('index')}}">
+                    <a class="nav-link menu-link" href="{{route('dashboard')}}">
                         <i class="las la-tachometer-alt"></i> <span>Dashboard</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->

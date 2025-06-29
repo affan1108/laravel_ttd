@@ -1,4 +1,4 @@
-@extends($layout)
+@extends('layouts.layouts-horizontal')
 @section('title') Dashboard @endsection
 @section('css')
 <!--datatable css-->
@@ -147,7 +147,7 @@
         });
     }
 
-    fetch("{{ route('geojson') }}")
+    fetch("{{ route('geo-kec') }}")
       .then(res => res.json())
       .then(data => {
         L.geoJSON(data, {

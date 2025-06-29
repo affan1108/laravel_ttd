@@ -1,4 +1,4 @@
-@extends($layout)
+@extends('layouts.layouts-detached')
 @section('title') @lang('translation.datatables') @endsection
 @section('css')
 <!--datatable css-->
@@ -208,7 +208,7 @@
     document.getElementById('btn_cari').addEventListener('click', function() {
         const nik = document.getElementById('nik').value;
 
-        fetch(`/tambah-darah/cari-nik/${nik}`)
+        fetch(`tambah-darah/cari-nik/${nik}`)
             .then(response => response.json())
             .then(data => {
                 const modalBody = document.querySelector('#resultModal .modal-body');

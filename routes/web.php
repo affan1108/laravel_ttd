@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TTD\KecamatanController;
+use App\Http\Controllers\TTD\KelurahanController;
 use App\Http\Controllers\TTD\PemeriksaanController;
 use App\Http\Controllers\TTD\PuskesmasController;
 use App\Http\Controllers\TTD\SekolahController;
@@ -87,7 +88,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('pemeriksaan', PemeriksaanController::class);
     Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
-    Route::get('dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('ttd/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     Route::put('tambah-darah/{id}', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
     Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
@@ -96,6 +97,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('puskesmas', PuskesmasController::class);
     Route::resource('kecamatan', KecamatanController::class);
     Route::resource('sekolah', SekolahController::class);
+
+    Route::get('/sekolah/export', [SekolahController::class, 'export'])->name('sekolah.export');
     // Route::get('/dashboard', [TTD])
 });
 
@@ -105,7 +108,8 @@ Route::get('tambah-darah', [TambahDarahController::class, 'index'])->name('tamba
 Route::get('tambah-darah/{id}', [TambahDarahController::class, 'show'])->name('tambah-darah.show');
 Route::post('tambah-darah', [TambahDarahController::class, 'store'])->name('tambah-darah.store');
 Route::get('tambah-darah/cari-nik/{nik}', [TambahDarahController::class, 'cariByNik']);
-Route::get('/geo-kecamatan', [KecamatanController::class, 'geojson'])->name('geojson');
+Route::get('/geo-kecamatan', [KecamatanController::class, 'geojson'])->name('geo-kec');
+Route::get('/geo-kelurahan', [KelurahanController::class, 'geojson'])->name('geo-kel');
 Route::get('/get-data-sekolah', [SekolahController::class, 'data'])->name('sekolah.data');
 
 
