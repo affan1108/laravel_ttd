@@ -39,9 +39,14 @@
 @endcomponent
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-6">
         <div class="card">
             <div id="map"></div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div id="donutChart"></div>
         </div>
     </div>
 </div>
@@ -109,6 +114,8 @@
 
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
+
 <script>
     var map = L.map('map').setView([-7.75, 113], 10);
 
@@ -265,5 +272,38 @@
     renderChart('00'); // atau 'all'
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch("{{ url('/chart/hasil') }}")
+            .then(res => res.json())
+            .then(res => {
+                console.log(res); // cek response-nya
+                var options = {
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    labels: res.labels,
+                    series: res.data,
+                    colors: ['#e74c3c', '#f39c12', '#3498db', '#2ecc71'],
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 300
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                };
 
+                var chart = new ApexCharts(document.querySelector("#donutChart"), options);
+                chart.render();
+            }).catch(error => {
+                console.error('Gagal ambil data chart:', error);
+            });
+    });
+</script>
 @endsection

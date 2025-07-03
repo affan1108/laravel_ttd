@@ -64,7 +64,7 @@ class PemeriksaanController extends Controller
 
 
         } catch (\Throwable $th) {
-            dd($th);
+            // dd($th);
             DB::rollBack();
 
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());

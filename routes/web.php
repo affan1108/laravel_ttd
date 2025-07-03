@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TTD\HasilController;
 use App\Http\Controllers\TTD\KecamatanController;
 use App\Http\Controllers\TTD\KelurahanController;
 use App\Http\Controllers\TTD\PemeriksaanController;
@@ -97,10 +98,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('puskesmas', PuskesmasController::class);
     Route::resource('kecamatan', KecamatanController::class);
     Route::resource('sekolah', SekolahController::class);
-
+    
     Route::get('/sekolah/export', [SekolahController::class, 'export'])->name('sekolah.export');
     // Route::get('/dashboard', [TTD])
 });
+Route::resource('hasil-pemeriksaan', HasilController::class);
+Route::get('/chart/hasil', [HasilController::class, 'chartData']);
 
 Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
 Route::post('/pemeriksaan', [PemeriksaanController::class, 'store'])->name('pemeriksaan.store');
@@ -111,6 +114,7 @@ Route::get('tambah-darah/cari-nik/{nik}', [TambahDarahController::class, 'cariBy
 Route::get('/geo-kecamatan', [KecamatanController::class, 'geojson'])->name('geo-kec');
 Route::get('/geo-kelurahan', [KelurahanController::class, 'geojson'])->name('geo-kel');
 Route::get('/get-data-sekolah', [SekolahController::class, 'data'])->name('sekolah.data');
+Route::get('/cari-nik', [HasilController::class, 'cariNik'])->name('biodata.cari-nik');
 
 
 // Route::get('{any}', [App\Http\Controllers\HomeController::class, 'index'])->name('index');

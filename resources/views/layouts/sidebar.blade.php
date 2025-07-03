@@ -43,6 +43,11 @@
                         <i class="lab la-delicious"></i> <span>Tablet Tambah Darah</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{route('hasil-pemeriksaan.index')}}">
+                        <i class="lab la-delicious"></i> <span>Hasil Pemeriksaan</span>
+                    </a>
+                </li>
                 @else
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{route('dashboard')}}">
