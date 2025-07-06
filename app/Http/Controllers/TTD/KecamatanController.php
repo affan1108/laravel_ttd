@@ -118,27 +118,46 @@ class KecamatanController extends Controller
     }
 
     public function geojson()
-    {
-        $features = [];
+{
+    $data = DB::table('kecamatans as kec')
+        ->leftJoin('sekolahs as s', 's.kecamatan_id', '=', 'kec.id')
+        ->leftJoin('pemeriksaans as bio', 'bio.nama_sekolah', '=', 's.id')
+        ->leftJoin('hasils as h', 'h.id_biodata', '=', 'bio.id')
+        ->leftJoin('puskesmas as pus', 'pus.id', '=', 'h.id_puskesmas')
+        ->select(
+            'kec.id',
+            'kec.nama as kecamatan',
+            DB::raw('ST_AsGeoJSON(kec.geometry) as geometry'),
+            DB::raw('MAX(pus.nama) as puskesmas'),
+            DB::raw('COUNT(h.id) as total'),
+            DB::raw('SUM(CASE WHEN h.hasil >= 12 THEN 1 ELSE 0 END) as normal'),
+            DB::raw('SUM(CASE WHEN h.hasil BETWEEN 11 AND 11.9 THEN 1 ELSE 0 END) as ringan'),
+            DB::raw('SUM(CASE WHEN h.hasil BETWEEN 8 AND 10.9 THEN 1 ELSE 0 END) as sedang'),
+            DB::raw('SUM(CASE WHEN h.hasil < 8 THEN 1 ELSE 0 END) as berat')
+        )
+        ->groupBy('kec.id', 'kec.nama', 'kec.geometry')
+        ->get();
 
-        $data = DB::table('kecamatans')->select('id', 'nama', DB::raw('ST_AsGeoJSON(geometry) as geometry'))->get();
+    $features = $data->map(function ($row) {
+        return [
+            'type' => 'Feature',
+            'geometry' => $row->geometry ? json_decode($row->geometry) : null,
+            'properties' => [
+                'kecamatan' => $row->kecamatan,
+                'puskesmas' => $row->puskesmas,
+                'total'     => (int) $row->total,
+                'normal'    => (int) $row->normal,
+                'ringan'    => (int) $row->ringan,
+                'sedang'    => (int) $row->sedang,
+                'berat'     => (int) $row->berat,
+            ]
+        ];
+    });
 
-        foreach ($data as $row) {
-            $features[] = [
-                'type' => 'Feature',
-                'geometry' => json_decode($row->geometry),
-                'properties' => [
-                    'id' => $row->id,
-                    'kecamatan' => $row->nama,
-                    // tambahkan nilai dummy persentase
-                    'persen_ttd' => rand(10, 90)
-                ]
-            ];
-        }
+    return response()->json([
+        'type' => 'FeatureCollection',
+        'features' => $features
+    ]);
+}
 
-        return response()->json([
-            'type' => 'FeatureCollection',
-            'features' => $features
-        ]);
-    }
 }
