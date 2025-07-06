@@ -57,7 +57,7 @@
 
                     <div class="d-flex gap-2"> <!-- wrapper kanan dengan gap -->
                         <div class="dropdown card-header-dropdown">
-                            <select id="puskesmasDonut" class="form-select js-example-basic-single">
+                            <select id="puskesmasDonut" class="form-select w-auto">
                                 <option value="00">Semua Puskesmas</option>
                                 @foreach($puskesmass as $puskesmas)
                                     <option value="{{ $puskesmas->id }}">{{ $puskesmas->nama }}</option>
@@ -65,7 +65,7 @@
                             </select>
                         </div>
                         <div class="dropdown card-header-dropdown">
-                            <select id="bulanDonut" class="form-select js-example-basic-single">
+                            <select id="bulanDonut" class="form-select w-auto">
                                 <option value="00">Semua Bulan</option>
                                 <option value="01">Januari</option>
                                 <option value="02">Februari</option>
@@ -99,7 +99,7 @@
                     <h3 class="card-title mt-2">Grafik Capaian Pemeriksaan</h3>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
-                            <select id="bulanBar" class="js-example-basic-single">
+                            <select id="bulanBar" class="form-select w-auto">
                                 <option value="00">Semua Bulan</option>
                                 <option value="01">Januari</option>
                                 <option value="02">Februari</option>
