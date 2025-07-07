@@ -126,6 +126,41 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title mt-2">Grafik Konsumsi TTD</h3>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown card-header-dropdown">
+                            <select id="TTD" class="form-select w-auto">
+                                <option value="00">Semua Bulan</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="chart" height="100px"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
 {!! NoCaptcha::renderJs() !!}
 
 @endsection
@@ -160,20 +195,19 @@
     var map = L.map('map').setView([-7.75, 113], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
     function getColor(value) {
     return value > 100 ? '#006837' :
-           value > 50  ? '#31a354' :
-           value > 20  ? '#78c679' :
-           value > 10  ? '#c2e699' :
-                         '#ffffcc';
-}
-
+            value > 50  ? '#31a354' :
+            value > 20  ? '#78c679' :
+            value > 10  ? '#c2e699' :
+                        '#ffffcc';
+    }
 
     function style(feature) {
-    const total = feature.properties.total || 0;
+    const total = feature.properties.total || 0; // handle null
     return {
         fillColor: getColor(total),
         weight: 1,
@@ -181,63 +215,63 @@
         color: 'black',
         fillOpacity: 0.7
     };
-}
-
+    }
 
     function onEachFeature(feature, layer) {
-    const nama = feature.properties.kecamatan;
+    const p = feature.properties;
 
-    layer.bindTooltip(nama, {
+    // Handle nilai null untuk angka
+    const total = p.total ?? 0;
+    const normal = p.normal ?? 0;
+    const ringan = p.ringan ?? 0;
+    const sedang = p.sedang ?? 0;
+    const berat = p.berat ?? 0;
+
+    // Tooltip nama kecamatan di tengah
+    layer.bindTooltip(p.kecamatan, {
         permanent: true,
         direction: 'center',
         className: 'label-kecamatan'
     });
-}
 
+    // Popup informasi detail
+    const content = `
+        <b>Kecamatan ${p.kecamatan}</b><br>
+        Pemeriksaan: <b>${total}</b><br>
+        Normal: ${normal}<br>
+        Anemia Ringan: ${ringan}<br>
+        Anemia Sedang: ${sedang}<br>
+        Anemia Berat: ${berat}
+    `;
+    layer.bindPopup(content);
+    }
 
     fetch("{{ route('geo-kec') }}")
-      .then(res => res.json())
+    .then(res => res.json())
     .then(data => {
         L.geoJson(data, {
-            style: feature => ({
-                fillColor: getColor(feature.properties.total),
-                color: 'black',
-                weight: 1,
-                fillOpacity: 0.6
-            }),
-            onEachFeature: function (feature, layer) {
-                const p = feature.properties;
-                const content = `
-                    <b>Kecamatan ${p.kecamatan}</b><br>
-                    Puskesmas: ${p.puskesmas}<br><hr class="my-1">
-                    Pemeriksaan: <b>${p.total}</b><br>
-                    Normal: ${p.normal}<br>
-                    Anemia Ringan: ${p.ringan}<br>
-                    Anemia Sedang: ${p.sedang}<br>
-                    Anemia Berat: ${p.berat}
-                `;
-                layer.bindPopup(content);
-            }
+        style: style,
+        onEachFeature: onEachFeature
         }).addTo(map);
     });
 
     var legend = L.control({position: 'bottomleft'});
-legend.onAdd = function (map) {
-  var div = L.DomUtil.create('div', 'legend'),
-      grades = [0, 10, 20, 50, 100],
-      labels = ['0–10', '11–20', '21–50', '51–100', '100+'];
+    legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'legend'),
+        grades = [0, 10, 20, 50, 100],
+        labels = ['0–10', '11–20', '21–50', '51–100', '100+'];
 
-  div.innerHTML = '<b>Jumlah Pemeriksaan</b><br>';
-  for (var i = 0; i < grades.length; i++) {
-    div.innerHTML +=
-      '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-      labels[i] + '<br>';
-  }
-  return div;
-};
-legend.addTo(map);
-
+    div.innerHTML = '<b>Jumlah Pemeriksaan</b><br>';
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+        labels[i] + '<br>';
+    }
+    return div;
+    };
+    legend.addTo(map);
 </script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
