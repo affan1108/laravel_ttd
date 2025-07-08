@@ -268,6 +268,8 @@
     $(document).ready(function() {
         // Inisialisasi DataTable
         var table = $('#sekolah-table').DataTable({
+            scrollX: true,
+            responsive: false,
             processing: true,
             serverSide: true,
             ajax: "{{ route('sekolah.data') }}",

@@ -79,7 +79,7 @@
                                                     <select class="js-example-basic-single" name="role">
                                                         <option value="{{old('name', @$row->role)}}" selected>
                                                             {{@$row->role}}</option>
-                                                        <option value="superadmin">Super Admin</option>
+                                                        <!-- <option value="superadmin">Super Admin</option> -->
                                                         <option value="admin">Admin</option>
                                                         <option value="user">User</option>
                                                     </select>
@@ -203,7 +203,7 @@
                         <label for="customername-field" class="form-label">Role</label>
                         <div class="col-lg-12">
                             <select class="js-example-basic-single" name="role">
-                                <option value="superadmin">Super Admin</option>
+                                <!-- <option value="superadmin">Super Admin</option> -->
                                 <option value="admin">Admin</option>
                                 <option value="user">User</option>
                             </select>

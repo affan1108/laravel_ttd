@@ -13,7 +13,7 @@
 @section('content')
 @component('components.breadcrumb')
 @slot('li_1') Entry Data @endslot
-@slot('title')Form Data Pribadi @endslot
+@slot('title')Data Pribadi @endslot
 @endcomponent
 
 <div class="row">
