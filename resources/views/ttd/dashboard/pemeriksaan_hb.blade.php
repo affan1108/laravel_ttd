@@ -96,7 +96,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                    <select class="js-example-basic-single" name="nama_Sekolah" required>
+                                    <select class="js-example-basic-single" name="sekolah_id" required>
                                         @foreach($sekolahs as $sekolah)
                                         <option value="{{$sekolah->id}}">{{$sekolah->nama}}</option>
                                         @endforeach
@@ -104,13 +104,16 @@
                                 </div>
                             </div>
                             <!--end col-->
-                            <!-- <div class="col-xxl-3 col-md-6">
+                            <div class="col-xxl-3 col-md-6">
                                 <div>
-                                    <label for="alamat_sekolah" class="form-label">Alamat Sekolah</label>
-                                    <input type="text" class="form-control" id="alamat_sekolah" name="alamat_sekolah"
-                                        placeholder="Masukkan Alamat Sekolah">
+                                    <label for="id_kecamatan" class="form-label">Kecamatan</label>
+                                    <select class="js-example-basic-single" name="kecamatan_id" required>
+                                        @foreach($kecamatans as $kecamatan)
+                                        <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                            </div> -->
+                            </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
                                 <div>

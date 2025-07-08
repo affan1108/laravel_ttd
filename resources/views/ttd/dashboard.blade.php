@@ -41,12 +41,52 @@
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
-            <div id="map"></div>
+            <div class="card-header">
+                <h3 class="card-title mt-2">Peta Sebaran</h3>
+            </div>
+            <div class="card-body">
+                <div id="map"></div>
+            </div>
         </div>
     </div>
     <div class="col-lg-6">
         <div class="card">
-            <div id="donutChart"></div>
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title mt-2">Grafik Hasil HB</h3>
+
+                    <div class="d-flex gap-2"> <!-- wrapper kanan dengan gap -->
+                        <div class="dropdown card-header-dropdown">
+                            <select id="puskesmasDonut" class="form-select w-auto">
+                                <option value="00">Semua Puskesmas</option>
+                                @foreach($puskesmass as $puskesmas)
+                                    <option value="{{ $puskesmas->id }}">{{ $puskesmas->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="dropdown card-header-dropdown">
+                            <select id="bulanDonut" class="form-select w-auto">
+                                <option value="00">Semua Bulan</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="donutChart"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -56,10 +96,45 @@
         <div class="card">
             <div class="card-header border-0">
                 <div class="d-flex justify-content-between">
-                    <h3 class="card-title mt-2">Grafik</h3>
+                    <h3 class="card-title mt-2">Grafik Capaian Pemeriksaan</h3>
                     <div class="flex-shrink-0">
                         <div class="dropdown card-header-dropdown">
-                            <select id="bulanFilter" class="form-select w-auto">
+                            <select id="bulanBar" class="form-select w-auto">
+                                <option value="00">Semua Bulan</option>
+                                <option value="01">Januari</option>
+                                <option value="02">Februari</option>
+                                <option value="03">Maret</option>
+                                <option value="04">April</option>
+                                <option value="05">Mei</option>
+                                <option value="06">Juni</option>
+                                <option value="07">Juli</option>
+                                <option value="08">Agustus</option>
+                                <option value="09">September</option>
+                                <option value="10">Oktober</option>
+                                <option value="11">November</option>
+                                <option value="12">Desember</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="chart" height="100px"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header border-0">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title mt-2">Grafik Konsumsi TTD</h3>
+                    <div class="flex-shrink-0">
+                        <div class="dropdown card-header-dropdown">
+                            <select id="TTD" class="form-select w-auto">
                                 <option value="00">Semua Bulan</option>
                                 <option value="01">Januari</option>
                                 <option value="02">Februari</option>
@@ -120,67 +195,168 @@
     var map = L.map('map').setView([-7.75, 113], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+    attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    function getColor(persen) {
-      return persen > 80 ? '#006837' :
-             persen > 60 ? '#31a354' :
-             persen > 40 ? '#addd8e' :
-             persen > 20 ? '#fdae61' :
-                           '#f46d43';
+    function getColor(value) {
+    return value > 100 ? '#006837' :
+            value > 50  ? '#31a354' :
+            value > 20  ? '#78c679' :
+            value > 10  ? '#c2e699' :
+                        '#ffffcc';
     }
 
     function style(feature) {
-      const persen = feature.properties.persen_ttd || 0;
-      return {
-        fillColor: getColor(persen),
+    const total = feature.properties.total || 0; // handle null
+    return {
+        fillColor: getColor(total),
         weight: 1,
         opacity: 1,
         color: 'black',
         fillOpacity: 0.7
-      };
+    };
     }
 
     function onEachFeature(feature, layer) {
-        const nama = feature.properties.kecamatan;
-        const persen = feature.properties.persen_ttd;
-        layer.bindPopup(`<b>Kecamatan:</b> ${nama}<br><b>Minum TTD:</b> ${persen}%`);
+    const p = feature.properties;
 
-        layer.bindTooltip(nama, {
-            permanent: true,
-            direction: 'center',
-            className: 'label-kecamatan'
-        });
+    // Handle nilai null untuk angka
+    const total = p.total ?? 0;
+    const normal = p.normal ?? 0;
+    const ringan = p.ringan ?? 0;
+    const sedang = p.sedang ?? 0;
+    const berat = p.berat ?? 0;
+
+    // Tooltip nama kecamatan di tengah
+    layer.bindTooltip(p.kecamatan, {
+        permanent: true,
+        direction: 'center',
+        className: 'label-kecamatan'
+    });
+
+    // Popup informasi detail
+    const content = `
+        <b>Kecamatan ${p.kecamatan}</b><br>
+        Pemeriksaan: <b>${total}</b><br>
+        Normal: ${normal}<br>
+        Anemia Ringan: ${ringan}<br>
+        Anemia Sedang: ${sedang}<br>
+        Anemia Berat: ${berat}
+    `;
+    layer.bindPopup(content);
     }
 
     fetch("{{ route('geo-kec') }}")
-      .then(res => res.json())
-      .then(data => {
-        L.geoJSON(data, {
-          style: style,
-          onEachFeature: onEachFeature
+    .then(res => res.json())
+    .then(data => {
+        L.geoJson(data, {
+        style: style,
+        onEachFeature: onEachFeature
         }).addTo(map);
-      });
+    });
 
-    // Legend
     var legend = L.control({position: 'bottomleft'});
     legend.onAdd = function (map) {
-      var div = L.DomUtil.create('div', 'legend'),
-          grades = [0, 20, 40, 60, 80],
-          labels = ['0–20%', '20–40%', '40–60%', '60–80%', '80+%'];
+    var div = L.DomUtil.create('div', 'legend'),
+        grades = [0, 10, 20, 50, 100],
+        labels = ['0–10', '11–20', '21–50', '51–100', '100+'];
 
-      div.innerHTML = '<b>Minum TTD</b><br>';
-      for (var i = 0; i < grades.length; i++) {
+    div.innerHTML = '<b>Jumlah Pemeriksaan</b><br>';
+    for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
-          '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-          labels[i] + '<br>';
-      }
-      return div;
+        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+        labels[i] + '<br>';
+    }
+    return div;
     };
     legend.addTo(map);
 </script>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chartContainer = document.querySelector("#donutChart");
+        let chart;
+
+        function renderChart(labels, data) {
+            if (chart) {
+                chart.updateOptions({ labels, series: data });
+            } else {
+                chart = new ApexCharts(chartContainer, {
+                    chart: { type: 'donut', height: 350 },
+                    labels: labels,
+                    series: data,
+                    colors: ['#e74c3c', '#f39c12', '#3498db', '#2ecc71']
+                });
+                chart.render();
+            }
+        }
+
+        const baseUrl = "{{ route('donutChart', ['bulan' => 'dummy', 'puskesmas' => 'dummy']) }}"
+            .replace('/dummy/dummy', '');
+
+        function fetchData(bulan, puskesmas) {
+            fetch(`${baseUrl}/${bulan}/${puskesmas}`)
+                .then(response => response.ok ? response.json() : response.text().then(t => { throw new Error(t) }))
+                .then(res => renderChart(res.labels, res.data))
+                .catch(err => {
+                    console.error("Fetch error:", err);
+                    chartContainer.innerHTML = `<pre>${err.message}</pre>`;
+                });
+        }
+
+        const bulanSelect = document.getElementById("bulanDonut");
+        const puskesmasSelect = document.getElementById("puskesmasDonut");
+
+        function loadFilteredChart() {
+            const bulan = bulanSelect.value;
+            const puskesmas = puskesmasSelect.value;
+            fetchData(bulan, puskesmas);
+        }
+
+        bulanSelect.addEventListener("change", loadFilteredChart);
+        puskesmasSelect.addEventListener("change", loadFilteredChart);
+
+        // Load pertama
+        fetchData("00", "00");
+    });
+
+</script>
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch("{{ url('/chart/hasil') }}")
+            .then(res => res.json())
+            .then(res => {
+                console.log(res); // cek response-nya
+                var options = {
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
+                    labels: res.labels,
+                    series: res.data,
+                    colors: ['#e74c3c', '#f39c12', '#3498db', '#2ecc71'],
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 300
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }]
+                };
+
+                var chart = new ApexCharts(document.querySelector("#donutChart"), options);
+                chart.render();
+            }).catch(error => {
+                console.error('Gagal ambil data chart:', error);
+            });
+    });
+</script> -->
 
 <script>
     const dataByMonth = {!! json_encode($monthlyPuskesmasData) !!};
@@ -261,49 +437,12 @@
         });
     }
 
-
-
-    document.getElementById('bulanFilter').addEventListener('change', function () {
+    document.getElementById('bulanBar').addEventListener('change', function () {
         const bulan = this.value;
         renderChart(bulan);
     });
 
     // Load default chart (optional)
     renderChart('00'); // atau 'all'
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch("{{ url('/chart/hasil') }}")
-            .then(res => res.json())
-            .then(res => {
-                console.log(res); // cek response-nya
-                var options = {
-                    chart: {
-                        type: 'donut',
-                        height: 350
-                    },
-                    labels: res.labels,
-                    series: res.data,
-                    colors: ['#e74c3c', '#f39c12', '#3498db', '#2ecc71'],
-                    responsive: [{
-                        breakpoint: 480,
-                        options: {
-                            chart: {
-                                width: 300
-                            },
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }]
-                };
-
-                var chart = new ApexCharts(document.querySelector("#donutChart"), options);
-                chart.render();
-            }).catch(error => {
-                console.error('Gagal ambil data chart:', error);
-            });
-    });
 </script>
 @endsection

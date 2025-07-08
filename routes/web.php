@@ -104,6 +104,7 @@ Route::middleware('auth')->group(function () {
 });
 Route::resource('hasil-pemeriksaan', HasilController::class);
 Route::get('/chart/hasil', [HasilController::class, 'chartData']);
+Route::get('/ttd/chart/donut/hasil/{bulan}/{puskesmas}', [HasilController::class, 'hasilHB'])->name('donutChart');
 
 Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
 Route::post('/pemeriksaan', [PemeriksaanController::class, 'store'])->name('pemeriksaan.store');

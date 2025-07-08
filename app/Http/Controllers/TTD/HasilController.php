@@ -109,12 +109,35 @@ class HasilController extends Controller
         return response()->json($results);
     }
 
-    public function chartData()
+    // public function chartData()
+    // {
+    //     $berat = Hasil::where('hasil', '<', 8)->count();
+    //     $sedang = Hasil::whereBetween('hasil', [8, 10.9])->count();
+    //     $ringan = Hasil::whereBetween('hasil', [11, 11.9])->count();
+    //     $normal = Hasil::where('hasil', '>=', 12)->count();
+
+    //     return response()->json([
+    //         'labels' => ['Berat', 'Sedang', 'Ringan', 'Normal'],
+    //         'data' => [$berat, $sedang, $ringan, $normal]
+    //     ]);
+    // }
+
+    public function hasilHB($bulan, $puskesmasId)
     {
-        $berat = Hasil::where('hasil', '<', 8)->count();
-        $sedang = Hasil::whereBetween('hasil', [8, 10.9])->count();
-        $ringan = Hasil::whereBetween('hasil', [11, 11.9])->count();
-        $normal = Hasil::where('hasil', '>=', 12)->count();
+        $query = Hasil::query();
+
+        if ($bulan !== '00') {
+            $query->whereMonth('tgl_pemeriksaan', $bulan);
+        }
+
+        if ($puskesmasId !== '00') {
+            $query->where('id_puskesmas', $puskesmasId);
+        }
+
+        $berat = (clone $query)->where('hasil', '<', 8)->count();
+        $sedang = (clone $query)->whereBetween('hasil', [8, 10.9])->count();
+        $ringan = (clone $query)->whereBetween('hasil', [11, 11.9])->count();
+        $normal = (clone $query)->where('hasil', '>=', 12)->count();
 
         return response()->json([
             'labels' => ['Berat', 'Sedang', 'Ringan', 'Normal'],

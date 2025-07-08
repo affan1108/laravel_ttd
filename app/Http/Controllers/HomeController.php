@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Antrian\Doctor;
+use App\Models\Hasil;
 use App\Models\MWLWL;
 use App\Models\Pemeriksaan;
 use App\Models\Puskesmas;
@@ -135,7 +136,7 @@ class HomeController extends Controller
     public function dashboard()
     {
         $layout = Auth::check() ? 'layouts.layouts-horizontal' : 'layouts.layouts-detached';
-        $data = Pemeriksaan::all();
+        $data = Hasil::with('pemeriksaan')->get();
         $puskesmass = Puskesmas::all();
 
         // Hitung jumlah pemeriksaan per puskesmas per bulan
@@ -143,8 +144,9 @@ class HomeController extends Controller
 
         foreach ($data as $pemeriksaan) {
             $bulan = $pemeriksaan->created_at->format('m');
-            $puskesmasId = $pemeriksaan->puskesmas_id ?? null;
-            $jenisKelamin = $pemeriksaan->jenis_kelamin; // Pastikan ini bernilai '1' atau '2'
+            $puskesmasId = $pemeriksaan->id_puskesmas ?? null;
+            $jenisKelamin = $pemeriksaan->pemeriksaan->jenis_kelamin;
+            // dd($jenisKelamin);
 
             if ($puskesmasId && in_array($jenisKelamin, ['1', '2'])) {
                 if (!isset($dataPerPuskesmas[$puskesmasId][$bulan][$jenisKelamin])) {

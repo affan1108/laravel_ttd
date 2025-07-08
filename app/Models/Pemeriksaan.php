@@ -17,8 +17,12 @@ class Pemeriksaan extends Model
     {
         return $this->belongsTo(Puskesmas::class, 'puskesmas_id');
     }
-    public function sekolah()
-    {
-        return $this->belongsTo(Sekolah::class, 'nama_sekolah', 'id');
+
+    public function sekolah(){
+        return $this->belongsTo(Sekolah::class, 'sekolah_id');
+    }
+
+    public function kecamatan(){
+        return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
 }

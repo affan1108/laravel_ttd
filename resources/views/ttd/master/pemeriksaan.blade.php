@@ -32,10 +32,16 @@
                     <thead>
                         <tr>
                             <th>NIK</th>
-                            <th>Nama</th>
+                            <th>NAMA</th>
                             <th>Nomer HP</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Alamat Lengkap</th>
+                            <th>Puskesmas Domisili</th>
+                            <th>Nama Sekolah</th>
+                            <th>Kecamatan</th>
+                            <th>Kelas</th>
                             <th>Jenis Kelamin</th>
-                            <th>Puskesmas</th>
                             <th>Nama Orang Tua</th>
                             <th>Aksi</th>
                         </tr>
@@ -46,8 +52,14 @@
                             <td>{{@$row->nik}}</td>
                             <td>{{@$row->nama}}</td>
                             <td>{{@$row->nomer}}</td>
-                            <td>{{@$row->jenis_kelamin == '1' ? 'Laki - laki' : 'Perempuan'}}</td>
+                            <td>{{@$row->tempat_lahir}}</td>
+                            <td>{{@$row->tgl_lahir}}</td>
+                            <td>{{@$row->alamat}}</td>
                             <td>{{@$row->puskesmas->nama}}</td>
+                            <td>{{@$row->sekolah->nama}}</td>
+                            <td>{{@$row->kecamatan->nama}}</td>
+                            <td>{{@$row->kelas}}</td>
+                            <td>{{@$row->jenis_kelamin == '1' ? 'Laki - laki' : 'Perempuan'}}</td>
                             <td>{{@$row->nama_ortu}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
@@ -136,16 +148,28 @@
                                                     <div class="col-xxl-3 col-md-6">
                                                         <div>
                                                             <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                                            <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah"
-                                                                placeholder="Masukkan Nama Sekolah" value="{{old('nama_sekolah',@$row->nama_sekolah)}}">
+                                                            <select class="js-example-basic-single" name="sekolah_id" required>
+                                                                @foreach($sekolahs as $sekolah)
+                                                                    <option value="{{ $sekolah->id }}"
+                                                                        {{ old('sekolah_id', isset($row) ? $row->sekolah_id : '') == $sekolah->id ? 'selected' : '' }}>
+                                                                        {{ $sekolah->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-xxl-3 col-md-6">
                                                         <div>
-                                                            <label for="alamat_sekolah" class="form-label">Alamat Sekolah</label>
-                                                            <input type="text" class="form-control" id="alamat_sekolah" name="alamat_sekolah"
-                                                                placeholder="Masukkan Alamat Sekolah" value="{{old('alamat_sekolah',@$row->alamat_sekolah)}}">
+                                                            <label for="nama_kecamatan" class="form-label">Kecamatan</label>
+                                                            <select class="js-example-basic-single" name="kecamatan_id" required>
+                                                                @foreach($kecamatans as $kecamatan)
+                                                                    <option value="{{ $kecamatan->id }}"
+                                                                        {{ old('kecamatan_id', isset($row) ? $row->kecamatan_id : '') == $kecamatan->id ? 'selected' : '' }}>
+                                                                        {{ $kecamatan->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <!--end col-->
@@ -237,15 +261,20 @@
                 <h5 class="card-title mb-0 flex-grow-1">Data Master Data Pribadi (Deleted)</h5>
             </div>
             <div class="card-body">
-
                 <table id="example2" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
                     <thead>
                         <tr>
                             <th>NIK</th>
                             <th>NAMA</th>
                             <th>Nomer HP</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Alamat Lengkap</th>
+                            <th>Puskesmas Domisili</th>
+                            <th>Nama Sekolah</th>
+                            <th>Kecamatan</th>
+                            <th>Kelas</th>
                             <th>Jenis Kelamin</th>
-                            <th>Puskesmas</th>
                             <th>Nama Orang Tua</th>
                             <th>Aksi</th>
                         </tr>
@@ -256,8 +285,14 @@
                             <td>{{@$row->nik}}</td>
                             <td>{{@$row->nama}}</td>
                             <td>{{@$row->nomer}}</td>
-                            <td>{{@$row->jenis_kelamin == '1' ? 'Laki - laki' : 'Perempuan'}}</td>
+                            <td>{{@$row->tempat_lahir}}</td>
+                            <td>{{@$row->tgl_lahir}}</td>
+                            <td>{{@$row->alamat}}</td>
                             <td>{{@$row->puskesmas->nama}}</td>
+                            <td>{{@$row->sekolah->nama}}</td>
+                            <td>{{@$row->kecamatan->nama}}</td>
+                            <td>{{@$row->kelas}}</td>
+                            <td>{{@$row->jenis_kelamin == '1' ? 'Laki - laki' : 'Perempuan'}}</td>
                             <td>{{@$row->nama_ortu}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
@@ -346,16 +381,28 @@
                                                     <div class="col-xxl-3 col-md-6">
                                                         <div>
                                                             <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                                            <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah"
-                                                                placeholder="Masukkan Nama Sekolah" value="{{old('nama_sekolah',@$row->nama_sekolah)}}">
+                                                            <select class="js-example-basic-single" name="sekolah_id" required>
+                                                                @foreach($sekolahs as $sekolah)
+                                                                    <option value="{{ $sekolah->id }}"
+                                                                        {{ old('sekolah_id', isset($row) ? $row->sekolah_id : '') == $sekolah->id ? 'selected' : '' }}>
+                                                                        {{ $sekolah->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-xxl-3 col-md-6">
                                                         <div>
-                                                            <label for="alamat_sekolah" class="form-label">Alamat Sekolah</label>
-                                                            <input type="text" class="form-control" id="alamat_sekolah" name="alamat_sekolah"
-                                                                placeholder="Masukkan Alamat Sekolah" value="{{old('alamat_sekolah',@$row->alamat_sekolah)}}">
+                                                            <label for="nama_kecamatan" class="form-label">Kecamatan</label>
+                                                            <select class="js-example-basic-single" name="kecamatan_id" required>
+                                                                @foreach($kecamatans as $kecamatan)
+                                                                    <option value="{{ $kecamatan->id }}"
+                                                                        {{ old('kecamatan_id', isset($row) ? $row->kecamatan_id : '') == $kecamatan->id ? 'selected' : '' }}>
+                                                                        {{ $kecamatan->nama }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <!--end col-->
@@ -517,16 +564,22 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                    <input type="text" class="form-control" id="nama_sekolah" name="nama_sekolah"
-                                        placeholder="Masukkan Nama Sekolah">
+                                    <select class="js-example-basic-single" name="sekolah_id" required>
+                                        @foreach($sekolahs as $sekolah)
+                                        <option value="{{$sekolah->id}}">{{$sekolah->nama}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
                                 <div>
-                                    <label for="alamat_sekolah" class="form-label">Alamat Sekolah</label>
-                                    <input type="text" class="form-control" id="alamat_sekolah" name="alamat_sekolah"
-                                        placeholder="Masukkan Alamat Sekolah">
+                                    <label for="id_kecamatan" class="form-label">Kecamatan</label>
+                                    <select class="js-example-basic-single" name="kecamatan_id" required>
+                                        @foreach($kecamatans as $kecamatan)
+                                        <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <!--end col-->
@@ -584,12 +637,16 @@
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<!-- Plugin Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
+<!-- Library pendukung untuk export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 
 <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 
@@ -618,43 +675,107 @@
 
     $(function() {
         $('#example1').DataTable({
+            "scrollX": true,
+            "responsive": false,
+            "lengthChange": false,
+            "autoWidth": false,
+            "search": true,
             dom: 'Bfrtip',
             buttons: [
                 {
                     extend: 'copy',
-                    exportOptions: {
-                        columns: [0,1,2,3,4] // hanya kolom NIK sampai Orang Tua (tanpa Aksi)
-                    }
+                    exportOptions: { columns: ':not(:last-child)' }
                 },
                 {
                     extend: 'csv',
-                    exportOptions: {
-                        columns: [0,1,2,3,4] // hanya kolom NIK sampai Orang Tua (tanpa Aksi)
-                    }
+                    exportOptions: { columns: ':not(:last-child)' }
                 },
                 {
                     extend: 'excel',
-                    exportOptions: {
-                        columns: [0,1,2,3,4]
-                    }
+                    exportOptions: { columns: ':not(:last-child)' }
                 },
                 {
                     extend: 'print',
-                    exportOptions: {
-                        columns: [0,1,2,3,4]
+                    exportOptions: { columns: ':not(:last-child)' },
+                    customize: function (win) {
+                        var css = '@page { size: landscape; }',
+                            head = win.document.head || win.document.getElementsByTagName('head')[0],
+                            style = win.document.createElement('style');
+
+                        style.type = 'text/css';
+                        style.media = 'print';
+
+                        if (style.styleSheet) {
+                            style.styleSheet.cssText = css;
+                        } else {
+                            style.appendChild(win.document.createTextNode(css));
+                        }
+
+                        head.appendChild(style);
+
+                        $(win.document.body).css('font-size', '10px');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
                     }
+                },
+                {
+                    extend: 'colvis'
                 }
             ]
         });
     });
 
+
     $(function () {
         $("#example2").DataTable({
-            "responsive": true,
+            "scrollX": true,
+            "responsive": false,
             "lengthChange": false,
             "autoWidth": false,
             "search": true,
-            "buttons": ["copy", "csv", "excel", "print", "colvis"]
+            buttons: [
+                {
+                    extend: 'copy',
+                    exportOptions: { columns: ':not(:last-child)' }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: { columns: ':not(:last-child)' }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: { columns: ':not(:last-child)' }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: { columns: ':not(:last-child)' },
+                    customize: function (win) {
+                        var css = '@page { size: landscape; }',
+                            head = win.document.head || win.document.getElementsByTagName('head')[0],
+                            style = win.document.createElement('style');
+
+                        style.type = 'text/css';
+                        style.media = 'print';
+
+                        if (style.styleSheet) {
+                            style.styleSheet.cssText = css;
+                        } else {
+                            style.appendChild(win.document.createTextNode(css));
+                        }
+
+                        head.appendChild(style);
+
+                        $(win.document.body).css('font-size', '10px');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                },
+                {
+                    extend: 'colvis'
+                }
+            ]
         }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
     });
 </script>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kecamatan;
 use App\Models\Pemeriksaan;
 use App\Models\Puskesmas;
 use App\Models\Sekolah;
@@ -21,8 +22,9 @@ class PemeriksaanController extends Controller
         $layout = Auth::check() ? 'layouts.layouts-horizontal' : 'layouts.layouts-detached';
         $puskesmass = Puskesmas::all();
         $sekolahs = Sekolah::all();
+        $kecamatans = Kecamatan::all();
 
-        return view('ttd.dashboard.pemeriksaan_hb', compact('puskesmass','layout','sekolahs'));
+        return view('ttd.dashboard.pemeriksaan_hb', compact('puskesmass','layout','sekolahs','kecamatans'));
 
 
     }
@@ -35,9 +37,11 @@ class PemeriksaanController extends Controller
         $data = Pemeriksaan::all();
         $puskesmass = Puskesmas::all();
         $deletes = Pemeriksaan::onlyTrashed()->get();
+        $sekolahs = Sekolah::all();
+        $kecamatans = Kecamatan::all();
         // dd($deletes);
 
-        return view('ttd.master.pemeriksaan', compact('data','puskesmass','deletes'));
+        return view('ttd.master.pemeriksaan', compact('data','puskesmass','deletes','sekolahs','kecamatans'));
     }
 
     /**
