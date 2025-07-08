@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('nomer');
             $table->string('tempat_lahir');
             $table->string('tgl_lahir');
-            $table->string('alamat');
+            // $table->string('alamat');
             $table->foreignId('puskesmas_id')->constrained('puskesmas')->onUpdate('restrict')->onDelete('restrict');
             $table->foreignId('sekolah_id')->constrained('sekolahs')->onUpdate('restrict')->onDelete('restrict');
-            // $table->string('alamat_sekolah')->nullable();
-            $table->foreignId('kecamtan_id')->constrained('kecamatans')->onUpdate('restrict')->onDelete('restrict');
+            $table->string('alamat_sekolah')->nullable();
+            $table->foreignId('kecamatan_id')->constrained('kecamatans')->onUpdate('restrict')->onDelete('restrict');
             $table->string('kelas')->nullable();
             $table->string('jenis_kelamin');
             $table->string('nama_ortu');

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Kecamatan;
 use App\Models\Sekolah;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class SekolahSeeder extends Seeder
@@ -27,12 +28,13 @@ class SekolahSeeder extends Seeder
             $namaKecamatan = trim($row[6]);
             $jenjang = trim($row[7]);
 
-            $kecamatan = Kecamatan::whereRaw('LOWER(nama) = ?', [strtolower($namaKecamatan)])->first();
+            $kecamatan = DB::table('kecamatans')->where('nama', $namaKecamatan)->first();
 
-            // if (!$kecamatan) {
-            //     $this->command->warn("Kecamatan tidak ditemukan: " . $namaKecamatan);
-            //     continue;
-            // }
+            if (!$kecamatan) {
+                echo "❌ Kecamatan '$namaKecamatan' tidak ditemukan, baris dilewati.\n";
+                continue;
+            }
+
 
             Sekolah::create([
                 'npsn' => $npsn,
