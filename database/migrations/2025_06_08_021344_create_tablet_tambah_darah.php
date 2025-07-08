@@ -12,16 +12,32 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tablet_tambah_darah', function (Blueprint $table) {
-             $table->id();
-            $table->string('id_pemeriksaan');
-            $table->string('nik');
-            $table->string('tgl_minum');
-            $table->string('jumlah_tablet');
-            $table->string('pengawas');
-            $table->string('nomor_pengawas');
-            $table->string('tgl_periksa_ulang');
-            $table->string('keterangan');
+            $table->id();
+
+            // id_pemeriksaan sebaiknya foreign key bertipe unsignedBigInteger
+            $table->unsignedBigInteger('id_pemeriksaan');
+
+            // nik sebaiknya string dengan panjang dibatasi (misalnya 20)
+            $table->string('nik', 20);
+
+            // tgl_minum dan tgl_periksa_ulang sebaiknya bertipe DATE
+            $table->date('tgl_minum');
+            $table->date('tgl_periksa_ulang');
+
+            // jumlah_tablet sebaiknya integer
+            $table->integer('jumlah_tablet');
+
+            // pengawas dan nomor_pengawas disarankan string
+            $table->string('pengawas', 100);
+            $table->string('nomor_pengawas', 20);
+
+            // keterangan bisa nullable
+            $table->text('keterangan')->nullable();
+
             $table->timestamps();
+
+            // foreign key constraint (optional tapi direkomendasikan)
+            $table->foreign('id_pemeriksaan')->references('id')->on('pemeriksaans')->onDelete('cascade');
         });
     }
 

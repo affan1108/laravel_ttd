@@ -8,6 +8,8 @@ use App\Models\TambahDarah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 
 class TambahDarahController extends Controller
@@ -139,5 +141,121 @@ class TambahDarahController extends Controller
             'status' => 'success',
             'data' => $data
         ]);
+    }
+    public function data(Request $request)
+    {
+        $isTotal = $request->filter_type === 'total';
+
+        $query = DB::table('tablet_tambah_darah as ttd')
+            ->join('pemeriksaans as p', 'ttd.id_pemeriksaan', '=', 'p.id')
+            ->leftJoin('puskesmas as ps', 'p.puskesmas_id', '=', 'ps.id')
+            ->join('sekolahs as s', 'p.sekolah_id', '=', 's.id');
+
+        if ($request->has('filter_month') && $request->filter_month !== 'all') {
+            $query->whereMonth('ttd.tgl_minum', $request->filter_month);
+        }
+
+        if ($isTotal) {
+            $query->select(
+                'p.id',
+                'p.nik',
+                'p.nama',
+                DB::raw("CASE 
+                WHEN p.jenis_kelamin = 1 THEN 'Laki-laki'
+                WHEN p.jenis_kelamin = 2 THEN 'Perempuan'
+                ELSE 'Tidak Diketahui' 
+            END as jenis_kelamin"),
+                'ps.nama as nama_puskesmas',
+                's.nama as nama_sekolah',
+                DB::raw('SUM(ttd.jumlah_tablet) as jumlah_tablet'),
+                DB::raw("GROUP_CONCAT(ttd.tgl_minum ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as tgl_minum"),
+                DB::raw("GROUP_CONCAT(ttd.tgl_periksa_ulang ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as tgl_periksa_ulang"),
+                DB::raw("GROUP_CONCAT(DISTINCT ttd.pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as pengawas"),
+                DB::raw("GROUP_CONCAT(DISTINCT ttd.nomor_pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as nomor_pengawas"),
+                DB::raw("GROUP_CONCAT(DISTINCT ttd.keterangan ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as keterangan")
+            )
+                ->groupBy(
+                    'p.id',
+                    'p.nik',
+                    'p.nama',
+                    'p.jenis_kelamin',
+                    'ps.nama',
+                    's.nama'
+                );
+        } else {
+            $query->select(
+                'ttd.id',
+                'p.nik',
+                'p.nama',
+                DB::raw("CASE 
+                WHEN p.jenis_kelamin = 1 THEN 'Laki-laki'
+                WHEN p.jenis_kelamin = 2 THEN 'Perempuan'
+                ELSE 'Tidak Diketahui'
+            END as jenis_kelamin"),
+                'ps.nama as nama_puskesmas',
+                's.nama as nama_sekolah',
+                'ttd.jumlah_tablet',
+                'ttd.tgl_minum',
+                'ttd.tgl_periksa_ulang',
+                'ttd.pengawas',
+                'ttd.nomor_pengawas',
+                'ttd.keterangan'
+            );
+        }
+
+        $datatable = DataTables::of($query)
+            ->addIndexColumn();
+
+        // Hanya tampilkan kolom aksi jika BUKAN total
+        if (!$isTotal) {
+            $datatable->addColumn('action', function ($row) {
+                return '
+                <button class="btn btn-sm btn-warning btn-edit" data-id="' . $row->id . '">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-sm btn-danger btn-delete" data-id="' . $row->id . '">
+                    <i class="fas fa-trash"></i> Hapus
+                </button>
+            ';
+            })->rawColumns(['action']);
+        }
+
+        return $datatable->make(true);
+    }
+
+    public function datasum()
+    {
+        $query  = DB::table('pemeriksaans as p')
+            ->join('tablet_tambah_darah as ttd', 'p.id', '=', 'ttd.id_pemeriksaan')
+            ->leftJoin('puskesmas as ps', 'p.puskesmas_id', '=', 'ps.id')
+            ->join('sekolahs as s', 'p.sekolah_id', '=', 's.id')
+            ->select(
+                'p.id',
+                'p.nik',
+                'p.nama',
+                DB::raw("CASE 
+            WHEN p.jenis_kelamin = 1 THEN 'Laki-laki'
+            WHEN p.jenis_kelamin = 2 THEN 'Perempuan'
+            ELSE 'Tidak Diketahui' 
+        END as jenis_kelamin"),
+                'ps.nama as nama_puskesmas',
+                's.nama as nama_sekolah',
+                DB::raw('SUM(ttd.jumlah_tablet) as jumlah_tablet'),
+                DB::raw("GROUP_CONCAT( ttd.tgl_minum ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_tgl_minum"),
+                DB::raw("GROUP_CONCAT( ttd.tgl_periksa_ulang ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_tgl_ulang"),
+                DB::raw("GROUP_CONCAT(DISTINCT ttd.pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_pengawas"),
+                DB::raw("GROUP_CONCAT(DISTINCT ttd.nomor_pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_nomor_pengawas"),
+                DB::raw("GROUP_CONCAT(DISTINCT ttd.keterangan ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_keterangan")
+            )
+            ->groupBy('p.id', 'p.nik', 'p.nama', 'p.jenis_kelamin', 'ps.nama', 's.nama')
+            ->get();
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                return ''; // Aksi akan di-generate oleh DataTables
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 }

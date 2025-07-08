@@ -19,7 +19,9 @@
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
-            <!-- <div class="card-header align-items-center d-flex">
+
+            <div class="card-body">
+                <!-- <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Input Example</h4>
                 <div class="flex-shrink-0">
                     <div class="form-check form-switch form-switch-right form-switch-md">
@@ -29,31 +31,29 @@
                     </div>
                 </div>
             </div> -->
-            @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show material-shadow" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
+                @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show material-shadow" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
 
-            @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show material-shadow" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
-            <form action="{{route('tambah-darah.store')}}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="id_pemeriksaan" value="{{ $data->id ?? ''}}">
-                <div class="card-body">
+                @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show material-shadow" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+                <form action="{{route('tambah-darah.store')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id_pemeriksaan" id="id_pemeriksaan" value="{{ $data->id ?? ''}}">
                     <div class="live-preview">
                         <div class="row gy-4">
                             <div class="col-xxl-3 col-md-6">
                                 <label for="nik" class="form-label">NIK</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK" value="{{ $data->nik ?? ''}}"
-                                        required>
-                                    <button type="button" class="btn btn-primary" id="btn_cari">Cari</button>
+                                    <select class="form-control" id="nik" name="nik" required></select>
+                                    <!-- <button type="button" class="btn btn-primary" id="btn_cari">Cari</button> -->
                                 </div>
                             </div>
                             <!--end col-->
@@ -64,15 +64,15 @@
                                         placeholder="Masukkan Nama Lengkap" value="{{ $data->nama ?? ''}}" required readonly>
                                 </div>
                             </div>
-                            <!--end col-->
-                            <div class="col-xxl-3 col-md-6">
+
+                            <!-- <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nomer" class="form-label">No HP</label>
                                     <input type="text" class="form-control" id="nomer" name="nomer"
                                         placeholder="Masukkan No HP" value="{{ $data->nomer ?? ''}}" required readonly>
                                 </div>
                             </div>
-                            <!--end col-->
+                            
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
@@ -80,7 +80,7 @@
                                         placeholder="Masukkan Tempat Lahir" value="{{ $data->tempat_lahir ?? ''}}" required readonly>
                                 </div>
                             </div>
-                            <!--end col-->
+                            
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
@@ -88,15 +88,15 @@
                                         placeholder="Masukkan Tanggal Lahir" value="{{ $data->tgl_lahir ?? ''}}" required readonly>
                                 </div>
                             </div>
-                            <!--end col-->
+                            
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="alamat" class="form-label">Alamat Lengkap</label>
                                     <input type="text" class="form-control" id="alamat" name="alamat"
                                         placeholder="Masukkan Alamat Lengkap" value="{{ $data->alamat ?? ''}}" required readonly>
                                 </div>
-                            </div>
-                            <!--end col-->
+                            </div> -->
+
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="tgl_minum" class="form-label">Tanggal Minum</label>
@@ -147,14 +147,14 @@
                         </div>
                         <!--end row-->
                     </div>
-                </div>
-                <div class="card-footer align-items-right">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-            </form>
+
+                    <div class="card-footer align-items-right">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
 </div>
 
 <!-- Result Modals -->
@@ -203,123 +203,54 @@
 <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
-
 <script>
-    document.getElementById('btn_cari').addEventListener('click', function() {
-        const nik = document.getElementById('nik').value;
-
-        fetch(`/tambah-darah/cari-nik/${nik}`)
-            .then(response => response.json())
-            .then(data => {
-                const modalBody = document.querySelector('#resultModal .modal-body');
-                modalBody.innerHTML = ''; // reset
-
-                if (data.status === 'success') {
-                    const items = data.data;
-
-                    // Header modal
-                    modalBody.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fs-4 fw-semibold text-primary">
-                        <i class="bi bi-person-check-fill me-2"></i>Hasil Pencarian
-                    </h5>
-                    <span class="badge bg-success">${items.length} Data Ditemukan</span>
-                </div>
-            `;
-
-                    items.forEach(data => {
-                        // Format tanggal lahir
-                        const tglLahir = new Date(data.tgl_lahir);
-                        const formattedDate = tglLahir.toLocaleDateString('id-ID', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                        });
-
-                        // Format jenis kelamin
-                        const jenisKelamin = data.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan';
-
-                        modalBody.innerHTML += `
-                    <div class="card shadow-sm mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <h6 class="card-title text-dark mb-3">
-                                        <i class="bi bi-person-circle me-2"></i>${data.nama}
-                                    </h6>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <p class="mb-1"><small class="text-muted">NIK:</small></p>
-                                            <p class="fw-medium">${data.nik}</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="mb-1"><small class="text-muted">Jenis Kelamin:</small></p>
-                                            <p class="fw-medium">${jenisKelamin}</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="mb-1"><small class="text-muted">Tanggal Lahir:</small></p>
-                                            <p class="fw-medium">${formattedDate}</p>
-                                        </div>
-                                        <div class="col-6">
-                                            <p class="mb-1"><small class="text-muted">No. Telepon:</small></p>
-                                            <p class="fw-medium">${data.nomer || '-'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 border-start">
-                                    <div class="d-flex flex-column h-100 justify-content-between">
-                                        <div>
-                                            <p class="mb-1"><small class="text-muted">Sekolah:</small></p>
-                                            <p class="fw-medium">${data.sekolah.nama || '-'}</p>
-                                        </div>
-                                        <div class="mt-2">
-                                            <a href="/tambah-darah/${data.encrypted_id}" class="btn btn-primary w-100">
-                                                <i class="bi bi-eye-fill me-2"></i>Pilih
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                    });
-                } else {
-                    modalBody.innerHTML = `
-                <div class="text-center py-4">
-                    <div class="mb-3">
-                        <i class="bi bi-exclamation-circle text-danger" style="font-size: 3rem;"></i>
-                    </div>
-                    <h5 class="text-danger mb-2">Data Tidak Ditemukan</h5>
-                    <p class="text-muted">Tidak ada data yang sesuai dengan NIK yang dicari</p>
-                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            `;
+    $(document).ready(function() {
+        $('#nik').select2({
+            placeholder: 'Cari NIK...',
+            allowClear: true,
+            minimumInputLength: 3,
+            language: {
+                inputTooShort: function() {
+                    return 'Ketik minimal 3 angka NIK...';
+                },
+                noResults: function() {
+                    return 'Data tidak ditemukan';
+                },
+                searching: function() {
+                    return 'Mencari...';
                 }
+            },
+            ajax: {
+                url: '{{ route("biodata.cari-nik") }}',
+                dataType: 'json',
+                delay: 300,
+                data: function(params) {
+                    return {
+                        q: params.term
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: data.map(item => ({
+                            idp: item.id,
+                            text: item.nik + ' - ' + item.nama,
+                            nama: item.nama,
+                            id: item.nik
+                        }))
+                    };
+                },
+                cache: true
+            }
+        });
 
-                let modal = new bootstrap.Modal(document.getElementById('resultModal'));
-                modal.show();
-            })
-            .catch(error => {
-                // Error handling yang lebih elegan
-                const modalBody = document.querySelector('#resultModal .modal-body');
-                modalBody.innerHTML = `
-            <div class="text-center py-4">
-                <div class="mb-3">
-                    <i class="bi bi-x-circle text-danger" style="font-size: 3rem;"></i>
-                </div>
-                <h5 class="text-danger mb-2">Terjadi Kesalahan</h5>
-                <p class="text-muted">Gagal memproses permintaan pencarian</p>
-                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        `;
-
-                let modal = new bootstrap.Modal(document.getElementById('resultModal'));
-                modal.show();
-                console.error(error);
-            });
+        $('#nik').on('select2:select', function(e) {
+            const data = e.params.data;
+            $('#nama').val(data.nama);
+            $('#id_pemeriksaan').val(data.idp);
+        });
     });
 </script>
+
 
 
 @endsection

@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
 
     Route::put('tambah-darah/{id}', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
     Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
+    Route::get('tambah-darah/data', [TambahDarahController::class, 'data'])->name('tambah-darah.data');
+    Route::get('tambah-darah/datatotal', [TambahDarahController::class, 'datasum'])->name('tambah-darah.datatotal');
 
     Route::resource('user', UserController::class);
     Route::resource('puskesmas', PuskesmasController::class);
