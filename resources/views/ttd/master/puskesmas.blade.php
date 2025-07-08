@@ -42,8 +42,8 @@
                             <td>
                                 <a data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Edit</a>
-                                <a data-bs-toggle="modal"
-                                                data-bs-target="#deleteRecordModal{{@$row->id}}" class="btn btn-danger">Hapus</a>
+                                <!-- <a data-bs-toggle="modal"
+                                                data-bs-target="#deleteRecordModal{{@$row->id}}" class="btn btn-danger">Hapus</a> -->
                             </td>
                         </tr>
                         <div class="modal fade" id="editModal{{@$row->id}}" tabindex="-1"

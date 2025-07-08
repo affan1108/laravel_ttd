@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data = User::all();
+        $data = User::where('role', '!=', 'superadmin')->get();
         return view('ttd.master.user', compact('data'));
     }
 
