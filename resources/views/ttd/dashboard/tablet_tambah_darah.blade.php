@@ -208,7 +208,7 @@
     document.getElementById('btn_cari').addEventListener('click', function() {
         const nik = document.getElementById('nik').value;
 
-        fetch(`tambah-darah/cari-nik/${nik}`)
+        fetch(`/tambah-darah/cari-nik/${nik}`)
             .then(response => response.json())
             .then(data => {
                 const modalBody = document.querySelector('#resultModal .modal-body');
@@ -227,9 +227,9 @@
                 </div>
             `;
 
-                    items.forEach(darah => {
+                    items.forEach(data => {
                         // Format tanggal lahir
-                        const tglLahir = new Date(darah.tgl_lahir);
+                        const tglLahir = new Date(data.tgl_lahir);
                         const formattedDate = tglLahir.toLocaleDateString('id-ID', {
                             day: 'numeric',
                             month: 'long',
@@ -237,7 +237,7 @@
                         });
 
                         // Format jenis kelamin
-                        const jenisKelamin = darah.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan';
+                        const jenisKelamin = data.jenis_kelamin === '1' ? 'Laki-laki' : 'Perempuan';
 
                         modalBody.innerHTML += `
                     <div class="card shadow-sm mb-3">
@@ -245,12 +245,12 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <h6 class="card-title text-dark mb-3">
-                                        <i class="bi bi-person-circle me-2"></i>${darah.nama}
+                                        <i class="bi bi-person-circle me-2"></i>${data.nama}
                                     </h6>
                                     <div class="row">
                                         <div class="col-6">
                                             <p class="mb-1"><small class="text-muted">NIK:</small></p>
-                                            <p class="fw-medium">${darah.nik}</p>
+                                            <p class="fw-medium">${data.nik}</p>
                                         </div>
                                         <div class="col-6">
                                             <p class="mb-1"><small class="text-muted">Jenis Kelamin:</small></p>
@@ -262,7 +262,7 @@
                                         </div>
                                         <div class="col-6">
                                             <p class="mb-1"><small class="text-muted">No. Telepon:</small></p>
-                                            <p class="fw-medium">${darah.nomer || '-'}</p>
+                                            <p class="fw-medium">${data.nomer || '-'}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -270,10 +270,10 @@
                                     <div class="d-flex flex-column h-100 justify-content-between">
                                         <div>
                                             <p class="mb-1"><small class="text-muted">Sekolah:</small></p>
-                                            <p class="fw-medium">${darah.nama_sekolah || '-'}</p>
+                                            <p class="fw-medium">${data.sekolah.nama || '-'}</p>
                                         </div>
                                         <div class="mt-2">
-                                            <a href="/tambah-darah/${darah.id}" class="btn btn-primary w-100">
+                                            <a href="/tambah-darah/${data.encrypted_id}" class="btn btn-primary w-100">
                                                 <i class="bi bi-eye-fill me-2"></i>Pilih
                                             </a>
                                         </div>
