@@ -11,9 +11,10 @@ class Pemeriksaan extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'pemeriksaans';
-    protected $guarded = []; 
+    protected $guarded = [];
 
-    public function puskesmas(){
+    public function puskesmas()
+    {
         return $this->belongsTo(Puskesmas::class, 'puskesmas_id');
     }
 

@@ -7,6 +7,8 @@ use App\Models\Pemeriksaan;
 use App\Models\TambahDarah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+
 
 class TambahDarahController extends Controller
 {
@@ -60,9 +62,16 @@ class TambahDarahController extends Controller
 
         return redirect()->route('tambah-darah.index')->with('success', 'Data berhasil disimpan.');
     }
-    public function show($id)
+    public function show($encryptedId)
     {
-        $data = Pemeriksaan::findOrFail($id);
+        try {
+            $id = Crypt::decryptString($encryptedId);
+            $data = Pemeriksaan::findOrFail($id);
+
+            // lanjutkan...
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404); // jika tidak valid
+        }
         return view('ttd.dashboard.tablet_tambah_darah', compact('data'));
     }
     public function edit($id) {}
@@ -110,7 +119,10 @@ class TambahDarahController extends Controller
 
     public function cariByNik($nik)
     {
-        $data = Pemeriksaan::where('nik', $nik)->get();
+        $data = Pemeriksaan::with('sekolah')
+            ->where('nik', 'like', '%' . $nik . '%')
+            ->get();
+
 
         if ($data->isEmpty()) {
             return response()->json([
@@ -118,7 +130,11 @@ class TambahDarahController extends Controller
                 'message' => 'Data tidak ditemukan.'
             ]);
         }
-
+        // Tambahkan encrypted_id ke setiap item
+        $data = $data->map(function ($item) {
+            $item->encrypted_id = Crypt::encryptString($item->id);
+            return $item;
+        });
         return response()->json([
             'status' => 'success',
             'data' => $data
