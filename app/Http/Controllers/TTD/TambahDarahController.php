@@ -79,6 +79,7 @@ class TambahDarahController extends Controller
     public function edit($id) {}
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         // Validasi data
         $validated = $request->validate([
             'nik' => 'required|string|max:20',
@@ -223,39 +224,9 @@ class TambahDarahController extends Controller
         return $datatable->make(true);
     }
 
-    public function datasum()
+    public function getedit($id)
     {
-        $query  = DB::table('pemeriksaans as p')
-            ->join('tablet_tambah_darah as ttd', 'p.id', '=', 'ttd.id_pemeriksaan')
-            ->leftJoin('puskesmas as ps', 'p.puskesmas_id', '=', 'ps.id')
-            ->join('sekolahs as s', 'p.sekolah_id', '=', 's.id')
-            ->select(
-                'p.id',
-                'p.nik',
-                'p.nama',
-                DB::raw("CASE 
-            WHEN p.jenis_kelamin = 1 THEN 'Laki-laki'
-            WHEN p.jenis_kelamin = 2 THEN 'Perempuan'
-            ELSE 'Tidak Diketahui' 
-        END as jenis_kelamin"),
-                'ps.nama as nama_puskesmas',
-                's.nama as nama_sekolah',
-                DB::raw('SUM(ttd.jumlah_tablet) as jumlah_tablet'),
-                DB::raw("GROUP_CONCAT( ttd.tgl_minum ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_tgl_minum"),
-                DB::raw("GROUP_CONCAT( ttd.tgl_periksa_ulang ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_tgl_ulang"),
-                DB::raw("GROUP_CONCAT(DISTINCT ttd.pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_pengawas"),
-                DB::raw("GROUP_CONCAT(DISTINCT ttd.nomor_pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_nomor_pengawas"),
-                DB::raw("GROUP_CONCAT(DISTINCT ttd.keterangan ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as semua_keterangan")
-            )
-            ->groupBy('p.id', 'p.nik', 'p.nama', 'p.jenis_kelamin', 'ps.nama', 's.nama')
-            ->get();
-
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                return ''; // Aksi akan di-generate oleh DataTables
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+        $ttd = TambahDarah::with('pemeriksaan')->findOrFail($id);
+        return response()->json($ttd);
     }
 }

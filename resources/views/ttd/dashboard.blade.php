@@ -9,13 +9,14 @@
 <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"
     type="text/css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<style>
     #map {
         position: relative;
         z-index: 0;
         height: 50vh;
     }
+
     .label-kecamatan {
         font-weight: 600;
         font-size: 13px;
@@ -28,9 +29,21 @@
         pointer-events: none;
         white-space: nowrap;
     }
-    .legend { background: white; padding: 6px; line-height: 18px; }
-    .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }
-  </style>
+
+    .legend {
+        background: white;
+        padding: 6px;
+        line-height: 18px;
+    }
+
+    .legend i {
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
+    }
+</style>
 @endsection
 @section('content')
 @component('components.breadcrumb')
@@ -60,7 +73,7 @@
                             <select id="puskesmasDonut" class="form-select w-auto">
                                 <option value="00">Semua Puskesmas</option>
                                 @foreach($puskesmass as $puskesmas)
-                                    <option value="{{ $puskesmas->id }}">{{ $puskesmas->nama }}</option>
+                                <option value="{{ $puskesmas->id }}">{{ $puskesmas->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -155,7 +168,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <canvas id="chart" height="100px"></canvas>
+                <canvas id="chart2" height="100px"></canvas>
             </div>
         </div>
     </div>
@@ -195,47 +208,47 @@
     var map = L.map('map').setView([-7.75, 113], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
+        attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
     function getColor(value) {
-    return value > 100 ? '#006837' :
-            value > 50  ? '#31a354' :
-            value > 20  ? '#78c679' :
-            value > 10  ? '#c2e699' :
-                        '#ffffcc';
+        return value > 100 ? '#006837' :
+            value > 50 ? '#31a354' :
+            value > 20 ? '#78c679' :
+            value > 10 ? '#c2e699' :
+            '#ffffcc';
     }
 
     function style(feature) {
-    const total = feature.properties.total || 0; // handle null
-    return {
-        fillColor: getColor(total),
-        weight: 1,
-        opacity: 1,
-        color: 'black',
-        fillOpacity: 0.7
-    };
+        const total = feature.properties.total || 0; // handle null
+        return {
+            fillColor: getColor(total),
+            weight: 1,
+            opacity: 1,
+            color: 'black',
+            fillOpacity: 0.7
+        };
     }
 
     function onEachFeature(feature, layer) {
-    const p = feature.properties;
+        const p = feature.properties;
 
-    // Handle nilai null untuk angka
-    const total = p.total ?? 0;
-    const normal = p.normal ?? 0;
-    const ringan = p.ringan ?? 0;
-    const sedang = p.sedang ?? 0;
-    const berat = p.berat ?? 0;
+        // Handle nilai null untuk angka
+        const total = p.total ?? 0;
+        const normal = p.normal ?? 0;
+        const ringan = p.ringan ?? 0;
+        const sedang = p.sedang ?? 0;
+        const berat = p.berat ?? 0;
 
-    // Tooltip nama kecamatan di tengah
-    layer.bindTooltip(p.kecamatan, {
-        permanent: true,
-        direction: 'center',
-        className: 'label-kecamatan'
-    });
+        // Tooltip nama kecamatan di tengah
+        layer.bindTooltip(p.kecamatan, {
+            permanent: true,
+            direction: 'center',
+            className: 'label-kecamatan'
+        });
 
-    // Popup informasi detail
-    const content = `
+        // Popup informasi detail
+        const content = `
         <b>Kecamatan ${p.kecamatan}</b><br>
         Pemeriksaan: <b>${total}</b><br>
         Normal: ${normal}<br>
@@ -243,47 +256,55 @@
         Anemia Sedang: ${sedang}<br>
         Anemia Berat: ${berat}
     `;
-    layer.bindPopup(content);
+        layer.bindPopup(content);
     }
 
     fetch("{{ route('geo-kec') }}")
-    .then(res => res.json())
-    .then(data => {
-        L.geoJson(data, {
-        style: style,
-        onEachFeature: onEachFeature
-        }).addTo(map);
+        .then(res => res.json())
+        .then(data => {
+            L.geoJson(data, {
+                style: style,
+                onEachFeature: onEachFeature
+            }).addTo(map);
+        });
+
+    var legend = L.control({
+        position: 'bottomleft'
     });
+    legend.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'legend'),
+            grades = [0, 10, 20, 50, 100],
+            labels = ['0–10', '11–20', '21–50', '51–100', '100+'];
 
-    var legend = L.control({position: 'bottomleft'});
-    legend.onAdd = function (map) {
-    var div = L.DomUtil.create('div', 'legend'),
-        grades = [0, 10, 20, 50, 100],
-        labels = ['0–10', '11–20', '21–50', '51–100', '100+'];
-
-    div.innerHTML = '<b>Jumlah Pemeriksaan</b><br>';
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-        '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-        labels[i] + '<br>';
-    }
-    return div;
+        div.innerHTML = '<b>Jumlah Pemeriksaan</b><br>';
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                labels[i] + '<br>';
+        }
+        return div;
     };
     legend.addTo(map);
 </script>
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const chartContainer = document.querySelector("#donutChart");
         let chart;
 
         function renderChart(labels, data) {
             if (chart) {
-                chart.updateOptions({ labels, series: data });
+                chart.updateOptions({
+                    labels,
+                    series: data
+                });
             } else {
                 chart = new ApexCharts(chartContainer, {
-                    chart: { type: 'donut', height: 350 },
+                    chart: {
+                        type: 'donut',
+                        height: 350
+                    },
                     labels: labels,
                     series: data,
                     colors: ['#e74c3c', '#f39c12', '#3498db', '#2ecc71']
@@ -297,7 +318,9 @@
 
         function fetchData(bulan, puskesmas) {
             fetch(`${baseUrl}/${bulan}/${puskesmas}`)
-                .then(response => response.ok ? response.json() : response.text().then(t => { throw new Error(t) }))
+                .then(response => response.ok ? response.json() : response.text().then(t => {
+                    throw new Error(t)
+                }))
                 .then(res => renderChart(res.labels, res.data))
                 .catch(err => {
                     console.error("Fetch error:", err);
@@ -320,7 +343,6 @@
         // Load pertama
         fetchData("00", "00");
     });
-
 </script>
 
 <!-- <script>
@@ -359,54 +381,52 @@
 </script> -->
 
 <script>
-    const dataByMonth = {!! json_encode($monthlyPuskesmasData) !!};
-    const ctx = document.getElementById('chart').getContext('2d');
-    let chart; // Simpan chart instance global
+    const dataByMonth = {!!json_encode($monthlyPuskesmasData) !!};
+    const dataByMonthttd = {!!json_encode($monthlyTTDPuskesmasData) !!};
 
-    // console.log(dataByMonth);
+    const ctx1 = document.getElementById('chart').getContext('2d');
+    const ctx2 = document.getElementById('chart2').getContext('2d');
+
+    let chart1; // Untuk chart pertama
+    let chart2; // Untuk chart kedua
 
     function renderChart(month = '00') {
-        let labels = []; // Nama Puskesmas
-        let dataLaki = []; // Nilai laki-laki
-        let dataPerempuan = []; // Nilai perempuan
-
-        const isCombined = (month === '00');
-
+        let labels = [];
+        let dataLaki = [];
+        let dataPerempuan = [];
         const temp = {};
-
-        // Gabung data (semua bulan) atau 1 bulan
+        const isCombined = (month === '00');
         const loopData = isCombined ? Object.values(dataByMonth).flat() : dataByMonth[month];
 
         loopData.forEach(item => {
-            // Pisah nama dan gender
             const match = item.name.match(/^(.*) \((L|P)\)$/);
             if (!match) return;
 
-            const namaPuskesmas = match[1];
-            const gender = match[2]; // 'L' atau 'P'
+            const nama = match[1];
+            const gender = match[2];
 
-            if (!temp[namaPuskesmas]) {
-                temp[namaPuskesmas] = { L: 0, P: 0 };
+            if (!temp[nama]) {
+                temp[nama] = {
+                    L: 0,
+                    P: 0
+                };
             }
-
-            temp[namaPuskesmas][gender] += item.value;
+            temp[nama][gender] += item.value;
         });
 
-        // Susun labels dan nilai laki/perempuan
-        for (const puskesmas in temp) {
-            labels.push(puskesmas);
-            dataLaki.push(temp[puskesmas]['L']);
-            dataPerempuan.push(temp[puskesmas]['P']);
+        for (const nama in temp) {
+            labels.push(nama);
+            dataLaki.push(temp[nama].L);
+            dataPerempuan.push(temp[nama].P);
         }
 
-        if (chart) chart.destroy();
+        if (chart1) chart1.destroy();
 
-        chart = new Chart(ctx, {
+        chart1 = new Chart(ctx1, {
             type: 'bar',
             data: {
-                labels: labels,
-                datasets: [
-                    {
+                labels,
+                datasets: [{
                         label: 'Laki-laki',
                         data: dataLaki,
                         backgroundColor: 'blue'
@@ -437,12 +457,87 @@
         });
     }
 
-    document.getElementById('bulanBar').addEventListener('change', function () {
+    function renderChartttd(month = '00') {
+        let labels = [];
+        let dataLaki = [];
+        let dataPerempuan = [];
+        const temp = {};
+        const isCombined = (month === '00');
+        const loopData = isCombined ? Object.values(dataByMonthttd).flat() : dataByMonthttd[month];
+
+        loopData.forEach(item => {
+            const match = item.name.match(/^(.*) \((L|P)\)$/);
+            if (!match) return;
+
+            const nama = match[1];
+            const gender = match[2];
+
+            if (!temp[nama]) {
+                temp[nama] = {
+                    L: 0,
+                    P: 0
+                };
+            }
+            temp[nama][gender] += item.value;
+        });
+
+        for (const nama in temp) {
+            labels.push(nama);
+            dataLaki.push(temp[nama].L);
+            dataPerempuan.push(temp[nama].P);
+        }
+
+        if (chart2) chart2.destroy();
+
+        chart2 = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                        label: 'Laki-laki',
+                        data: dataLaki,
+                        backgroundColor: 'blue'
+                    },
+                    {
+                        label: 'Perempuan',
+                        data: dataPerempuan,
+                        backgroundColor: 'pink'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            usePointStyle: true
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Listener dropdown
+    document.getElementById('bulanBar').addEventListener('change', function() {
         const bulan = this.value;
         renderChart(bulan);
+        // renderChartttd(bulan);
+    });// Listener dropdown
+    document.getElementById('TTD').addEventListener('change', function() {
+        const bulan = this.value;
+        // renderChart(bulan);
+        renderChartttd(bulan);
     });
 
-    // Load default chart (optional)
-    renderChart('00'); // atau 'all'
+    // Initial render
+    renderChart('00');
+    renderChartttd('00');
 </script>
 @endsection

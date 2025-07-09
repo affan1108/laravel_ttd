@@ -91,10 +91,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
     Route::get('ttd/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
-    Route::put('tambah-darah/{id}', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
+    Route::put('tambah-darah/{id}/update', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
     Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
     Route::get('tambah-darah/data', [TambahDarahController::class, 'data'])->name('tambah-darah.data');
-    Route::get('tambah-darah/datatotal', [TambahDarahController::class, 'datasum'])->name('tambah-darah.datatotal');
+    Route::get('tambah-darah/{id}/edit', [TambahDarahController::class, 'getedit'])->name('tambah-darah.getedit');
 
     Route::resource('user', UserController::class);
     Route::resource('puskesmas', PuskesmasController::class);

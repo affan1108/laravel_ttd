@@ -102,7 +102,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close" id="close-modal"></button>
             </div>
-            <form method="POST" enctype="multipart/form-data">
+            <form id="editForm" method="POST" enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
                 <div class="modal-body">
@@ -148,13 +148,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-xxl-3 col-md-6">
+                            <!-- <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="alamat" class="form-label">Alamat Lengkap</label>
                                     <input type="text" class="form-control" id="alamat_edit" name="alamat"
                                         placeholder="Masukkan Alamat Lengkap" required disabled>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-xxl-3 col-md-6">
                                 <div>
@@ -224,7 +224,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                     aria-label="Close" id="btn-close"></button>
             </div>
-            <form method="post">
+            <form method="post" id="deleteForm">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
@@ -250,8 +250,6 @@
                                 </div>
 
                                 <div class="row g-3">
-
-
                                     <div class="col-md-6">
                                         <div class="info-item hover-effect">
                                             <div class="d-flex align-items-center">
@@ -562,6 +560,65 @@
             const data = e.params.data;
             $('#nama_add').val(data.nama);
             $('#id_pemeriksaan_add').val(data.idp);
+        });
+        // Handle Edit Button
+        $('#example1').on('click', '.btn-edit', function() {
+            var id = $(this).data('id');
+            var editUrl = "{{ route('tambah-darah.update', ':id') }}".replace(':id', id);
+
+            // Ambil data via AJAX
+            $.get('tambah-darah/' + id + '/edit', function(data) {
+                // Isi form edit
+                $('#editForm').attr('action', editUrl);
+                $('#nik_edit').val(data.pemeriksaan.nik);
+                $('#nik_edit2').val(data.pemeriksaan.nik);
+                $('#nama_edit').val(data.pemeriksaan.nama);
+                $('#nomer_edit').val(data.pemeriksaan.nomer);
+                $('#tempat_lahir_edit').val(data.pemeriksaan.tempat_lahir);
+                $('#tgl_lahir_edit').val(data.pemeriksaan.tgl_lahir);
+                $('#tgl_minum_edit').val(data.tgl_minum);
+                $('#jumlah_tablet_edit').val(data.jumlah_tablet);
+                $('#pengawas_edit').val(data.pengawas);
+                $('#nomor_pengawas_edit').val(data.nomor_pengawas);
+                $('#tgl_periksa_ulang_edit').val(data.tgl_periksa_ulang);
+                $('#keterangan_edit').val(data.keterangan);
+
+
+                // Tampilkan modal
+                $('#editModal').modal('show');
+            }).fail(function() {
+                alert('Gagal memuat data sekolah');
+            });
+        });
+        // Handle Delete Button
+        $('#example1').on('click', '.btn-delete', function() {
+            var id = $(this).data('id');
+            var deleteUrl = "{{ route('tambah-darah.destroy', ':id') }}".replace(':id', id);
+
+            // Set form action dan tampilkan modal
+
+            // Ambil data via AJAX
+            $.get('tambah-darah/' + id + '/edit', function(data2) {
+                // Isi form edit
+
+                $('#pemerikaan_nama').html(data2.pemeriksaan.nama);
+                $('#pemeriksaan_nomer').html(data2.pemeriksaan.nomer);
+                $('#tgl_minum_del').html(data2.tgl_minum);
+                $('#jumlah_tablet_del').html(data2.jumlah_tablet);
+                $('#pengawas_del').html(data2.pengawas);
+                $('#tgl_periksa_ulang_del').html(data2.tgl_periksa_ulang);
+                $('#keterangan_edit').html(data2.keterangan);
+
+
+                // Tampilkan modal
+                $('#deleteForm').attr('action', deleteUrl);
+
+                $('#deleteRecordModal').modal('show');
+
+                // $('#editModal').modal('show');
+            }).fail(function() {
+                alert('Gagal memuat data sekolah');
+            });
         });
     });
 

@@ -8,6 +8,7 @@ use App\Models\MWLWL;
 use App\Models\Pemeriksaan;
 use App\Models\Puskesmas;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -95,7 +96,6 @@ class HomeController extends Controller
             //     'Message' => "Something went wrong!"
             // ], 200); // Status code here
             return redirect()->back();
-
         }
     }
 
@@ -137,7 +137,15 @@ class HomeController extends Controller
     {
         $layout = Auth::check() ? 'layouts.layouts-horizontal' : 'layouts.layouts-detached';
         $data = Hasil::with('pemeriksaan')->get();
+        //  dd($data);
         $puskesmass = Puskesmas::all();
+        $dataTTD = DB::table('tablet_tambah_darah as ttd')
+            ->join('pemeriksaans as pm', 'ttd.id_pemeriksaan', '=', 'pm.id')
+            ->join('puskesmas as ps', 'pm.puskesmas_id', '=', 'ps.id')
+            ->select('pm.jenis_kelamin', 'ps.nama', 'ttd.tgl_minum','pm.puskesmas_id')
+            ->get();
+        // dd($dataTTD);
+
 
         // Hitung jumlah pemeriksaan per puskesmas per bulan
         $dataPerPuskesmas = [];
@@ -186,10 +194,53 @@ class HomeController extends Controller
             }
         }
 
+        $dataTTDPerPuskesmas = [];
+
+        foreach ($dataTTD as $ttd) {
+            // dd($ttd);
+            $bulan = Carbon::parse($ttd->tgl_minum)->format('m');
+
+            $puskesmasId = $ttd->puskesmas_id ?? null;
+            $jenisKelamin = $ttd->jenis_kelamin;
+            // dd($jenisKelamin);
+
+            if ($puskesmasId && in_array($jenisKelamin, ['1', '2'])) {
+                if (!isset($dataTTDPerPuskesmas[$puskesmasId][$bulan][$jenisKelamin])) {
+                    $dataTTDPerPuskesmas[$puskesmasId][$bulan][$jenisKelamin] = 0;
+                }
+
+                $dataTTDPerPuskesmas[$puskesmasId][$bulan][$jenisKelamin]++;
+            }
+        }
+        // dd($dataTTDPerPuskesmas);
+
+        // Susun data untuk grafik
+        $monthlyTTDPuskesmasData = [];
+
+        foreach ($puskesmass as $puskesmas) {
+            for ($m = 1; $m <= 12; $m++) {
+                $bulan = str_pad($m, 2, '0', STR_PAD_LEFT);
+
+                $laki = $dataTTDPerPuskesmas[$puskesmas->id][$bulan]['1'] ?? 0;
+                $perempuan = $dataTTDPerPuskesmas[$puskesmas->id][$bulan]['2'] ?? 0;
+
+                $monthlyTTDPuskesmasData[$bulan][] = [
+                    'name' => $puskesmas->nama . ' (L)',
+                    'value' => $laki,
+                    'color' => 'blue',
+                ];
+                $monthlyTTDPuskesmasData[$bulan][] = [
+                    'name' => $puskesmas->nama . ' (P)',
+                    'value' => $perempuan,
+                    'color' => 'pink',
+                ];
+            }
+        }
+        // dd($monthlyTTDPuskesmasData);
+
+
         // dd($dataPerPuskesmas, $colorPerPuskesmas, $monthlyPuskesmasData);
 
-        return view('ttd.dashboard', compact('data','puskesmass','monthlyPuskesmasData','layout'));
-
-
+        return view('ttd.dashboard', compact('data', 'puskesmass', 'monthlyPuskesmasData', 'monthlyTTDPuskesmasData', 'layout'));
     }
 }
