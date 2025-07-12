@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('alamat')->nullable();
             $table->string('kelurahan')->nullable();
-            $table->string('status')->nullable();
+            $table->foreignId('puskesmas_id')->nullable()->constrained('puskesmas')->onDelete('cascade');
             $table->string('jenjang')->nullable();
             $table->foreignId('kecamatan_id')->constrained('kecamatans')->onDelete('cascade');
             $table->timestamps();

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Kecamatan;
+use App\Models\Puskesmas;
 use App\Models\Sekolah;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -12,41 +13,43 @@ class SekolahSeeder extends Seeder
 {
     public function run(): void
     {
-        $path = public_path('SD SMP PASURUAN.xlsx');
-        $spreadsheet = IOFactory::load($path);
+        $spreadsheet = IOFactory::load(public_path('sekolah.xlsx'));
         $sheet = $spreadsheet->getActiveSheet();
         $rows = $sheet->toArray();
 
         foreach ($rows as $index => $row) {
-            if ($index == 0) continue; // skip header
 
-            $npsn = trim($row[1]);
-            $namaSekolah = trim($row[2]);
-            $alamat = trim($row[3]);
-            $kelurahan = trim($row[4]);
-            $status = trim($row[5]);
-            $namaKecamatan = trim($row[6]);
-            $jenjang = trim($row[7]);
+            $namaKec     = strtolower(trim($row[0]));
+            $namaPuskes  = strtolower(trim($row[1]));
+            $npsn        = $row[2];
+            $namaSekolah = $row[3];
+            $desa        = $row[4];
+            $alamat      = $row[5];
 
-            $kecamatan = DB::table('kecamatans')->where('nama', $namaKecamatan)->first();
+            $kecamatan = Kecamatan::get()->first(function ($item) use ($namaKec) {
+                return strtolower($item->nama) === $namaKec;
+            });
 
-            if (!$kecamatan) {
-                echo "❌ Kecamatan '$namaKecamatan' tidak ditemukan, baris dilewati.\n";
-                continue;
+            $puskesmas = Puskesmas::get()->first(function ($item) use ($namaPuskes) {
+                return strtolower($item->nama) === $namaPuskes;
+            });
+
+            if ($kecamatan && $puskesmas) {
+                Sekolah::updateOrCreate(
+                    [
+                        'kecamatan_id' => $kecamatan->id,
+                        'puskesmas_id' => $puskesmas->id,
+                        'npsn' => $npsn,
+                        'nama' => $namaSekolah,
+                        'kelurahan' => $desa,
+                        'alamat' => $alamat,
+                    ]
+                );
+
+                echo "Inserted: $namaSekolah ($npsn)\n";
+            } else {
+                echo "Skipped: $namaSekolah - Kecamatan/Puskesmas tidak ditemukan\n";
             }
-
-
-            Sekolah::create([
-                'npsn' => $npsn,
-                'nama' => $namaSekolah,
-                'alamat' => $alamat,
-                'kelurahan' => $kelurahan,
-                'status' => $status,
-                'kecamatan_id' => $kecamatan->id,
-                'jenjang' => $jenjang,
-            ]);
         }
-
-        $this->command->info('Import selesai!');
     }
 }

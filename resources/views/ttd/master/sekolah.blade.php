@@ -36,7 +36,7 @@
                             <th>Alamat</th>
                             <th>Kelurahan</th>
                             <!-- <th>Status</th> -->
-                            <th>Jenjang</th>
+                            <!-- <th>Jenjang</th> -->
                             <th>Kecamatan</th>
                             <th>Aksi</th>
                         </tr>
@@ -59,42 +59,42 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
-                    <div class="row gy-4">
-                        <div class="col-xxl-3 col-md-6">
+                    <div class="row gy-3">
+                        <div class="col-xxl-4 col-md-6">
                             <label for="editNPSN" class="form-label">NPSN <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="npsn" id="editNPSN" required>
+                            <input type="text" class="form-control" name="npsn" id="editNPSN">
                             <div class="invalid-feedback feedback-npsn"></div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
+                        <div class="col-xxl-4 col-md-6">
                             <label for="editNama" class="form-label">Nama Sekolah <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="nama" id="editNama" required>
                             <div class="invalid-feedback feedback-nama"></div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
+                        <div class="col-xxl-4 col-md-6">
                             <label for="editAlamat" class="form-label">Alamat <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="alamat" id="editAlamat" required>
                             <div class="invalid-feedback feedback-alamat"></div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
-                            <label for="editKelurahan" class="form-label">Kelurahan <span class="text-danger">*</span></label>
+                        <div class="col-xxl-4 col-md-6">
+                            <label for="editKelurahan" class="form-label">Kelurahan/Desa <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="kelurahan" id="editKelurahan" required>
                             <div class="invalid-feedback feedback-kelurahan"></div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
+                        <!-- <div class="col-xxl-4 col-md-6">
                             <label for="editStatus" class="form-label">Status <span class="text-danger">*</span></label>
                             <select class="form-select" name="status" id="editStatus">
                                 <option value="NEGERI">Negeri</option>
                                 <option value="SWASTA">Swasta</option>
                             </select>
-                        </div>
-                        <div class="col-xxl-3 col-md-6">
+                        </div> -->
+                        <!-- <div class="col-xxl-4 col-md-6">
                             <label for="editJenjang" class="form-label">Jenjang <span class="text-danger">*</span></label>
                             <select class="form-select" name="jenjang" id="editJenjang">
                                 <option value="Sekolah Dasar">Sekolah Dasar</option>
                                 <option value="Sekolah Menengah Pertama">Sekolah Menengah Pertama</option>
                             </select>
-                        </div>
-                        <div class="col-xxl-3 col-md-6">
+                        </div> -->
+                        <div class="col-xxl-4 col-md-6">
                             <label for="editKecamatan" class="form-label">Kecamatan <span class="text-danger">*</span></label>
                             <select class="form-select" name="kecamatan_id" id="editKecamatan">
                                 @foreach($kecamatans as $kecamatan)
@@ -147,11 +147,11 @@
             <form method="POST" action="{{route('sekolah.store')}}" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <div class="row gy-4">
-                        <div class="col-xxl-3 col-md-6">
+                    <div class="row gy-3">
+                        <div class="col-xxl-4 col-md-6">
                             <label for="NPSN" class="form-label">NPSN <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('NPSN') is-invalid @enderror" name="npsn"
-                                value="{{ old('npsn') }}" id="NPSN" placeholder="Masukkan NPSN" required>
+                                value="{{ old('npsn') }}" id="NPSN" placeholder="Masukkan NPSN">
                             @error('NPSN')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -161,7 +161,7 @@
                                 Please enter NPSN
                             </div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
+                        <div class="col-xxl-4 col-md-6">
                             <label for="Nama Sekolah" class="form-label">Nama Sekolah <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('Nama Sekolah') is-invalid @enderror" name="nama"
                                 value="{{ old('nama') }}" id="nama" placeholder="Masukkan Nama Sekolah" required>
@@ -174,7 +174,7 @@
                                 Please enter Nama Sekolah
                             </div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
+                        <div class="col-xxl-4 col-md-6">
                             <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('alamat') is-invalid @enderror" name="alamat"
                                 value="{{ old('alamat') }}" id="alamat" placeholder="Masukkan Alamat" required>
@@ -187,8 +187,8 @@
                                 Please enter Alamat
                             </div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
-                            <label for="kelurahan" class="form-label">Kelurahan <span class="text-danger">*</span></label>
+                        <div class="col-xxl-4 col-md-6">
+                            <label for="kelurahan" class="form-label">Kelurahan/Desa <span class="text-danger">*</span></label>
                             <input type="text" class="form-control @error('kelurahan') is-invalid @enderror" name="kelurahan"
                                 value="{{ old('kelurahan') }}" id="kelurahan" placeholder="Masukkan Kelurahan" required>
                             @error('kelurahan')
@@ -200,7 +200,7 @@
                                 Please enter Kelurahan
                             </div>
                         </div>
-                        <div class="col-xxl-3 col-md-6">
+                        <!-- <div class="col-xxl-4 col-md-6">
                             <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                             <div class="col-lg-12">
                                 <select class="js-example-basic-single" name="status">
@@ -208,8 +208,8 @@
                                     <option value="SWASTA">Swasta</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-xxl-3 col-md-6">
+                        </div> -->
+                        <!-- <div class="col-xxl-4 col-md-6">
                             <label for="jenjang" class="form-label">Jenjang <span class="text-danger">*</span></label>
                             <div class="col-lg-12">
                                 <select class="js-example-basic-single" name="jenjang">
@@ -217,8 +217,8 @@
                                     <option value="Sekolah Menengah Pertama">Sekolah Menengah Pertama</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-xxl-3 col-md-6">
+                        </div> -->
+                        <div class="col-xxl-4 col-md-6">
                             <label for="kecamatan" class="form-label">Kecamatan <span class="text-danger">*</span></label>
                             <select class="js-example-basic-single" name="kecamatan_id">
                                 @foreach($kecamatans as $kecamatan)
@@ -279,7 +279,7 @@
                 { data: 'nama', name: 'nama' },
                 { data: 'alamat', name: 'alamat' },
                 { data: 'kelurahan', name: 'kelurahan' },
-                { data: 'jenjang', name: 'jenjang' },
+                // { data: 'jenjang', name: 'jenjang' },
                 { data: 'kecamatan.nama', name: 'kecamatan.nama' },
                 { 
                     data: 'action', 
