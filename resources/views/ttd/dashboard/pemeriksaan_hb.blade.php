@@ -118,8 +118,15 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="kelas" class="form-label">Kelas</label>
-                                    <input type="text" class="form-control" id="kelas" name="kelas"
-                                        placeholder="Masukkan Kelas">
+                                    <select class="js-example-basic-single" name="kelas" id="kelas">
+                                        <!-- <option value="0" selected>Pilih Jenis Kelamin</option> -->
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
                                 </div>
                             </div>
                             <!--end col-->

@@ -120,12 +120,13 @@ class KecamatanController extends Controller
     public function geojson()
 {
     $data = DB::table('kecamatans as kec')
-        ->leftJoin('pemeriksaans as bio', 'bio.kecamatan_id', '=', 'kec.id')
-        ->leftJoin('hasils as h', 'h.id_biodata', '=', 'bio.id')
+        ->leftJoin('puskesmas as pus', 'pus.kecamatan_id', '=', 'kec.id')
+        ->leftJoin('hasils as h', 'h.id_puskesmas', '=', 'pus.id')
         ->select(
             'kec.id',
             'kec.nama as kecamatan',
             DB::raw('ST_AsGeoJSON(kec.geometry) as geometry'),
+            DB::raw('GROUP_CONCAT(DISTINCT pus.nama SEPARATOR ", ") as puskesmas'),
             DB::raw('COUNT(h.id) as total'),
             DB::raw('SUM(CASE WHEN h.hasil >= 12 THEN 1 ELSE 0 END) as normal'),
             DB::raw('SUM(CASE WHEN h.hasil BETWEEN 11 AND 11.9 THEN 1 ELSE 0 END) as ringan'),
@@ -141,6 +142,7 @@ class KecamatanController extends Controller
             'geometry' => $row->geometry ? json_decode($row->geometry) : null,
             'properties' => [
                 'kecamatan' => $row->kecamatan,
+                'puskesmas' => $row->puskesmas ?? '-',
                 'total'     => (int) $row->total,
                 'normal'    => (int) $row->normal,
                 'ringan'    => (int) $row->ringan,
@@ -155,6 +157,7 @@ class KecamatanController extends Controller
         'features' => $features
     ]);
 }
+
 
 
 }

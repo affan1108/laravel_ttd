@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PemeriksaanController extends Controller
 {
@@ -50,10 +51,30 @@ class PemeriksaanController extends Controller
     public function store(Request $request)
     {
         // Validasi input dasar, bisa dikembangkan sesuai kebutuhan
-        $request->validate([
-            'nik' => 'required|unique:pemeriksaans,nik',
-            'g-recaptcha-response' => 'required|captcha',
-        ]);
+        if (auth()->guest()) {
+            $validator = Validator::make($request->all(), [
+                'nik' => 'required|size:16|unique:pemeriksaans,nik',
+                'g-recaptcha-response' => 'required|captcha',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Pastikan NIK dan captcha sudah benar.');
+            }
+        } else {
+            $validator = Validator::make($request->all(), [
+                'nik' => 'required|size:16|unique:pemeriksaans,nik',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'NIK harus 16 digit.');
+            }
+        }
 
         DB::beginTransaction();
 

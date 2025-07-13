@@ -16,4 +16,9 @@ class Hasil extends Model
     {
         return $this->belongsTo(Pemeriksaan::class, 'id_biodata');
     }
+
+    public function puskesmas()
+    {
+        return $this->belongsTo(Puskesmas::class, 'id_puskesmas');
+    }
 }

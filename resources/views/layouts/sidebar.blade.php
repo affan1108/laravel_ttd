@@ -39,13 +39,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('tambah-darah.index')}}">
-                        <i class="lab la-delicious"></i> <span>Tablet Tambah Darah</span>
+                    <a class="nav-link menu-link" href="{{route('hasil-pemeriksaan.index')}}">
+                        <i class="las la-folder-minus "></i> <span>Hasil Pemeriksaan</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('hasil-pemeriksaan.index')}}">
-                        <i class="las la-folder-minus "></i> <span>Hasil Pemeriksaan</span>
+                    <a class="nav-link menu-link" href="{{route('tambah-darah.index')}}">
+                        <i class="lab la-delicious"></i> <span>Tablet Tambah Darah</span>
                     </a>
                 </li>
                 @else
@@ -74,6 +74,9 @@
                                     <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
                                 </li>
                             </ul>
@@ -100,6 +103,9 @@
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>

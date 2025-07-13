@@ -51,7 +51,7 @@
                                 <div>
                                     <label for="hasil" class="form-label">HB Hasil Pemeriksaan</label>
                                     <input type="text" class="form-control" id="hasil" name="hasil"
-                                        placeholder="Masukkan Hasil Pemeriksaan" required>
+                                        placeholder="contoh: 9.6" required>
                                 </div>
                             </div>
                             <!--end col-->
@@ -79,6 +79,12 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                        <div class="mb-3">
+                            {!! NoCaptcha::display() !!}
+                            @error('g-recaptcha-response')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <!--end row-->
                     </div>

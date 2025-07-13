@@ -18,16 +18,11 @@
     }
 
     .label-kecamatan {
-        font-weight: 600;
-        font-size: 13px;
-        color: white;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 4px 8px;
-        border-radius: 4px;
-        box-shadow: 0 0 3px #000;
-        text-shadow: 0 0 2px #000;
-        pointer-events: none;
-        white-space: nowrap;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        font-weight: bold;
+        color: black;
     }
 
     .legend {
@@ -203,7 +198,7 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> -->
 
 <script>
-    var map = L.map('map').setView([-7.75, 113], 10);
+    var map = L.map('map').setView([-7.75, 112.85], 10.3);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
@@ -248,6 +243,7 @@
         // Popup informasi detail
         const content = `
         <b>Kecamatan ${p.kecamatan}</b><br>
+        Puskesmas: <b>${p.puskesmas}</b><br>
         Pemeriksaan: <b>${total}</b><br>
         Normal: ${normal}<br>
         Anemia Ringan: ${ringan}<br>

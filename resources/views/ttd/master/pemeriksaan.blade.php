@@ -9,6 +9,15 @@
 <link href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"
     type="text/css" />
+    <style>
+        tfoot input {
+            width: 100%;
+            padding: 3px;
+            box-sizing: border-box;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+    </style>
 @endsection
 @section('content')
 @component('components.breadcrumb')
@@ -176,8 +185,14 @@
                                                     <div class="col-xxl-3 col-md-6">
                                                         <div>
                                                             <label for="kelas" class="form-label">Kelas</label>
-                                                            <input type="text" class="form-control" id="kelas" name="kelas"
-                                                                placeholder="Masukkan Kelas" value="{{old('kelas',@$row->kelas)}}">
+                                                            <select class="js-example-basic-single" name="kelas" id="kelas" value="{{old('kelas',@$row->kelas)}}">
+                                                                @foreach (['7', '8', '9', '10', '11', '12'] as $kelas)
+                                                                    <option value="{{ $kelas }}" 
+                                                                        {{ old('kelas', @$row->kelas) == $kelas ? 'selected' : '' }}>
+                                                                        {{ $kelas }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <!--end col-->
@@ -185,9 +200,8 @@
                                                         <div>
                                                             <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
                                                             <select class="js-example-basic-single" name="jenis_kelamin" id="jenis_kelamin" value="{{old('jenis_kelamin',@$row->jenis_kelamin)}}">
-                                                                <!-- <option value="0" selected>Pilih Jenis Kelamin</option> -->
-                                                                <option value="1">Laki - laki</option>
-                                                                <option value="2">Perempuan</option>
+                                                                <option value="1" {{ old('jenis_kelamin', @$row->jenis_kelamin) == '1' ? 'selected' : '' }}>Laki - laki</option>
+                                                                <option value="2" {{ old('jenis_kelamin', @$row->jenis_kelamin) == '2' ? 'selected' : '' }}>Perempuan</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -248,6 +262,23 @@
                         </div>
                         @endforeach
                     </tbody>
+                    <!-- <tfoot>
+                        <tr>
+                            <th>NIK</th>
+                            <th>NAMA</th>
+                            <th>Nomer HP</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Alamat Lengkap</th>
+                            <th>Puskesmas Domisili</th>
+                            <th>Nama Sekolah</th>
+                            <th>Kecamatan</th>
+                            <th>Kelas</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Nama Orang Tua</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </tfoot> -->
                 </table>
             </div>
         </div>
@@ -409,8 +440,15 @@
                                                     <div class="col-xxl-3 col-md-6">
                                                         <div>
                                                             <label for="kelas" class="form-label">Kelas</label>
-                                                            <input type="text" class="form-control" id="kelas" name="kelas"
-                                                                placeholder="Masukkan Kelas" value="{{old('kelas',@$row->kelas)}}">
+                                                            <select class="js-example-basic-single" name="kelas" id="kelas" value="{{old('kelas',@$row->kelas)}}">
+                                                                <!-- <option value="0" selected>Pilih Jenis Kelamin</option> -->
+                                                                <option value="7">7</option>
+                                                                <option value="8">8</option>
+                                                                <option value="9">9</option>
+                                                                <option value="10">10</option>
+                                                                <option value="11">11</option>
+                                                                <option value="12">12</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <!--end col-->
@@ -586,8 +624,15 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="kelas" class="form-label">Kelas</label>
-                                    <input type="text" class="form-control" id="kelas" name="kelas"
-                                        placeholder="Masukkan Kelas">
+                                    <select class="js-example-basic-single" name="kelas" id="kelas">
+                                        <!-- <option value="0" selected>Pilih Jenis Kelamin</option> -->
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
                                 </div>
                             </div>
                             <!--end col-->
@@ -673,45 +718,61 @@
         });
     });
 
-    $(function() {
-        $('#example1').DataTable({
-            "scrollX": true,
-            "responsive": false,
-            "lengthChange": false,
-            "autoWidth": false,
-            "search": true,
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'copy',
-                    exportOptions: { columns: ':not(:last-child)' }
-                },
-                {
-                    extend: 'csv',
-                    exportOptions: { columns: ':not(:last-child)' }
-                },
-                {
-                    extend: 'excel',
-                    exportOptions: { columns: ':not(:last-child)' }
-                },
-                {
-                    extend: 'print',
-                    exportOptions: { columns: ':not(:last-child)' },
-                    customize: function (win) {
-                        var css = '@page { size: landscape; }',
-                            head = win.document.head || win.document.getElementsByTagName('head')[0],
-                            style = win.document.createElement('style');
+    $(function () {
+    // Hancurkan instance DataTable jika sudah ada
+    if ($.fn.DataTable.isDataTable('#example1')) {
+        $('#example1').DataTable().destroy();
+    }
 
-                        style.type = 'text/css';
-                        style.media = 'print';
+    // Tambahkan input filter per kolom di bawah header
+    $('#example1 tfoot th').each(function () {
+        var title = $(this).text();
+        if (title !== 'Aksi') {
+            $(this).html('<input type="text" placeholder="Cari ' + title + '" />');
+        } else {
+            $(this).html('');
+        }
+    });
 
-                        if (style.styleSheet) {
-                            style.styleSheet.cssText = css;
-                        } else {
-                            style.appendChild(win.document.createTextNode(css));
-                        }
+    // Inisialisasi ulang DataTable
+    var table = $('#example1').DataTable({
+        "scrollX": true,
+        "responsive": false,
+        "lengthChange": false,
+        "autoWidth": false,
+        "search": false,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'copy',
+                exportOptions: { columns: ':not(:last-child)' }
+            },
+            {
+                extend: 'csv',
+                exportOptions: { columns: ':not(:last-child)' }
+            },
+            {
+                extend: 'excel',
+                exportOptions: { columns: ':not(:last-child)' }
+            },
+            {
+                extend: 'print',
+                exportOptions: { columns: ':not(:last-child)' },
+                customize: function (win) {
+                    var css = '@page { size: landscape; }',
+                        head = win.document.head || win.document.getElementsByTagName('head')[0],
+                        style = win.document.createElement('style');
 
-                        head.appendChild(style);
+                    style.type = 'text/css';
+                    style.media = 'print';
+
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = css;
+                    } else {
+                        style.appendChild(win.document.createTextNode(css));
+                    }
+
+                    head.appendChild(style);
 
                         $(win.document.body).css('font-size', '10px');
                         $(win.document.body).find('table')
@@ -724,7 +785,18 @@
                 }
             ]
         });
+
+        // Filter per kolom
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change clear', function () {
+                if (that.search() !== this.value) {
+                    that.search(this.value).draw();
+                }
+            });
+        });
     });
+
 
 
     $(function () {

@@ -7,6 +7,7 @@ use App\Models\Hasil;
 use App\Models\Pemeriksaan;
 use App\Models\Puskesmas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HasilController extends Controller
@@ -26,7 +27,9 @@ class HasilController extends Controller
      */
     public function create()
     {
-        //
+        $data = Hasil::with('pemeriksaan')->get();
+        $puskesmass = Puskesmas::all();
+        return view('ttd.master.hasil', compact('data','puskesmass'));
     }
 
     /**
@@ -35,10 +38,16 @@ class HasilController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        if (auth()->guest()) {
+            $request->validate([
+                'id_biodata' => 'required|unique:hasils,id_biodata',
+                'g-recaptcha-response' => 'required|captcha',
+            ]);
+        }
         DB::beginTransaction();
 
         try {
-            $data = $request->except('pemeriksaan_domisili');
+            $data = $request->except('pemeriksaan_domisili', 'g-recaptcha-response');
 
             if ($request->pemeriksaan_domisili == 1) {
                 $biodata = Pemeriksaan::where('id', $request->id_biodata)->first();
@@ -84,7 +93,19 @@ class HasilController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $data = Hasil::findOrFail($id);
+            $data->update($request->all());
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data berhasil diperbarui');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
     }
 
     /**
