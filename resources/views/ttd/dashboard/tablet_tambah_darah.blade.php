@@ -18,10 +18,10 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <div class="card">
+        <div class="card" style="background-color: #F5CBCB;">
 
             <div class="card-body">
-                 <img src="{{ URL::asset('build/images/tambah_darah2.png') }}" alt="" class="img-fluid move-animation" style="max-height: 200px;">
+                <img src="{{ URL::asset('build/images/tambah_darah2.png') }}" alt="" class="img-fluid move-animation" style="max-height: 200px;">
                 <!-- <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Input Example</h4>
                 <div class="flex-shrink-0">
@@ -49,113 +49,99 @@
                     @csrf
                     <input type="hidden" name="id_pemeriksaan" id="id_pemeriksaan" value="{{ $data->id ?? ''}}">
                     <div class="live-preview">
-                        <div class="row gy-4">
+                        <div class="row gx-3  gy-4">
                             <div class="col-xxl-3 col-md-6">
-                                <label for="nik" class="form-label">NIK</label>
-                                <div class="input-group">
-                                    <select class="form-control" id="nik" name="nik" required></select>
-                                    <!-- <button type="button" class="btn btn-primary" id="btn_cari">Cari</button> -->
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <label for="nik" class="form-label">NIK</label>
+                                    <div class="input-group">
+                                        <select class="form-control" id="nik" name="nik" required></select>
+                                        <!-- <button type="button" class="btn btn-primary" id="btn_cari">Cari</button> -->
+                                    </div>
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="nama" class="form-label">Nama Lengkap</label>
-                                    <input type="text" class="form-control" id="nama" name="nama"
-                                        placeholder="Masukkan Nama Lengkap" value="{{ $data->nama ?? ''}}" required readonly>
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <div>
+                                        <label for="nama" class="form-label">Nama Lengkap</label>
+                                        <input type="text" class="form-control" id="nama" name="nama"
+                                            placeholder="Masukkan Nama Lengkap" value="{{ $data->nama ?? ''}}" required readonly>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="nomer" class="form-label">No HP</label>
-                                    <input type="text" class="form-control" id="nomer" name="nomer"
-                                        placeholder="Masukkan No HP" value="{{ $data->nomer ?? ''}}" required readonly>
-                                </div>
-                            </div>
-                            
                             <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
-                                        placeholder="Masukkan Tempat Lahir" value="{{ $data->tempat_lahir ?? ''}}" required readonly>
-                                </div>
-                            </div>
-                            
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                                    <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir"
-                                        placeholder="Masukkan Tanggal Lahir" value="{{ $data->tgl_lahir ?? ''}}" required readonly>
-                                </div>
-                            </div>
-                            
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="alamat" class="form-label">Alamat Lengkap</label>
-                                    <input type="text" class="form-control" id="alamat" name="alamat"
-                                        placeholder="Masukkan Alamat Lengkap" value="{{ $data->alamat ?? ''}}" required readonly>
-                                </div>
-                            </div> -->
-
-                            <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tgl_minum" class="form-label">Tanggal Minum</label>
-                                    <input type="date" class="form-control" id="tgl_minum" name="tgl_minum" required
-                                        placeholder="Masukkan Tanggal Minum">
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <div>
+                                        <label for="tgl_minum" class="form-label">Tanggal Minum</label>
+                                        <input type="date" class="form-control" id="tgl_minum" name="tgl_minum" required
+                                            placeholder="Masukkan Tanggal Minum">
+                                    </div>
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="jml_tablet" class="form-label">Jumlah Tablet</label>
-                                    <input type="number" class="form-control" id="jml_tablet" name="jml_tablet" required
-                                        placeholder="Masukkan Jumlah Tablet">
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <div>
+                                        <label for="jml_tablet" class="form-label">Jumlah Tablet</label>
+                                        <input type="number" class="form-control" id="jml_tablet" name="jml_tablet" required
+                                            placeholder="Masukkan Jumlah Tablet">
+                                    </div>
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="pengawas" class="form-label">Nama Pengawas</label>
-                                    <input type="text" class="form-control" id="pengawas" name="pengawas" required
-                                        placeholder="Masukkan Pengawas Minum Tablet Tambah Darah">
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <div>
+                                        <label for="pengawas" class="form-label">Nama Pengawas</label>
+                                        <input type="text" class="form-control" id="pengawas" name="pengawas" required
+                                            placeholder="Masukkan Pengawas Minum Tablet Tambah Darah">
+                                    </div>
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="no_pengawas" class="form-label">No Telp Pengawas</label>
-                                    <input type="text" class="form-control" id="no_pengawas" name="no_pengawas" required
-                                        placeholder="Masukkan No Telp Pengawas" required>
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <div>
+                                        <label for="no_pengawas" class="form-label">No Telp Pengawas</label>
+                                        <input type="text" class="form-control" id="no_pengawas" name="no_pengawas" required
+                                            placeholder="Masukkan No Telp Pengawas" required>
+                                    </div>
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="tgl_periksa_ulang" class="form-label">Tanggal diperiksa HB ulang</label>
-                                    <input type="date" class="form-control" id="tgl_periksa_ulang" name="tgl_periksa_ulang"
-                                        placeholder="Masukkan Tanggal diperiksa HB ulang" required>
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <div>
+                                        <label for="tgl_periksa_ulang" class="form-label">Tanggal diperiksa HB ulang</label>
+                                        <input type="date" class="form-control" id="tgl_periksa_ulang" name="tgl_periksa_ulang"
+                                            placeholder="Masukkan Tanggal diperiksa HB ulang" required>
+                                    </div>
                                 </div>
                             </div>
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
-                                <div>
-                                    <label for="keterangan" class="form-label">Keterangan</label>
-                                    <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan" rows="3"></textarea>
+                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                                    <div>
+                                        <label for="keterangan" class="form-label">Keterangan</label>
+                                        <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan" rows="3"></textarea>
+                                    </div>
                                 </div>
                             </div>
                             <!--end col-->
-                            <div class="mb-3">
-                                {!! NoCaptcha::display() !!}
-                                @error('g-recaptcha-response')
+                            <div class="col-auto mb-3" style="border-radius:10px;">
+                                <div class=" bg-white p-3" style="border-radius:10px;">
+                                    {!! NoCaptcha::display() !!}
+                                    @error('g-recaptcha-response')
                                     <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                    @enderror
+                                </div>
                             </div>
-                        </div>                        
+                        </div>
                         <!--end row-->
                     </div>
 
-                    <div class="card-footer align-items-right">
+                    <div class="card-footer align-items-right" style="border-radius:10px;">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
