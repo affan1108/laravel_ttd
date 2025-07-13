@@ -143,7 +143,7 @@
 </div>
 
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-primary p-3">
                 <h5 class="modal-title text-light" id="exampleModalLabel">Add New Data</h5>
@@ -153,62 +153,102 @@
             <form method="POST" action="{{route('user.store')}}" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-                            value="{{ old('email') }}" id="useremail" placeholder="Enter email address" required>
-                        @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                        <div class="invalid-feedback">
-                            Please enter email
+                    <div class="live-preview">
+                        <div class="row gy-4">
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="useremail" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                                    value="{{ old('email') }}" id="useremail" placeholder="Enter email address" required>
+                                @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                                <div class="invalid-feedback">
+                                    Please enter email
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
+                                    value="{{ old('name') }}" id="username" placeholder="Enter username" required>
+                                @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                                <div class="invalid-feedback">
+                                    Please enter username
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="userpassword" class="form-label">Password <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    name="password" id="userpassword" placeholder="Enter password" required>
+                                @error('password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                                <div class="invalid-feedback">
+                                    Please enter password
+                                </div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="input-password">Confirm Password <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
+                                    name="password_confirmation" id="input-password" placeholder="Enter Confirm Password"
+                                    required>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="customername-field" class="form-label">Role</label>
+                                <div class="col-lg-12">
+                                    <select class="js-example-basic-single" name="role">
+                                        <!-- <option value="superadmin">Super Admin</option> -->
+                                        <option value="admin">Super Admin</option>
+                                        <option value="puskesmas">Admin Puskesmas</option>
+                                        <option value="sekolah">Admin Sekolah</option>
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Pilih Role</div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="customername-field" class="form-label">Kecamatan</label>
+                                <div class="col-lg-12">
+                                    <select class="js-example-basic-single" name="kecamatan_id" required>
+                                        <option value="" selected>Full Akses</option>
+                                        @foreach($kecamatans as $kecamatan)
+                                        <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Pilih Kecamatan</div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="customername-field" class="form-label">Sekolah</label>
+                                <div class="col-lg-12">
+                                    <select class="js-example-basic-single" name="sekolah_id" required>
+                                        <option value="" selected>Full Akses</option>
+                                        @foreach($sekolahs as $sekolah)
+                                        <option value="{{$sekolah->id}}">{{$sekolah->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Pilih Sekolah</div>
+                            </div>
+                            <div class="col-xxl-3 col-md-6">
+                                <label for="customername-field" class="form-label">Puskesmas</label>
+                                <div class="col-lg-12">
+                                    <select class="js-example-basic-single" name="puskesmas_id" required>
+                                        <option value="" selected>Full Akses</option>
+                                        @foreach($puskesmass as $puskesmas)
+                                        <option value="{{$puskesmas->id}}">{{$puskesmas->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="invalid-feedback">Pilih Puskesmas</div>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                            value="{{ old('name') }}" id="username" placeholder="Enter username" required>
-                        @error('name')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                        <div class="invalid-feedback">
-                            Please enter username
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="userpassword" class="form-label">Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror"
-                            name="password" id="userpassword" placeholder="Enter password" required>
-                        @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                        <div class="invalid-feedback">
-                            Please enter password
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="input-password">Confirm Password <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
-                            name="password_confirmation" id="input-password" placeholder="Enter Confirm Password"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="customername-field" class="form-label">Role</label>
-                        <div class="col-lg-12">
-                            <select class="js-example-basic-single" name="role">
-                                <!-- <option value="superadmin">Super Admin</option> -->
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
-                            </select>
-                        </div>
-                        <div class="invalid-feedback">Pilih Role</div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -62,6 +62,8 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
 });
 
 
@@ -87,28 +89,33 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-    Route::resource('pemeriksaan', PemeriksaanController::class);
-    Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
     Route::get('ttd/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/chart/hasil', [HasilController::class, 'chartData']);
+    Route::get('/ttd/chart/donut/hasil/{bulan}/{puskesmas}', [HasilController::class, 'hasilHB'])->name('donutChart');
 
     Route::put('tambah-darah/{id}/update', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
     Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
     Route::get('tambah-darah/data', [TambahDarahController::class, 'data'])->name('tambah-darah.data');
     Route::get('tambah-darah/{id}/edit', [TambahDarahController::class, 'getedit'])->name('tambah-darah.getedit');
+});
 
-    Route::resource('user', UserController::class);
-    Route::resource('puskesmas', PuskesmasController::class);
+Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::resource('kecamatan', KecamatanController::class);
+});
+
+Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
+    Route::resource('puskesmas', PuskesmasController::class);
+    Route::resource('user', UserController::class);
     Route::resource('sekolah', SekolahController::class);
-    
     Route::get('/sekolah/export', [SekolahController::class, 'export'])->name('sekolah.export');
-    // Route::get('/dashboard', [TTD])
+    Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
+});
+
+Route::middleware(['auth', 'role:superadmin,admin,puskesmas,sekolah'])->group(function () {
+    Route::resource('pemeriksaan', PemeriksaanController::class);
 });
 Route::resource('hasil-pemeriksaan', HasilController::class);
-Route::get('/chart/hasil', [HasilController::class, 'chartData']);
-Route::get('/ttd/chart/donut/hasil/{bulan}/{puskesmas}', [HasilController::class, 'hasilHB'])->name('donutChart');
 
-Route::get('/', [PemeriksaanController::class, 'index'])->name('index');
 Route::post('/pemeriksaan', [PemeriksaanController::class, 'store'])->name('pemeriksaan.store');
 Route::get('tambah-darah', [TambahDarahController::class, 'index'])->name('tambah-darah.index');
 Route::get('tambah-darah/{id}', [TambahDarahController::class, 'show'])->name('tambah-darah.show');

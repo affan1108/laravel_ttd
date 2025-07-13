@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Akses;
 use App\Models\Hasil;
 use App\Models\Pemeriksaan;
 use App\Models\Puskesmas;
@@ -27,8 +28,38 @@ class HasilController extends Controller
      */
     public function create()
     {
-        $data = Hasil::with('pemeriksaan')->get();
-        $puskesmass = Puskesmas::all();
+        if (Auth::user()->role == 'puskesmas') {
+            $akses = Akses::where('user_id', Auth::user()->id)->first(); // ambil akses user
+
+            if ($akses) {
+                $data = Hasil::with('pemeriksaan')
+                    ->where('id_puskesmas', $akses->puskesmas_id)
+                    ->get();
+
+                $puskesmass = Puskesmas::where('id', $akses->puskesmas_id)->get();
+            } else {
+                // kalau tidak ada data akses
+                $data = collect(); // koleksi kosong
+                $puskesmass = collect();
+            }
+        } elseif (Auth::user()->role == 'sekolah') {
+            $akses = Akses::where('user_id', Auth::user()->id)->first(); // ambil akses user
+
+            if ($akses) {
+                $data = Hasil::with('pemeriksaan')
+                    ->where('id_puskesmas', $akses->puskesmas_id)
+                    ->get();
+
+                $puskesmass = Puskesmas::where('id', $akses->puskesmas_id)->get();
+            } else {
+                // kalau tidak ada data akses
+                $data = collect(); // koleksi kosong
+                $puskesmass = collect();
+            }
+        } else {
+            $data = Hasil::with('pemeriksaan')->get();
+            $puskesmass = Puskesmas::all();
+        }
         return view('ttd.master.hasil', compact('data','puskesmass'));
     }
 
@@ -40,7 +71,6 @@ class HasilController extends Controller
         // dd($request->all());
         if (auth()->guest()) {
             $request->validate([
-                'id_biodata' => 'required|unique:hasils,id_biodata',
                 'g-recaptcha-response' => 'required|captcha',
             ]);
         }
@@ -120,12 +150,41 @@ class HasilController extends Controller
     {
         $search = $request->q;
 
-        $results = DB::table('pemeriksaans')
-            ->select('id','nik', 'nama')
-            ->where('nik', 'like', "%{$search}%")
-            ->orWhere('nama', 'like', "%{$search}%")
-            ->limit(20) // batasi hasil agar efisien
-            ->get();
+        if(auth()->guest()) {
+            $results = DB::table('pemeriksaans')
+                ->select('id','nik', 'nama')
+                ->where(function ($query) use ($search) {
+                    $query->where('nik', 'like', "%{$search}%")
+                        ->orWhere('nama', 'like', "%{$search}%");
+                })
+                ->limit(20)
+                ->get();
+            
+        } elseif (Auth::user()->role == 'sekolah') {
+            $akses = Akses::where('user_id', Auth::user()->id)->first();
+
+            $results = DB::table('pemeriksaans')
+                ->select('id','nik', 'nama')
+                ->where('sekolah_id', $akses->sekolah_id)
+                ->where(function ($query) use ($search) {
+                    $query->where('nik', 'like', "%{$search}%")
+                        ->orWhere('nama', 'like', "%{$search}%");
+                })
+                ->limit(20)
+                ->get();
+        } elseif (Auth::user()->role == 'puskesmas') {
+            $akses = Akses::where('user_id', Auth::user()->id)->first();
+
+            $results = DB::table('pemeriksaans')
+                ->select('id','nik', 'nama')
+                ->where('puskesmas_id', $akses->puskesmas_id)
+                ->where(function ($query) use ($search) {
+                    $query->where('nik', 'like', "%{$search}%")
+                        ->orWhere('nama', 'like', "%{$search}%");
+                })
+                ->limit(20)
+                ->get();
+        }
 
         return response()->json($results);
     }

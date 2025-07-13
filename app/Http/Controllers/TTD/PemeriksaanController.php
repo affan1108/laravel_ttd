@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Akses;
 use App\Models\Kecamatan;
 use App\Models\Pemeriksaan;
 use App\Models\Puskesmas;
@@ -35,11 +36,44 @@ class PemeriksaanController extends Controller
      */
     public function create()
     {
-        $data = Pemeriksaan::all();
-        $puskesmass = Puskesmas::all();
-        $deletes = Pemeriksaan::onlyTrashed()->get();
-        $sekolahs = Sekolah::all();
-        $kecamatans = Kecamatan::all();
+        if (Auth::user()->role == 'sekolah') {
+            $akses = Akses::where('user_id', Auth::user()->id)->get();
+
+            $kecamatanIds = $akses->pluck('kecamatan_id')->filter(); 
+            $puskesmasIds = $akses->pluck('puskesmas_id');
+            $sekolahIds = $akses->pluck('sekolah_id');
+            $sekolahs = collect(); 
+            $puskesmass = collect();
+
+            $data = Pemeriksaan::whereIn('puskesmas_id', $puskesmasIds)->get();
+
+            if ($puskesmasIds->contains(null)) {
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
+            } else {
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)
+                    ->whereIn('id', $puskesmasIds)
+                    ->get();
+            }
+
+
+            if ($sekolahIds->contains(null)) {
+                $sekolahs = Sekolah::whereIn('kecamatan_id', $kecamatanIds)->get();
+            } else {
+                $sekolahs = Sekolah::whereIn('kecamatan_id', $kecamatanIds)
+                    ->whereIn('id', $sekolahIds)
+                    ->get();
+            }
+
+            $kecamatans = Kecamatan::whereIn('id', $kecamatanIds)->get();
+
+            $deletes = Pemeriksaan::onlyTrashed()->get();
+        } else {
+            $data = Pemeriksaan::all();
+            $puskesmass = Puskesmas::all();
+            $deletes = Pemeriksaan::onlyTrashed()->get();
+            $sekolahs = Sekolah::all();
+            $kecamatans = Kecamatan::all();
+        }
         // dd($deletes);
 
         return view('ttd.master.pemeriksaan', compact('data','puskesmass','deletes','sekolahs','kecamatans'));

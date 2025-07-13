@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Akses;
+use App\Models\Kecamatan;
 use App\Models\Pemeriksaan;
+use App\Models\Puskesmas;
+use App\Models\Sekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +21,10 @@ class UserController extends Controller
     public function index()
     {
         $data = User::where('role', '!=', 'superadmin')->get();
-        return view('ttd.master.user', compact('data'));
+        $puskesmass = Puskesmas::all();
+        $sekolahs = Sekolah::all();
+        $kecamatans = Kecamatan::all();
+        return view('ttd.master.user', compact('data','puskesmass','sekolahs','kecamatans'));
     }
 
     /**
@@ -48,12 +55,21 @@ class UserController extends Controller
             }
 
             // Simpan user ke database
-            User::create([
+            $user = User::create([
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
                 'role' => $request->input('role'),
             ]);
+
+            if($request->kecamatan_id){
+                Akses::create([
+                    'user_id' => $user->id,
+                    'kecamatan_id' => $request->kecamatan_id,
+                    'sekolah_id' => $request->sekolah_id,
+                    'puskesmas_id' => $request->puskesmas_id,
+                ]);
+            }
 
             return redirect()->back()->with('success', 'User berhasil ditambahkan');
         } catch (\Exception $e) {

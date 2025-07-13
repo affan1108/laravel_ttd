@@ -46,6 +46,7 @@
 @slot('title')Dashboard @endslot
 @endcomponent
 
+@if(Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
@@ -168,6 +169,7 @@
         </div>
     </div>
 </div>
+@endif
 
 {!! NoCaptcha::renderJs() !!}
 

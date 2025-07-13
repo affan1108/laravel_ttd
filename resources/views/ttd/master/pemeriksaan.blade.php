@@ -285,6 +285,7 @@
     </div>
 </div>
 
+@if(Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -526,6 +527,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">

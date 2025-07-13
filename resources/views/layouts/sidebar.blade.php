@@ -82,6 +82,56 @@
                             </ul>
                         </div>
                     </li>
+                    @elseif(Auth::user()->role == 'puskesmas')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                            <i class="las la-pager"></i> <span>Master Data</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarData">
+                            <ul class="nav nav-sm flex-column">
+                                <!-- <li class="nav-item">
+                                    <a href="{{route('sekolah.index')}}" class="nav-link">Sekolah</a>
+                                </li> -->
+                                <!-- <li class="nav-item">
+                                    <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
+                                </li> -->
+                                <!-- <li class="nav-item">
+                                    <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
+                                </li> -->
+                                <li class="nav-item">
+                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    @elseif(Auth::user()->role == 'sekolah')
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                            <i class="las la-pager"></i> <span>Master Data</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarData">
+                            <ul class="nav nav-sm flex-column">
+                                <!-- <li class="nav-item">
+                                    <a href="{{route('sekolah.index')}}" class="nav-link">Sekolah</a>
+                                </li> -->
+                                <!-- <li class="nav-item">
+                                    <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
+                                </li> -->
+                                <li class="nav-item">
+                                    <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                     @else
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">

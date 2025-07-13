@@ -6,10 +6,10 @@
                 <div class="navbar-brand-box horizontal-logo">
                     <a href="{{route('dashboard')}}" class="logo logo-dark">
                         <!-- <span class="logo-sm">
-                            <img src="{{ URL::asset('images/tamara.png') }}" alt="" height="22">
+                            <img src="{{ URL::asset('images/tamara.png') }}" alt="tamara" height="22">
                         </span> -->
                         <span class="logo-lg">
-                            <img src="{{ URL::asset('images/tamara.png') }}" alt="" height="75">
+                            <img src="{{ URL::asset('images/tamara.png') }}" alt="tamara" height="75">
                             <!-- Tablet Tambah Darah Remaja -->
                         </span>
                     </a>
