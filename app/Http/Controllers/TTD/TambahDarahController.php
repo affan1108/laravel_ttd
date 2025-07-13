@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -35,6 +36,15 @@ class TambahDarahController extends Controller
     public function create() {}
     public function store(Request $request)
     {
+        if (auth()->guest()) {
+            $validator = Validator::make($request->all(), [
+                'g-recaptcha-response' => 'required|captcha',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Pastikan captcha sudah benar.');
+            }
+        }
         // Validasi data
         $validated = $request->validate([
             'nik' => 'required|string|max:20',
@@ -45,6 +55,15 @@ class TambahDarahController extends Controller
             'no_pengawas' => 'required|string|max:20',
             'tgl_periksa_ulang' => 'required|date',
             'keterangan' => 'nullable|string',
+            [
+                'nik.required' => 'NIK wajib diisi.',
+                'id_pemeriksaan.exists' => 'Pemeriksaan tidak ditemukan.',
+                'tgl_minum.required' => 'Tanggal minum wajib diisi.',
+                'jml_tablet.required' => 'Jumlah tablet wajib diisi.',
+                'pengawas.required' => 'Pengawas wajib diisi.',
+                'no_pengawas.required' => 'Nomor pengawas wajib diisi.',
+                'tgl_periksa_ulang.required' => 'Tanggal periksa ulang wajib diisi.',
+            ]
         ]);
         // dd($validated);
 

@@ -21,6 +21,7 @@
         <div class="card">
 
             <div class="card-body">
+                 <img src="{{ URL::asset('build/images/tambah_darah2.png') }}" alt="" class="img-fluid move-animation" style="max-height: 200px;">
                 <!-- <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Input Example</h4>
                 <div class="flex-shrink-0">
@@ -144,7 +145,13 @@
                                 </div>
                             </div>
                             <!--end col-->
-                        </div>
+                            <div class="mb-3">
+                                {!! NoCaptcha::display() !!}
+                                @error('g-recaptcha-response')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>                        
                         <!--end row-->
                     </div>
 
@@ -178,7 +185,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+{!! NoCaptcha::renderJs() !!}
 @endsection
 @section('script')
 
