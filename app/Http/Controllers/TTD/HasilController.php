@@ -44,7 +44,13 @@ class HasilController extends Controller
                     ->whereIn('id_puskesmas', $puskesmasIds)
                     ->get();
 
-                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
+                if ($puskesmasIds->contains(null)) {
+                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
+                } else {
+                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)
+                        ->whereIn('id', $puskesmasIds)
+                        ->get();
+                }
             }
         } elseif ($user->role === 'sekolah') {
             if ($puskesmasIds->isNotEmpty()) {
@@ -52,7 +58,13 @@ class HasilController extends Controller
                     ->whereIn('id_puskesmas', $puskesmasIds)
                     ->get();
 
-                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
+                if ($puskesmasIds->contains(null)) {
+                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
+                } else {
+                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)
+                        ->whereIn('id', $puskesmasIds)
+                        ->get();
+                }
             }
         } else {
             // Untuk role lainnya (superadmin/dinas)
