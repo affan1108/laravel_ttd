@@ -28,39 +28,39 @@ class HasilController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->role == 'puskesmas') {
-            $akses = Akses::where('user_id', Auth::user()->id)->first(); // ambil akses user
+        $user = Auth::user();
+        $akses = Akses::where('user_id', $user->id)->get();
 
-            if ($akses) {
+        $kecamatanIds = $akses->pluck('kecamatan_id')->filter()->unique();
+        $puskesmasIds = $akses->pluck('puskesmas_id');
+        $sekolahIds = $akses->pluck('sekolah_id');
+
+        $data = collect(); // Default data kosong
+        $puskesmass = collect(); // Default data kosong
+
+        if ($user->role === 'puskesmas') {
+            if ($puskesmasIds->isNotEmpty()) {
                 $data = Hasil::with('pemeriksaan')
-                    ->where('id_puskesmas', $akses->puskesmas_id)
+                    ->whereIn('id_puskesmas', $puskesmasIds)
                     ->get();
 
-                $puskesmass = Puskesmas::where('id', $akses->puskesmas_id)->get();
-            } else {
-                // kalau tidak ada data akses
-                $data = collect(); // koleksi kosong
-                $puskesmass = collect();
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
             }
-        } elseif (Auth::user()->role == 'sekolah') {
-            $akses = Akses::where('user_id', Auth::user()->id)->first(); // ambil akses user
-
-            if ($akses) {
+        } elseif ($user->role === 'sekolah') {
+            if ($puskesmasIds->isNotEmpty()) {
                 $data = Hasil::with('pemeriksaan')
-                    ->where('id_puskesmas', $akses->puskesmas_id)
+                    ->whereIn('id_puskesmas', $puskesmasIds)
                     ->get();
 
-                $puskesmass = Puskesmas::where('id', $akses->puskesmas_id)->get();
-            } else {
-                // kalau tidak ada data akses
-                $data = collect(); // koleksi kosong
-                $puskesmass = collect();
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
             }
         } else {
+            // Untuk role lainnya (superadmin/dinas)
             $data = Hasil::with('pemeriksaan')->get();
             $puskesmass = Puskesmas::all();
         }
-        return view('ttd.master.hasil', compact('data','puskesmass'));
+
+        return view('ttd.master.hasil', compact('data', 'puskesmass'));
     }
 
     /**
