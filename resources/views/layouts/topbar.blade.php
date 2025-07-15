@@ -107,6 +107,8 @@
                 </form> -->
             </div>
 
+            <!-- <div class="d-flex align-items-center" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-style:italic">Tablet Tambah Darah Remaja</div> -->
+
             <div class="d-flex align-items-center">
 
                 <!-- <div class="dropdown d-md-none topbar-head-dropdown header-item">

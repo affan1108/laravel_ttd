@@ -46,7 +46,6 @@
 @slot('title')Dashboard @endslot
 @endcomponent
 
-@if(Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
@@ -100,6 +99,7 @@
     </div>
 </div>
 
+@if(Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
@@ -206,18 +206,32 @@
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    function getColor(value) {
-        return value > 100 ? '#006837' :
-            value > 50 ? '#31a354' :
-            value > 20 ? '#78c679' :
-            value > 10 ? '#c2e699' :
+    // Untuk peta, berdasarkan ada tidaknya anemia
+    function getColor(feature) {
+        const ringan = feature.properties.ringan ?? 0;
+        const sedang = feature.properties.sedang ?? 0;
+        const berat = feature.properties.berat ?? 0;
+        const total = feature.properties.total ?? 0;
+
+        if (ringan > 0 || sedang > 0 || berat > 0) {
+            return '#e31a1c'; // Merah jika ada anemia
+        }
+
+        return getColorByTotal(total);
+    }
+
+    // Untuk legend, hanya berdasarkan total
+    function getColorByTotal(total) {
+        return total > 100 ? '#006837' :
+            total > 50 ? '#31a354' :
+            total > 20 ? '#78c679' :
+            total > 10 ? '#c2e699' :
             '#ffffcc';
     }
 
     function style(feature) {
-        const total = feature.properties.total || 0; // handle null
         return {
-            fillColor: getColor(total),
+            fillColor: getColor(feature),
             weight: 1,
             opacity: 1,
             color: 'black',
@@ -267,6 +281,7 @@
     var legend = L.control({
         position: 'bottomleft'
     });
+
     legend.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'legend'),
             grades = [0, 10, 20, 50, 100],
@@ -275,14 +290,13 @@
         div.innerHTML = '<b>Jumlah Pemeriksaan</b><br>';
         for (var i = 0; i < grades.length; i++) {
             div.innerHTML +=
-                '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                '<i style="background:' + getColorByTotal(grades[i] + 1) + '"></i> ' +
                 labels[i] + '<br>';
         }
         return div;
     };
     legend.addTo(map);
 </script>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

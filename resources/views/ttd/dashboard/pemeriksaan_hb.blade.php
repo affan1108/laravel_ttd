@@ -76,7 +76,7 @@
                                 <!--end col-->
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
-                                        <label for="puskesmas" class="form-label">Puskesmas Domisili</label>
+                                        <label for="puskesmas" class="form-label">Puskesmas</label>
                                         <select class="js-example-basic-single" name="puskesmas_id" required>
                                             @foreach($puskesmass as $puskesmas)
                                                 <option value="{{$puskesmas->id}}">{{$puskesmas->nama}}</option>

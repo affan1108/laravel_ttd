@@ -33,7 +33,7 @@
                         <tr>
                             <th>NIK</th>
                             <th>NAMA</th>
-                            <th>Puskesmas Pemeriksaan</th>
+                            <!-- <th>Puskesmas Pemeriksaan</th> -->
                             <th>Tanggal Pemeriksaan</th>
                             <th>Hasil Pemeriksaan</th>
                             <th>Aksi</th>
@@ -44,7 +44,7 @@
                         <tr>
                             <td>{{@$row->pemeriksaan->nik}}</td>
                             <td>{{@$row->pemeriksaan->nama}}</td>
-                            <td>{{@$row->puskesmas->nama}}</td>
+                            <!-- <td>{{@$row->puskesmas->nama}}</td> -->
                             <td>{{@$row->tgl_pemeriksaan}}</td>
                             <td>{{@$row->hasil}}</td>
                             <td>
@@ -112,7 +112,7 @@
                                                         </div>
                                                     </div> -->
 
-                                                    <div class="col-md-6" id="puskesmas_dom_container">
+                                                    <!-- <div class="col-md-6" id="puskesmas_dom_container">
                                                         <label for="puskesmas" class="form-label">Puskesmas Pemeriksaan</label>
                                                         <select class="form-select js-example-basic-single" name="id_puskesmas">
                                                             @foreach($puskesmass as $puskesmas)
@@ -122,7 +122,7 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                                 <!--end row-->
                                             </div>
@@ -228,14 +228,14 @@
                                     </div>
                                 </div> -->
 
-                                <div class="col-md-6" id="puskesmas_dom_container">
+                                <!-- <div class="col-md-6" id="puskesmas_dom_container">
                                     <label for="puskesmas" class="form-label">Puskesmas Pemeriksaan</label>
                                     <select class="form-select js-example-basic-single" name="id_puskesmas">
                                         @foreach($puskesmass as $puskesmas)
                                         <option value="{{$puskesmas->id}}">{{$puskesmas->nama}}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> -->
                             </div>
                             <!--end row-->
                         </div>

@@ -63,7 +63,7 @@
                                 </div>
                                 <!--end col-->
                             </div>
-                            <div class="row gy-2 mt-2 mb-3">
+                            <!-- <div class="row gy-2 mt-2 mb-3">
                                 <div class="col-xxl-4 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <div>Apakah pemeriksaan hb dilakukan di puskesmas sesuai domisili?</div>
@@ -92,8 +92,8 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-auto mb-3" style="border-radius:10px;">
+                            </div> -->
+                            <div class="row gy-2 mt-2 mb-3" style="border-radius:10px;">
                                 <div class=" bg-white p-3" style="border-radius:10px;">
                                     {!! NoCaptcha::display() !!}
                                     @error('g-recaptcha-response')

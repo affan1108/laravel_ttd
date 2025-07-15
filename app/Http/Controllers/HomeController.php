@@ -138,7 +138,15 @@ class HomeController extends Controller
         $layout = Auth::check() ? 'layouts.layouts-horizontal' : 'layouts.layouts-detached';
         $data = Hasil::with('pemeriksaan')->get();
         //  dd($data);
-        $puskesmass = Puskesmas::all();
+        if (Auth::user()->role == 'puskesmas') {
+            $userPuskesmasIds = DB::table('akses')
+                ->where('user_id', Auth::id())
+                ->pluck('puskesmas_id');
+
+            $puskesmass = Puskesmas::where('id', $userPuskesmasIds)->get();
+        } else {
+            $puskesmass = Puskesmas::all();
+        }
         $dataTTD = DB::table('tablet_tambah_darah as ttd')
             ->join('pemeriksaans as pm', 'ttd.id_pemeriksaan', '=', 'pm.id')
             ->join('puskesmas as ps', 'pm.puskesmas_id', '=', 'ps.id')

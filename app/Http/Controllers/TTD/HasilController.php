@@ -216,20 +216,37 @@ class HasilController extends Controller
 
     public function hasilHB($bulan, $puskesmasId)
     {
-        $query = Hasil::query();
+        if (Auth::user()->role == 'puskesmas') {
+            $userPuskesmasIds = DB::table('akses')
+                ->where('user_id', Auth::id())
+                ->pluck('puskesmas_id');
 
-        if ($bulan !== '00') {
-            $query->whereMonth('tgl_pemeriksaan', $bulan);
+            $query = Hasil::join('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id')
+                ->whereIn('p.puskesmas_id', $userPuskesmasIds); // filter akses user
+
+            if ($bulan !== '00') {
+                $query->whereMonth('tgl_pemeriksaan', $bulan);
+            }
+
+            if ($puskesmasId !== '00') {
+                $query->where('p.puskesmas_id', $puskesmasId); // tambahan filter jika user memilih puskesmas spesifik
+            }
+        } else {
+            $query = Hasil::join('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id');
+
+            if ($bulan !== '00') {
+                $query->whereMonth('tgl_pemeriksaan', $bulan);
+            }
+
+            if ($puskesmasId !== '00') {
+                $query->where('p.puskesmas_id', $puskesmasId);
+            }
         }
-
-        if ($puskesmasId !== '00') {
-            $query->where('id_puskesmas', $puskesmasId);
-        }
-
-        $berat = (clone $query)->where('hasil', '<', 8)->count();
-        $sedang = (clone $query)->whereBetween('hasil', [8, 10.9])->count();
-        $ringan = (clone $query)->whereBetween('hasil', [11, 11.9])->count();
-        $normal = (clone $query)->where('hasil', '>=', 12)->count();
+        
+        $berat = (clone $query)->where('hasils.hasil', '<', 8)->count();
+        $sedang = (clone $query)->whereBetween('hasils.hasil', [8, 10.9])->count();
+        $ringan = (clone $query)->whereBetween('hasils.hasil', [11, 11.9])->count();
+        $normal = (clone $query)->where('hasils.hasil', '>=', 12)->count();
 
         return response()->json([
             'labels' => ['Berat', 'Sedang', 'Ringan', 'Normal'],

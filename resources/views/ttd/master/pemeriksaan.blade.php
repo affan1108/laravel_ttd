@@ -46,7 +46,7 @@
                             <th>Tempat Lahir</th>
                             <th>Tanggal Lahir</th>
                             <th>Alamat Lengkap</th>
-                            <th>Puskesmas Domisili</th>
+                            <th>Puskesmas</th>
                             <th>Nama Sekolah</th>
                             <th>Kecamatan</th>
                             <th>Kelas</th>
@@ -142,7 +142,7 @@
                                                     <!--end col-->
                                                     <div class="col-xxl-3 col-md-6">
                                                         <div>
-                                                            <label for="puskesmas" class="form-label">Puskesmas Domisili</label>
+                                                            <label for="puskesmas" class="form-label">Puskesmas</label>
                                                             <select class="js-example-basic-single" name="puskesmas_id" required>
                                                                 @foreach($puskesmass as $puskesmas)
                                                                     <option value="{{ $puskesmas->id }}"
@@ -592,7 +592,7 @@
                             <!--end col-->
                             <div class="col-xxl-3 col-md-6">
                                 <div>
-                                    <label for="puskesmas" class="form-label">Puskesmas Domisili</label>
+                                    <label for="puskesmas" class="form-label">Puskesmas</label>
                                     <select class="js-example-basic-single" name="puskesmas_id" required>
                                         @foreach($puskesmass as $puskesmas)
                                         <option value="{{$puskesmas->id}}">{{$puskesmas->nama}}</option>

@@ -83,9 +83,9 @@
                                 <li class="nav-item">
                                     <a href="{{ route('sekolah.index') }}" class="nav-link {{ request()->routeIs('sekolah.*') ? 'active' : '' }}">Sekolah</a>
                                 </li>
-                                <li class="nav-item">
+                                <!-- <li class="nav-item">
                                     <a href="{{ route('puskesmas.index') }}" class="nav-link {{ request()->routeIs('puskesmas.*') ? 'active' : '' }}">Puskesmas</a>
-                                </li>
+                                </li> -->
                                 <li class="nav-item">
                                     <a href="{{ route('pemeriksaan.create') }}" class="nav-link {{ request()->routeIs('pemeriksaan.*') ? 'active' : '' }}">Data Pribadi</a>
                                 </li>

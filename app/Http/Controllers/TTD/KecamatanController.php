@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TTD;
 use App\Http\Controllers\Controller;
 use App\Models\Kecamatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -118,45 +119,70 @@ class KecamatanController extends Controller
     }
 
     public function geojson()
-{
-    $data = DB::table('kecamatans as kec')
-        ->leftJoin('puskesmas as pus', 'pus.kecamatan_id', '=', 'kec.id')
-        ->leftJoin('hasils as h', 'h.id_puskesmas', '=', 'pus.id')
-        ->select(
-            'kec.id',
-            'kec.nama as kecamatan',
-            DB::raw('ST_AsGeoJSON(kec.geometry) as geometry'),
-            DB::raw('GROUP_CONCAT(DISTINCT pus.nama SEPARATOR ", ") as puskesmas'),
-            DB::raw('COUNT(h.id) as total'),
-            DB::raw('SUM(CASE WHEN h.hasil >= 12 THEN 1 ELSE 0 END) as normal'),
-            DB::raw('SUM(CASE WHEN h.hasil BETWEEN 11 AND 11.9 THEN 1 ELSE 0 END) as ringan'),
-            DB::raw('SUM(CASE WHEN h.hasil BETWEEN 8 AND 10.9 THEN 1 ELSE 0 END) as sedang'),
-            DB::raw('SUM(CASE WHEN h.hasil < 8 THEN 1 ELSE 0 END) as berat')
-        )
-        ->groupBy('kec.id', 'kec.nama', 'kec.geometry')
-        ->get();
+    {
+        if (Auth::user()->role == 'puskesmas') {
+            $userPuskesmasIds = DB::table('akses')
+                ->where('user_id', Auth::id())
+                ->pluck('puskesmas_id');
 
-    $features = $data->map(function ($row) {
-        return [
-            'type' => 'Feature',
-            'geometry' => $row->geometry ? json_decode($row->geometry) : null,
-            'properties' => [
-                'kecamatan' => $row->kecamatan,
-                'puskesmas' => $row->puskesmas ?? '-',
-                'total'     => (int) $row->total,
-                'normal'    => (int) $row->normal,
-                'ringan'    => (int) $row->ringan,
-                'sedang'    => (int) $row->sedang,
-                'berat'     => (int) $row->berat,
-            ]
-        ];
-    });
+            $data = DB::table('kecamatans as kec')
+                ->leftJoin('pemeriksaans as p', 'p.kecamatan_id', '=', 'kec.id')
+                ->leftJoin('hasils as h', 'h.id_biodata', '=', 'p.id')
+                ->leftJoin('puskesmas as pus', 'p.puskesmas_id', '=', 'pus.id')
+                ->whereIn('p.puskesmas_id', $userPuskesmasIds)
+                ->select(
+                    'kec.id',
+                    'kec.nama as kecamatan',
+                    DB::raw('ST_AsGeoJSON(kec.geometry) as geometry'),
+                    DB::raw('GROUP_CONCAT(DISTINCT pus.nama SEPARATOR ", ") as puskesmas'),
+                    DB::raw('COUNT(h.id) as total'),
+                    DB::raw('SUM(CASE WHEN h.hasil >= 12 THEN 1 ELSE 0 END) as normal'),
+                    DB::raw('SUM(CASE WHEN h.hasil BETWEEN 11 AND 11.9 THEN 1 ELSE 0 END) as ringan'),
+                    DB::raw('SUM(CASE WHEN h.hasil BETWEEN 8 AND 10.9 THEN 1 ELSE 0 END) as sedang'),
+                    DB::raw('SUM(CASE WHEN h.hasil < 8 THEN 1 ELSE 0 END) as berat')
+                )
+                ->groupBy('kec.id', 'kec.nama', 'kec.geometry')
+                ->get();
+        } else {
+            $data = DB::table('kecamatans as kec')
+            ->leftJoin('pemeriksaans as p', 'p.kecamatan_id', '=', 'kec.id')
+            ->leftJoin('hasils as h', 'h.id_biodata', '=', 'p.id')
+            ->select(
+                'kec.id',
+                'kec.nama as kecamatan',
+                DB::raw('ST_AsGeoJSON(kec.geometry) as geometry'),
+                DB::raw('GROUP_CONCAT(DISTINCT p.puskesmas_id SEPARATOR ", ") as puskesmas'),
+                DB::raw('COUNT(h.id) as total'),
+                DB::raw('SUM(CASE WHEN h.hasil >= 12 THEN 1 ELSE 0 END) as normal'),
+                DB::raw('SUM(CASE WHEN h.hasil BETWEEN 11 AND 11.9 THEN 1 ELSE 0 END) as ringan'),
+                DB::raw('SUM(CASE WHEN h.hasil BETWEEN 8 AND 10.9 THEN 1 ELSE 0 END) as sedang'),
+                DB::raw('SUM(CASE WHEN h.hasil < 8 THEN 1 ELSE 0 END) as berat')
+            )
+            ->groupBy('kec.id', 'kec.nama', 'kec.geometry')
+            ->get();
+        }
 
-    return response()->json([
-        'type' => 'FeatureCollection',
-        'features' => $features
-    ]);
-}
+        $features = $data->map(function ($row) {
+            return [
+                'type' => 'Feature',
+                'geometry' => $row->geometry ? json_decode($row->geometry) : null,
+                'properties' => [
+                    'kecamatan' => $row->kecamatan,
+                    'puskesmas' => $row->puskesmas ?? '-',
+                    'total'     => (int) $row->total,
+                    'normal'    => (int) $row->normal,
+                    'ringan'    => (int) $row->ringan,
+                    'sedang'    => (int) $row->sedang,
+                    'berat'     => (int) $row->berat,
+                ]
+            ];
+        });
+
+        return response()->json([
+            'type' => 'FeatureCollection',
+            'features' => $features
+        ]);
+    }
 
 
 
