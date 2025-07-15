@@ -22,16 +22,7 @@
 
             <div class="card-body">
                 <img src="{{ URL::asset('build/images/tambah_darah2.png') }}" alt="" class="img-fluid move-animation" style="max-height: 200px;">
-                <!-- <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Input Example</h4>
-                <div class="flex-shrink-0">
-                    <div class="form-check form-switch form-switch-right form-switch-md">
-                        <label for="form-grid-showcode" class="form-label text-muted">Show
-                            Code</label>
-                        <input class="form-check-input code-switcher" type="checkbox" id="form-grid-showcode">
-                    </div>
-                </div>
-            </div> -->
+                
                 @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show material-shadow" role="alert">
                     {{ session('success') }}
