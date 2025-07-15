@@ -34,60 +34,76 @@
                 <li class="menu-title"><span>@lang('translation.menu')</span></li>
                 @if(!Auth::user())
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('index')}}">
+                    <a class="nav-link menu-link {{ request()->is('/*') ? 'active' : '' }}" href="{{route('index')}}">
                         <i class="las la-pager "></i> <span>Data Pribadi</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('hasil-pemeriksaan.index')}}">
+                    <a class="nav-link menu-link {{ request()->is('hasil-pemeriksaan*') ? 'active' : '' }}" href="{{route('hasil-pemeriksaan.index')}}">
                         <i class="las la-folder-minus "></i> <span>Hasil Pemeriksaan</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('tambah-darah.index')}}">
+                    <a class="nav-link menu-link {{ request()->is('tambah-darah*') ? 'active' : '' }}" href="{{route('tambah-darah.index')}}">
                         <i class="lab la-delicious"></i> <span>Tablet Tambah Darah</span>
                     </a>
                 </li>
                 @else
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{route('dashboard')}}">
+                    <a class="nav-link menu-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{route('dashboard')}}">
                         <i class="las la-tachometer-alt"></i> <span>Dashboard</span>
                     </a>
                 </li> <!-- end Dashboard Menu -->
+                    @php
+                        $isMasterActive = request()->routeIs(
+                            'user.*',
+                            'sekolah.*',
+                            'puskesmas.*',
+                            'kecamatan.*',
+                            'pemeriksaan.*',
+                            'hasil-pemeriksaan.*',
+                            'tambah-darah.*'
+                        );
+                    @endphp
                     @if(Auth::user()->role == 'admin')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <a class="nav-link menu-link {{ $isMasterActive ? '' : 'collapsed' }}"
+                        href="#sidebarData"
+                        data-bs-toggle="collapse"
+                        role="button"
+                        aria-expanded="{{ $isMasterActive ? 'true' : 'false' }}"
+                        aria-controls="sidebarData">
                             <i class="las la-pager"></i> <span>Master Data</span>
                         </a>
-                        <div class="collapse menu-dropdown" id="sidebarData">
+                        <div class="collapse menu-dropdown {{ $isMasterActive ? 'show' : '' }}" id="sidebarData">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
-                                    <a href="{{route('user.index')}}" class="nav-link">User</a>
+                                    <a href="{{ route('user.index') }}" class="nav-link {{ request()->routeIs('user.*') ? 'active' : '' }}">User</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('sekolah.index')}}" class="nav-link">Sekolah</a>
+                                    <a href="{{ route('sekolah.index') }}" class="nav-link {{ request()->routeIs('sekolah.*') ? 'active' : '' }}">Sekolah</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
+                                    <a href="{{ route('puskesmas.index') }}" class="nav-link {{ request()->routeIs('puskesmas.*') ? 'active' : '' }}">Puskesmas</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
+                                    <a href="{{ route('pemeriksaan.create') }}" class="nav-link {{ request()->routeIs('pemeriksaan.*') ? 'active' : '' }}">Data Pribadi</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
+                                    <a href="{{ route('hasil-pemeriksaan.create') }}" class="nav-link {{ request()->routeIs('hasil-pemeriksaan.*') ? 'active' : '' }}">Hasil Pemeriksaan</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
+                                    <a href="{{ route('tambah-darah.index') }}" class="nav-link {{ request()->routeIs('tambah-darah.*') ? 'active' : '' }}">Tablet Tambah Darah</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
                     @elseif(Auth::user()->role == 'puskesmas')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <a class="nav-link menu-link {{ $isMasterActive ? '' : 'collapsed' }}" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="{{ $isMasterActive ? 'true' : 'false' }}" aria-controls="sidebarDashboards">
                             <i class="las la-pager"></i> <span>Master Data</span>
                         </a>
-                        <div class="collapse menu-dropdown" id="sidebarData">
+                        <div class="collapse menu-dropdown {{ $isMasterActive ? 'show' : '' }}" id="sidebarData">
                             <ul class="nav nav-sm flex-column">
                                 <!-- <li class="nav-item">
                                     <a href="{{route('sekolah.index')}}" class="nav-link">Sekolah</a>
@@ -99,20 +115,20 @@
                                     <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
                                 </li> -->
                                 <li class="nav-item">
-                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
+                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link {{ request()->routeIs('hasil-pemeriksaan.*') ? 'active' : '' }}">Hasil Pemeriksaan</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
+                                    <a href="{{route('tambah-darah.index')}}" class="nav-link {{ request()->routeIs('tambah-darah.*') ? 'active' : '' }}">Tablet Tambah Darah</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
                     @elseif(Auth::user()->role == 'sekolah')
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <a class="nav-link menu-link {{ $isMasterActive ? '' : 'collapsed' }}" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="{{ $isMasterActive ? 'true' : 'false' }}" aria-controls="sidebarDashboards">
                             <i class="las la-pager"></i> <span>Master Data</span>
                         </a>
-                        <div class="collapse menu-dropdown" id="sidebarData">
+                        <div class="collapse menu-dropdown {{ $isMasterActive ? 'show' : '' }}" id="sidebarData">
                             <ul class="nav nav-sm flex-column">
                                 <!-- <li class="nav-item">
                                     <a href="{{route('sekolah.index')}}" class="nav-link">Sekolah</a>
@@ -121,44 +137,44 @@
                                     <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
                                 </li> -->
                                 <li class="nav-item">
-                                    <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
+                                    <a href="{{route('pemeriksaan.create')}}" class="nav-link {{ request()->routeIs('pemeriksaan.*') ? 'active' : '' }}">Data Pribadi</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
+                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link {{ request()->routeIs('hasil-pemeriksaan.*') ? 'active' : '' }}">Hasil Pemeriksaan</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
+                                    <a href="{{route('tambah-darah.index')}}" class="nav-link {{ request()->routeIs('tambah-darah.*') ? 'active' : '' }}">Tablet Tambah Darah</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
                     @else
                     <li class="nav-item">
-                        <a class="nav-link menu-link" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
+                        <a class="nav-link menu-link {{ $isMasterActive ? '' : 'collapsed' }}" href="#sidebarData" data-bs-toggle="collapse" role="button" aria-expanded="{{ $isMasterActive ? 'true' : 'false' }}" aria-controls="sidebarDashboards">
                             <i class="las la-pager"></i> <span>Master Data</span>
                         </a>
-                        <div class="collapse menu-dropdown" id="sidebarData">
+                        <div class="collapse menu-dropdown {{ $isMasterActive ? 'show' : '' }}" id="sidebarData">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
-                                    <a href="{{route('user.index')}}" class="nav-link">User</a>
+                                    <a href="{{route('user.index')}}" class="nav-link {{ request()->routeIs('user.*') ? 'active' : '' }}">User</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('kecamatan.index')}}" class="nav-link">Kecamatan</a>
+                                    <a href="{{route('kecamatan.index')}}" class="nav-link {{ request()->routeIs('kecamatan.*') ? 'active' : '' }}">Kecamatan</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('sekolah.index')}}" class="nav-link">Sekolah</a>
+                                    <a href="{{route('sekolah.index')}}" class="nav-link {{ request()->routeIs('sekolah.*') ? 'active' : '' }}">Sekolah</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
+                                    <a href="{{route('puskesmas.index')}}" class="nav-link {{ request()->routeIs('puskesmas.*') ? 'active' : '' }}">Puskesmas</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
+                                    <a href="{{route('pemeriksaan.create')}}" class="nav-link {{ request()->routeIs('pemeriksaan.*') ? 'active' : '' }}">Data Pribadi</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link">Hasil Pemeriksaan</a>
+                                    <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link {{ request()->routeIs('hasil-pemeriksaan.*') ? 'active' : '' }}">Hasil Pemeriksaan</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{route('tambah-darah.index')}}" class="nav-link">Tablet Tambah Darah</a>
+                                    <a href="{{route('tambah-darah.index')}}" class="nav-link {{ request()->routeIs('tambah-darah.*') ? 'active' : '' }}">Tablet Tambah Darah</a>
                                 </li>
                             </ul>
                         </div>

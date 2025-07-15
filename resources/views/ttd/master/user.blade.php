@@ -215,7 +215,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <label for="customername-field" class="form-label">Kecamatan</label>
                                 <div class="col-lg-12">
-                                    <select class="js-example-basic-single" name="kecamatan_id" required>
+                                    <select class="js-example-basic-single" name="kecamatan_id">
                                         <option value="" selected>Full Akses</option>
                                         @foreach($kecamatans as $kecamatan)
                                         <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>
@@ -227,7 +227,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <label for="customername-field" class="form-label">Sekolah</label>
                                 <div class="col-lg-12">
-                                    <select class="js-example-basic-single" name="sekolah_id" required>
+                                    <select class="js-example-basic-single" name="sekolah_id">
                                         <option value="" selected>Full Akses</option>
                                         @foreach($sekolahs as $sekolah)
                                         <option value="{{$sekolah->id}}">{{$sekolah->nama}}</option>
@@ -239,7 +239,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <label for="customername-field" class="form-label">Puskesmas</label>
                                 <div class="col-lg-12">
-                                    <select class="js-example-basic-single" name="puskesmas_id" required>
+                                    <select class="js-example-basic-single" name="puskesmas_id">
                                         <option value="" selected>Full Akses</option>
                                         @foreach($puskesmass as $puskesmas)
                                         <option value="{{$puskesmas->id}}">{{$puskesmas->nama}}</option>
