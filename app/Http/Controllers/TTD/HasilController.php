@@ -41,34 +41,18 @@ class HasilController extends Controller
         if ($user->role === 'puskesmas') {
             if ($puskesmasIds->isNotEmpty()) {
                 $data = Hasil::with('pemeriksaan')
-                    ->whereHas('pemeriksaan', function ($query) use ($puskesmasIds) {
-                        $query->whereIn('puskesmas_id', $puskesmasIds);
-                    })
+                    ->whereIn('id_puskesmas', $puskesmasIds)
                     ->get();
 
-                if ($puskesmasIds->contains(null)) {
-                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
-                } else {
-                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)
-                        ->whereIn('id', $puskesmasIds)
-                        ->get();
-                }
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
             }
         } elseif ($user->role === 'sekolah') {
-            if ($sekolahIds->isNotEmpty()) {
+            if ($puskesmasIds->isNotEmpty()) {
                 $data = Hasil::with('pemeriksaan')
-                    ->whereHas('pemeriksaan', function ($query) use ($sekolahIds) {
-                        $query->whereIn('sekolah_id', $sekolahIds);
-                    })
+                    ->whereIn('id_puskesmas', $puskesmasIds)
                     ->get();
 
-                if ($sekolahIds->contains(null)) {
-                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
-                } else {
-                    $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)
-                        ->whereIn('id', $sekolahIds)
-                        ->get();
-                }
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
             }
         } else {
             // Untuk role lainnya (superadmin/dinas)
@@ -159,19 +143,7 @@ class HasilController extends Controller
      */
     public function destroy(string $id)
     {
-        try{
-            DB::beginTransaction();
-
-            $data = Hasil::findOrFail($id);
-            $data->delete();
-
-            DB::commit();
-
-            return redirect()->back()->with('success', 'Data berhasil dihapus');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
-        }
+        //
     }
 
     public function cariNik(Request $request)
@@ -210,7 +182,15 @@ class HasilController extends Controller
                     $query->where('nik', 'like', "%{$search}%")
                         ->orWhere('nama', 'like', "%{$search}%");
                 })
-                ->whereNull('deleted_at')
+                ->limit(20)
+                ->get();
+        } else {
+            $results = DB::table('pemeriksaans')
+                ->select('id','nik', 'nama')
+                ->where(function ($query) use ($search) {
+                    $query->where('nik', 'like', "%{$search}%")
+                        ->orWhere('nama', 'like', "%{$search}%");
+                })
                 ->limit(20)
                 ->get();
         }
@@ -233,53 +213,20 @@ class HasilController extends Controller
 
     public function hasilHB($bulan, $puskesmasId)
     {
-        if (Auth::user()->role == 'puskesmas') {
-            $userPuskesmasIds = DB::table('akses')
-                ->where('user_id', Auth::id())
-                ->pluck('puskesmas_id');
+        $query = Hasil::query();
 
-            $query = Hasil::leftJoin('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id')
-                ->whereIn('p.puskesmas_id', $userPuskesmasIds); // filter akses user
-
-            if ($bulan !== '00') {
-                $query->whereMonth('tgl_pemeriksaan', $bulan);
-            }
-
-            if ($puskesmasId !== '00') {
-                $query->where('p.puskesmas_id', $puskesmasId);
-            }
-            // dd($query);
-        } elseif (Auth::user()->role == 'puskesmas') {
-            $userSekolahIds = DB::table('akses')
-                ->where('user_id', Auth::id())
-                ->pluck('sekolah_id');
-
-            $query = Hasil::leftJoin('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id')
-                ->whereIn('p.puskesmas_id', $userSekolahIds); // filter akses user
-
-            if ($bulan !== '00') {
-                $query->whereMonth('tgl_pemeriksaan', $bulan);
-            }
-
-            if ($puskesmasId !== '00') {
-                $query->where('p.puskesmas_id', $puskesmasId);
-            }
-        } else {
-            $query = Hasil::join('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id');
-
-            if ($bulan !== '00') {
-                $query->whereMonth('tgl_pemeriksaan', $bulan);
-            }
-
-            if ($puskesmasId !== '00') {
-                $query->where('p.puskesmas_id', $puskesmasId);
-            }
+        if ($bulan !== '00') {
+            $query->whereMonth('tgl_pemeriksaan', $bulan);
         }
-        
-        $berat = (clone $query)->where('hasils.hasil', '<', 8)->count();
-        $sedang = (clone $query)->whereBetween('hasils.hasil', [8, 10.9])->count();
-        $ringan = (clone $query)->whereBetween('hasils.hasil', [11, 11.9])->count();
-        $normal = (clone $query)->where('hasils.hasil', '>=', 12)->count();
+
+        if ($puskesmasId !== '00') {
+            $query->where('id_puskesmas', $puskesmasId);
+        }
+
+        $berat = (clone $query)->where('hasil', '<', 8)->count();
+        $sedang = (clone $query)->whereBetween('hasil', [8, 10.9])->count();
+        $ringan = (clone $query)->whereBetween('hasil', [11, 11.9])->count();
+        $normal = (clone $query)->where('hasil', '>=', 12)->count();
 
         return response()->json([
             'labels' => ['Berat', 'Sedang', 'Ringan', 'Normal'],
