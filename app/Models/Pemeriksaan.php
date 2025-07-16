@@ -25,4 +25,8 @@ class Pemeriksaan extends Model
     public function kecamatan(){
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
+
+    public function hasil(){
+        return $this->hasMany(Hasil::class, 'id');
+    }
 }

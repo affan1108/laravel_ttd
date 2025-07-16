@@ -111,9 +111,9 @@
                                 <!-- <li class="nav-item">
                                     <a href="{{route('puskesmas.index')}}" class="nav-link">Puskesmas</a>
                                 </li> -->
-                                <!-- <li class="nav-item">
+                                <li class="nav-item">
                                     <a href="{{route('pemeriksaan.create')}}" class="nav-link">Data Pribadi</a>
-                                </li> -->
+                                </li>
                                 <li class="nav-item">
                                     <a href="{{route('hasil-pemeriksaan.create')}}" class="nav-link {{ request()->routeIs('hasil-pemeriksaan.*') ? 'active' : '' }}">Hasil Pemeriksaan</a>
                                 </li>

@@ -14,16 +14,18 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
+    <body class="font-serif antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
             <div>
                 <a href="{{route('index')}}">
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
                 </a>
             </div>
-            <!-- <div>
-                <p>Tablet Tambah Darah Remaja</p>
-            </div> -->
+            <div>
+                <p class="text-gray-800 dark:text-white transition-colors duration-300" style="margin-top: -40px; font-style: italic">
+                    Tablet Tambah Darah Remaja
+                </p>
+            </div>
 
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}

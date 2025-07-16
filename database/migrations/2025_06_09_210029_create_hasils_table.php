@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('id_puskesmas')->nullable()->constrained('puskesmas')->onUpdate('restrict')->onDelete('restrict');
             $table->string("tgl_pemeriksaan");
             $table->string("hasil");
+            $table->softDeletes();
             $table->timestamps();
         });
     }

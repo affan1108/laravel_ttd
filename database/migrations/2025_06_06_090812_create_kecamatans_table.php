@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->geometry('geometry')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -85,6 +85,51 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            @php
+                                                $akses_user = $aksess->where('user_id', $row->id)->first();
+                                            @endphp
+                                            <div class="mb-3">
+                                                <label for="customername-field" class="form-label">Kecamatan</label>
+                                                <div class="col-lg-12">
+                                                    <select class="js-example-basic-single" name="kecamatan_id">
+                                                        <option value="" selected>Full Akses</option>
+                                                        @foreach($kecamatans as $kecamatan)
+                                                        <option value="{{ $kecamatan->id }}" 
+                                                            {{ old('kecamatan_id', isset($row) && $akses_user ? $akses_user->kecamatan_id : '') == $kecamatan->id ? 'selected' : '' }}>
+                                                            {{ $kecamatan->nama }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="invalid-feedback">Pilih Kecamatan</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="customername-field" class="form-label">Sekolah</label>
+                                                <div class="col-lg-12">
+                                                    <select class="js-example-basic-single" name="sekolah_id">
+                                                        <option value="" selected>Full Akses</option>
+                                                        @foreach($sekolahs as $sekolah)
+                                                        <option value="{{$sekolah->id}}" {{ old('sekolah_id', isset($row) && $akses_user ? $akses_user->sekolah_id : '') == $sekolah->id ? 'selected' : '' }}>
+                                                            {{ $sekolah->nama }}
+                                                        </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="invalid-feedback">Pilih Sekolah</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="customername-field" class="form-label">Puskesmas</label>
+                                                <div class="col-lg-12">
+                                                    <select class="js-example-basic-single" name="puskesmas_id">
+                                                        <option value="" selected>Full Akses</option>
+                                                        @foreach($puskesmass as $puskesmas)
+                                                        <option value="{{$puskesmas->id}}" {{ old('puskesmas_id', isset($row) && $akses_user ? $akses_user->puskesmas_id : '') == $puskesmas->id ? 'selected' : '' }}>
+                                                                        {{ $puskesmas->nama }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="invalid-feedback">Pilih Puskesmas</div>
+                                            </div>
                                         </div>
                                         <div class="modal-footer">
                                             <div class="hstack gap-2 justify-content-end">
@@ -287,5 +332,22 @@
 <script src="{{ URL::asset('build/js/pages/datatables.init.js') }}"></script>
 
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        // Inisialisasi semua select2 default
+        $('.js-example-basic-single').select2({
+            width: '100%',
+            dropdownAutoWidth: true
+        });
 
+        // Jika select2 ada dalam modal, reinit saat modal dibuka
+        $('.modal').on('shown.bs.modal', function () {
+            $(this).find('.js-example-basic-single').select2({
+                dropdownParent: $(this),
+                width: '100%',
+                dropdownAutoWidth: true
+            });
+        });
+    });
+</script>
 @endsection

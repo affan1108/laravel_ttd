@@ -108,6 +108,18 @@ class KecamatanController extends Controller
             // Cari data berdasarkan ID
             $data = Kecamatan::findOrFail($id);
 
+            if ($data->puskesmas()->exists()) {
+                return redirect()->back()->with('error', 'Tidak bisa dihapus karena masih memiliki data puskesmas.');
+            }
+
+            if ($data->pemeriksaan()->exists()) {
+                return redirect()->back()->with('error', 'Tidak bisa dihapus karena masih memiliki data pemeriksaan.');
+            }
+
+            if ($data->sekolah()->exists()) {
+                return redirect()->back()->with('error', 'Tidak bisa dihapus karena masih memiliki data sekolah.');
+            }
+
             // Hapus data
             $data->delete();
 
@@ -130,6 +142,32 @@ class KecamatanController extends Controller
                 ->leftJoin('hasils as h', 'h.id_biodata', '=', 'p.id')
                 ->leftJoin('puskesmas as pus', 'p.puskesmas_id', '=', 'pus.id')
                 ->whereIn('p.puskesmas_id', $userPuskesmasIds)
+                ->whereNull('h.deleted_at')
+                ->select(
+                    'kec.id',
+                    'kec.nama as kecamatan',
+                    DB::raw('ST_AsGeoJSON(kec.geometry) as geometry'),
+                    DB::raw('GROUP_CONCAT(DISTINCT pus.nama SEPARATOR ", ") as puskesmas'),
+                    DB::raw('COUNT(h.id) as total'),
+                    DB::raw('SUM(CASE WHEN h.hasil >= 12 THEN 1 ELSE 0 END) as normal'),
+                    DB::raw('SUM(CASE WHEN h.hasil BETWEEN 11 AND 11.9 THEN 1 ELSE 0 END) as ringan'),
+                    DB::raw('SUM(CASE WHEN h.hasil BETWEEN 8 AND 10.9 THEN 1 ELSE 0 END) as sedang'),
+                    DB::raw('SUM(CASE WHEN h.hasil < 8 THEN 1 ELSE 0 END) as berat')
+                )
+                ->groupBy('kec.id', 'kec.nama', 'kec.geometry')
+                ->get();
+                // dd($data);
+        } elseif (Auth::user()->role == 'sekolah'){
+            $userSekolahIds = DB::table('akses')
+                ->where('user_id', Auth::id())
+                ->pluck('sekolah_id');
+
+            $data = DB::table('kecamatans as kec')
+                ->leftJoin('pemeriksaans as p', 'p.kecamatan_id', '=', 'kec.id')
+                ->leftJoin('hasils as h', 'h.id_biodata', '=', 'p.id')
+                ->leftJoin('puskesmas as pus', 'p.puskesmas_id', '=', 'pus.id')
+                ->whereIn('p.sekolah_id', $userSekolahIds)
+                ->whereNull('h.deleted_at')
                 ->select(
                     'kec.id',
                     'kec.nama as kecamatan',
@@ -146,12 +184,14 @@ class KecamatanController extends Controller
         } else {
             $data = DB::table('kecamatans as kec')
             ->leftJoin('pemeriksaans as p', 'p.kecamatan_id', '=', 'kec.id')
+            ->leftJoin('puskesmas as pus', 'p.puskesmas_id', '=', 'pus.id')
             ->leftJoin('hasils as h', 'h.id_biodata', '=', 'p.id')
+            ->whereNull('h.deleted_at')
             ->select(
                 'kec.id',
                 'kec.nama as kecamatan',
                 DB::raw('ST_AsGeoJSON(kec.geometry) as geometry'),
-                DB::raw('GROUP_CONCAT(DISTINCT p.puskesmas_id SEPARATOR ", ") as puskesmas'),
+                DB::raw('GROUP_CONCAT(DISTINCT pus.nama SEPARATOR ", ") as puskesmas'),
                 DB::raw('COUNT(h.id) as total'),
                 DB::raw('SUM(CASE WHEN h.hasil >= 12 THEN 1 ELSE 0 END) as normal'),
                 DB::raw('SUM(CASE WHEN h.hasil BETWEEN 11 AND 11.9 THEN 1 ELSE 0 END) as ringan'),

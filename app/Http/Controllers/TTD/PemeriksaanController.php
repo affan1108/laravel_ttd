@@ -36,15 +36,38 @@ class PemeriksaanController extends Controller
      */
     public function create()
     {
-        if (Auth::user()->role == 'sekolah') {
-            $akses = Akses::where('user_id', Auth::user()->id)->get();
+        $akses = Akses::where('user_id', Auth::user()->id)->get();
 
             $kecamatanIds = $akses->pluck('kecamatan_id')->filter(); 
             $puskesmasIds = $akses->pluck('puskesmas_id');
             $sekolahIds = $akses->pluck('sekolah_id');
             $sekolahs = collect(); 
             $puskesmass = collect();
+        if (Auth::user()->role == 'sekolah') {
 
+            $data = Pemeriksaan::whereIn('puskesmas_id', $puskesmasIds)->get();
+
+            if ($puskesmasIds->contains(null)) {
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
+            } else {
+                $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)
+                    ->whereIn('id', $puskesmasIds)
+                    ->get();
+            }
+
+
+            if ($sekolahIds->contains(null)) {
+                $sekolahs = Sekolah::whereIn('kecamatan_id', $kecamatanIds)->get();
+            } else {
+                $sekolahs = Sekolah::whereIn('kecamatan_id', $kecamatanIds)
+                    ->whereIn('id', $sekolahIds)
+                    ->get();
+            }
+
+            $kecamatans = Kecamatan::whereIn('id', $kecamatanIds)->get();
+
+            $deletes = Pemeriksaan::onlyTrashed()->get();
+        } elseif (Auth::user()->role == 'puskesmas') {
             $data = Pemeriksaan::whereIn('puskesmas_id', $puskesmasIds)->get();
 
             if ($puskesmasIds->contains(null)) {
@@ -89,24 +112,26 @@ class PemeriksaanController extends Controller
             $validator = Validator::make($request->all(), [
                 'nik' => 'required|size:16|unique:pemeriksaans,nik',
                 'g-recaptcha-response' => 'required|captcha',
+                'nomer' => 'required|size:11',
             ]);
 
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator)
                     ->withInput()
-                    ->with('error', 'Pastikan NIK dan captcha sudah benar.');
+                    ->with('error', 'gagal Menyimpan');
             }
         } else {
             $validator = Validator::make($request->all(), [
                 'nik' => 'required|size:16|unique:pemeriksaans,nik',
+                'nomer' => 'required|size:11',
             ]);
 
             if ($validator->fails()) {
                 return redirect()->back()
                     ->withErrors($validator)
                     ->withInput()
-                    ->with('error', 'NIK harus 16 digit.');
+                    ->with('error', 'Gagal Menyimpan');
             }
         }
 
@@ -177,6 +202,11 @@ class PemeriksaanController extends Controller
             DB::beginTransaction();
 
             $data = Pemeriksaan::findOrFail($id);
+
+            if ($data->hasil()->count() > 0) {
+                return redirect()->back()->with('error', 'Tidak bisa dihapus karena masih memiliki data hasil pemeriksaan.');
+            }
+
             $data->delete();
 
             DB::commit();

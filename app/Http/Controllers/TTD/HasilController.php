@@ -41,7 +41,9 @@ class HasilController extends Controller
         if ($user->role === 'puskesmas') {
             if ($puskesmasIds->isNotEmpty()) {
                 $data = Hasil::with('pemeriksaan')
-                    ->whereIn('id_puskesmas', $puskesmasIds)
+                    ->whereHas('pemeriksaan', function ($query) use ($puskesmasIds) {
+                        $query->whereIn('puskesmas_id', $puskesmasIds);
+                    })
                     ->get();
 
                 if ($puskesmasIds->contains(null)) {
@@ -53,16 +55,18 @@ class HasilController extends Controller
                 }
             }
         } elseif ($user->role === 'sekolah') {
-            if ($puskesmasIds->isNotEmpty()) {
+            if ($sekolahIds->isNotEmpty()) {
                 $data = Hasil::with('pemeriksaan')
-                    ->whereIn('id_puskesmas', $puskesmasIds)
+                    ->whereHas('pemeriksaan', function ($query) use ($sekolahIds) {
+                        $query->whereIn('sekolah_id', $sekolahIds);
+                    })
                     ->get();
 
-                if ($puskesmasIds->contains(null)) {
+                if ($sekolahIds->contains(null)) {
                     $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
                 } else {
                     $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)
-                        ->whereIn('id', $puskesmasIds)
+                        ->whereIn('id', $sekolahIds)
                         ->get();
                 }
             }
@@ -155,7 +159,19 @@ class HasilController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try{
+            DB::beginTransaction();
+
+            $data = Hasil::findOrFail($id);
+            $data->delete();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data berhasil dihapus');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $th->getMessage());
+        }
     }
 
     public function cariNik(Request $request)
@@ -194,6 +210,7 @@ class HasilController extends Controller
                     $query->where('nik', 'like', "%{$search}%")
                         ->orWhere('nama', 'like', "%{$search}%");
                 })
+                ->whereNull('deleted_at')
                 ->limit(20)
                 ->get();
         }
@@ -221,7 +238,7 @@ class HasilController extends Controller
                 ->where('user_id', Auth::id())
                 ->pluck('puskesmas_id');
 
-            $query = Hasil::join('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id')
+            $query = Hasil::leftJoin('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id')
                 ->whereIn('p.puskesmas_id', $userPuskesmasIds); // filter akses user
 
             if ($bulan !== '00') {
@@ -229,7 +246,23 @@ class HasilController extends Controller
             }
 
             if ($puskesmasId !== '00') {
-                $query->where('p.puskesmas_id', $puskesmasId); // tambahan filter jika user memilih puskesmas spesifik
+                $query->where('p.puskesmas_id', $puskesmasId);
+            }
+            // dd($query);
+        } elseif (Auth::user()->role == 'puskesmas') {
+            $userSekolahIds = DB::table('akses')
+                ->where('user_id', Auth::id())
+                ->pluck('sekolah_id');
+
+            $query = Hasil::leftJoin('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id')
+                ->whereIn('p.puskesmas_id', $userSekolahIds); // filter akses user
+
+            if ($bulan !== '00') {
+                $query->whereMonth('tgl_pemeriksaan', $bulan);
+            }
+
+            if ($puskesmasId !== '00') {
+                $query->where('p.puskesmas_id', $puskesmasId);
             }
         } else {
             $query = Hasil::join('pemeriksaans as p', 'hasils.id_biodata', '=', 'p.id');

@@ -545,8 +545,11 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nik" class="form-label">NIK</label>
-                                    <input type="text" class="form-control" id="nik" name="nik"
+                                    <input type="text" class="form-control" id="nik" name="nik" value="{{ old('nik') }}"
                                         placeholder="Masukkan NIK" required>
+                                    @error('nik')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <!--end col-->
@@ -561,8 +564,11 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nomer" class="form-label">No HP</label>
-                                    <input type="text" class="form-control" id="nomer" name="nomer"
+                                    <input type="text" class="form-control" id="nomer" name="nomer" value="{{ old('nomer') }}"
                                         placeholder="Masukkan No HP" required>
+                                    @error('nomer')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <!--end col-->
@@ -604,7 +610,8 @@
                             <div class="col-xxl-3 col-md-6">
                                 <div>
                                     <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                    <select class="js-example-basic-single" name="sekolah_id" required>
+                                    <select class="js-example-basic-single" name="sekolah_id">
+                                        <option value="" selected>Pilih Sekolah</option>
                                         @foreach($sekolahs as $sekolah)
                                         <option value="{{$sekolah->id}}">{{$sekolah->nama}}</option>
                                         @endforeach

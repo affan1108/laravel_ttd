@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
             $table->foreignId('puskesmas_id')->nullable()->constrained('puskesmas')->onDelete('cascade');
             $table->foreignId('sekolah_id')->nullable()->constrained('sekolahs')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

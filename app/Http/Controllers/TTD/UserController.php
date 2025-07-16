@@ -24,7 +24,8 @@ class UserController extends Controller
         $puskesmass = Puskesmas::all();
         $sekolahs = Sekolah::all();
         $kecamatans = Kecamatan::all();
-        return view('ttd.master.user', compact('data','puskesmass','sekolahs','kecamatans'));
+        $aksess = Akses::whereIn('user_id', $data->pluck('id'))->get();
+        return view('ttd.master.user', compact('data','puskesmass','sekolahs','kecamatans','aksess'));
     }
 
     /**
@@ -113,6 +114,13 @@ class UserController extends Controller
             $user->update([
                 'name' => $request->name,
                 'role' => $request->role,
+            ]);
+
+            $akses = Akses::where('user_id', $id)->first();
+            $akses->update([
+                'kecamatan_id' => $request->kecamatan_id,
+                'puskesmas_id' => $request->puskesmas_id,
+                'sekolah_id' => $request->sekolah_id,
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui!');

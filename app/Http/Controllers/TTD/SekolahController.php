@@ -113,6 +113,15 @@ class SekolahController extends Controller
             DB::beginTransaction();
 
             $data = Sekolah::findOrFail($id);
+
+            if ($data->pemeriksaan()->exists()) {
+                return redirect()->back()->with('error', 'Tidak bisa dihapus karena masih memiliki data pemeriksaan.');
+            }
+
+            if ($data->akses()->exists()) {
+                return redirect()->back()->with('error', 'Tidak bisa dihapus karena masih memiliki data akses.');
+            }
+
             $data->delete();
 
             DB::commit();
