@@ -54,6 +54,7 @@ class HasilController extends Controller
                         ->get();
                 }
             }
+            $deletes = Hasil::onlyTrashed()->get();
         } elseif ($user->role === 'sekolah') {
             if ($sekolahIds->isNotEmpty()) {
                 $data = Hasil::with('pemeriksaan')
@@ -70,13 +71,15 @@ class HasilController extends Controller
                         ->get();
                 }
             }
+            $deletes = Hasil::onlyTrashed()->get();
         } else {
             // Untuk role lainnya (superadmin/dinas)
             $data = Hasil::with('pemeriksaan')->get();
             $puskesmass = Puskesmas::all();
+            $deletes = Hasil::onlyTrashed()->get();
         }
 
-        return view('ttd.master.hasil', compact('data', 'puskesmass'));
+        return view('ttd.master.hasil', compact('data', 'puskesmass','deletes'));
     }
 
     /**
@@ -213,6 +216,15 @@ class HasilController extends Controller
                 ->whereNull('deleted_at')
                 ->limit(20)
                 ->get();
+        } else {
+            $results = DB::table('pemeriksaans')
+                ->select('id','nik', 'nama')
+                ->where(function ($query) use ($search) {
+                    $query->where('nik', 'like', "%{$search}%")
+                        ->orWhere('nama', 'like', "%{$search}%");
+                })
+                ->limit(20)
+                ->get();
         }
 
         return response()->json($results);
@@ -249,7 +261,7 @@ class HasilController extends Controller
                 $query->where('p.puskesmas_id', $puskesmasId);
             }
             // dd($query);
-        } elseif (Auth::user()->role == 'puskesmas') {
+        } elseif (Auth::user()->role == 'sekolah') {
             $userSekolahIds = DB::table('akses')
                 ->where('user_id', Auth::id())
                 ->pluck('sekolah_id');
@@ -285,6 +297,13 @@ class HasilController extends Controller
             'labels' => ['Berat', 'Sedang', 'Ringan', 'Normal'],
             'data' => [$berat, $sedang, $ringan, $normal]
         ]);
+    }
+
+    public function restore($id)
+    {
+        $data = Hasil::withTrashed()->findOrFail($id);
+        $data->restore();
+        return redirect()->back()->with('success', 'Data berhasil dikembalikan.');
     }
 
 }

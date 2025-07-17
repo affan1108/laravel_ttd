@@ -141,7 +141,7 @@ class HomeController extends Controller
             ->where('user_id', Auth::id())
             ->pluck('puskesmas_id');
             
-            $puskesmass = Puskesmas::where('id', $userPuskesmasIds)->get();
+            $puskesmass = Puskesmas::whereIn('id', $userPuskesmasIds)->get();
         } else {
             $puskesmass = Puskesmas::all();
         }

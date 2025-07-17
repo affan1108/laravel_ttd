@@ -41,8 +41,8 @@ Route::get('index/{locale}', [App\Http\Controllers\HomeController::class, 'lang'
 
 
 Route::middleware('guest')->group(function () {
-    Route::get('register', [RegisteredUserController::class, 'create'])
-        ->name('register');
+    // Route::get('register', [RegisteredUserController::class, 'create'])
+    //     ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
@@ -109,6 +109,7 @@ Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
     Route::resource('sekolah', SekolahController::class);
     Route::get('/sekolah/export', [SekolahController::class, 'export'])->name('sekolah.export');
     Route::post('/pemeriksaan/restore/{id}', [PemeriksaanController::class, 'restore'])->name('pemeriksaan.restore');
+    Route::post('/hasil-pemeriksaan/restore/{id}', [HasilController::class, 'restore'])->name('hasil-pemeriksaan.restore');
 });
 
 Route::middleware(['auth', 'role:superadmin,admin,puskesmas,sekolah'])->group(function () {

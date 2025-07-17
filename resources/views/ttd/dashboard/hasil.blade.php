@@ -58,7 +58,7 @@
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="hasil" class="form-label">HB Hasil Pemeriksaan</label>
                                         <input type="text" class="form-control" id="hasil" name="hasil"
-                                            placeholder="contoh: 9.6" required>
+                                            placeholder="contoh: 9.6" step="0.1" min="0" required>
                                     </div>
                                 </div>
                                 <!--end col-->

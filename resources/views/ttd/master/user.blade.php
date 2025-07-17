@@ -248,7 +248,7 @@
                             <div class="col-xxl-3 col-md-6">
                                 <label for="customername-field" class="form-label">Role</label>
                                 <div class="col-lg-12">
-                                    <select class="js-example-basic-single" name="role">
+                                    <select class="js-example-basic-single" name="role" id="role">
                                         <!-- <option value="superadmin">Super Admin</option> -->
                                         <option value="admin">Super Admin</option>
                                         <option value="puskesmas">Admin Puskesmas</option>
@@ -257,10 +257,10 @@
                                 </div>
                                 <div class="invalid-feedback">Pilih Role</div>
                             </div>
-                            <div class="col-xxl-3 col-md-6">
+                            <div class="col-xxl-3 col-md-6" id="kecamatan-group">
                                 <label for="customername-field" class="form-label">Kecamatan</label>
                                 <div class="col-lg-12">
-                                    <select class="js-example-basic-single" name="kecamatan_id">
+                                    <select class="js-example-basic-single" name="kecamatan_id" required>
                                         <option value="" selected>Full Akses</option>
                                         @foreach($kecamatans as $kecamatan)
                                         <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>
@@ -269,7 +269,7 @@
                                 </div>
                                 <div class="invalid-feedback">Pilih Kecamatan</div>
                             </div>
-                            <div class="col-xxl-3 col-md-6">
+                            <div class="col-xxl-3 col-md-6" id="sekolah-group" >
                                 <label for="customername-field" class="form-label">Sekolah</label>
                                 <div class="col-lg-12">
                                     <select class="js-example-basic-single" name="sekolah_id">
@@ -281,7 +281,7 @@
                                 </div>
                                 <div class="invalid-feedback">Pilih Sekolah</div>
                             </div>
-                            <div class="col-xxl-3 col-md-6">
+                            <div class="col-xxl-3 col-md-6" id="puskesmas-group">
                                 <label for="customername-field" class="form-label">Puskesmas</label>
                                 <div class="col-lg-12">
                                     <select class="js-example-basic-single" name="puskesmas_id">
@@ -350,4 +350,30 @@
         });
     });
 </script>
+<script>
+$(document).ready(function () {
+    function toggleGroups() {
+        const role = $('#role').val();
+
+        if (role === 'admin') {
+            $('#kecamatan-group').hide();
+            $('#sekolah-group').hide();
+            $('#puskesmas-group').hide();
+        } else {
+            $('#kecamatan-group').show();
+            $('#sekolah-group').show();
+            $('#puskesmas-group').show();
+        }
+    }
+
+    // Saat halaman dimuat pertama kali
+    toggleGroups();
+
+    // Saat pilihan role diubah
+    $('#role').on('change', function () {
+        toggleGroups();
+    });
+});
+</script>
+
 @endsection

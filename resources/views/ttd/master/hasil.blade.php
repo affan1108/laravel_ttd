@@ -177,6 +177,162 @@
     </div>
 </div>
 
+@if(Auth::user()->role == 'superadmin' || Auth::user()->role == 'admin')
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0 flex-grow-1">Data Master Hasil Pemeriksaan (Deleted)</h5>
+            </div>
+            <div class="card-body">
+                <table id="example2" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>NIK</th>
+                            <th>NAMA</th>
+                            <!-- <th>Puskesmas Pemeriksaan</th> -->
+                            <th>Tanggal Pemeriksaan</th>
+                            <th>Hasil Pemeriksaan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($deletes as $row)
+                        <tr>
+                            <td>{{@$row->pemeriksaan->nik}}</td>
+                            <td>{{@$row->pemeriksaan->nama}}</td>
+                            <!-- <td>{{@$row->puskesmas->nama}}</td> -->
+                            <td>{{@$row->tgl_pemeriksaan}}</td>
+                            <td>{{@$row->hasil}}</td>
+                            <td>
+                                <a data-bs-toggle="modal"
+                                                data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Detail</a>
+                                <a data-bs-toggle="modal"
+                                                data-bs-target="#restoreModal{{@$row->id}}" class="btn btn-warning">Restore</a>
+                            </td>
+                        </tr>
+                        <div class="modal fade" id="editModal{{@$row->id}}" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-secondary p-3">
+                                        <h5 class="modal-title text-light" id="exampleModalLabel">Edit Data</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close" id="close-modal"></button>
+                                    </div>
+                                    <form action="{{route('hasil-pemeriksaan.update', @$row->id)}}" method="POST" enctype="multipart/form-data">
+                                        @method('PUT')
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="live-preview">
+                                                <div class="row gy-3">
+                                                    <div class="col-xxl-4 col-md-6">
+                                                        <label for="id_biodata" class="form-label">NIK</label>
+                                                        <select id="id_biodata" name="id_biodata" class="form-control js-nik-search" disabled>
+                                                            @if(isset($row->pemeriksaan))
+                                                                <option value="{{ $row->pemeriksaan->id }}" selected>
+                                                                    {{ $row->pemeriksaan->nik }} - {{ $row->pemeriksaan->nama ?? '' }}
+                                                                </option>
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                    <!--end col-->
+                                                    <div class="col-xxl-4 col-md-6">
+                                                        <div>
+                                                            <label for="tgl_pemeriksaan" class="form-label">Tanggal Pemeriksaan</label>
+                                                            <input type="date" class="form-control" id="tgl_pemeriksaan" name="tgl_pemeriksaan"
+                                                                placeholder="Masukkan Tanggal Pemeriksaan" value="{{old('tgl_pemeriksaan',@$row->tgl_pemeriksaan)}}" required>
+                                                        </div>
+                                                    </div>
+                                                    <!--end col-->
+                                                    <div class="col-xxl-4 col-md-6">
+                                                        <div>
+                                                            <label for="hasil" class="form-label">HB Hasil Pemeriksaan</label>
+                                                            <input type="text" class="form-control" id="hasil" name="hasil"
+                                                                placeholder="contoh: 9.6" value="{{old('hasil',@$row->hasil)}}" required>
+                                                        </div>
+                                                    </div>
+                                                    <!--end col-->
+                                                </div>
+                                                <div class="row gy-2 mt-2">
+                                                    <!-- <div class="col-md-6">
+                                                        <div>Apakah pemeriksaan hb dilakukan di puskesmas sesuai domisili?</div>
+                                                        <div class="mt-2 d-flex justify-content-evenly">
+                                                            <div class="form-check form-radio-primary mb-3">
+                                                                <input class="form-check-input" type="radio" name="pemeriksaan_domisili" id="radio_ya" value="1" checked>
+                                                                <label class="form-check-label" for="radio_ya">Iya</label>
+                                                            </div>
+                                                            <div class="form-check form-radio-primary mb-3">
+                                                                <input class="form-check-input" type="radio" name="pemeriksaan_domisili" id="radio_tidak" value="0">
+                                                                <label class="form-check-label" for="radio_tidak">Tidak</label>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+
+                                                    <!-- <div class="col-md-6" id="puskesmas_dom_container">
+                                                        <label for="puskesmas" class="form-label">Puskesmas Pemeriksaan</label>
+                                                        <select class="form-select js-example-basic-single" name="id_puskesmas">
+                                                            @foreach($puskesmass as $puskesmas)
+                                                                <option value="{{ $puskesmas->id }}"
+                                                                    {{ old('id_puskesmas', $row->id_puskesmas) == $puskesmas->id ? 'selected' : '' }}>
+                                                                    {{ $puskesmas->nama }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div> -->
+                                                </div>
+                                                <!--end row-->
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer align-items-right">
+                                            <button type="submit" class="btn btn-secondary">Simpan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade zoomIn" id="restoreModal{{@$row->id}}" tabindex="-1"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close" id="btn-close"></button>
+                                    </div>
+                                    <form action="{{ route('hasil-pemeriksaan.restore', @$row->id) }}" method="post">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="mt-2 text-center">
+                                                <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
+                                                    colors="primary:#f7b84b,secondary:#f06548"
+                                                    style="width:100px;height:100px"></lord-icon>
+                                                <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                                                    <h4>Are you Sure ?</h4>
+                                                    <p class="text-muted mx-4 mb-0">Yakin restore data?</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex gap-2 justify-content-center mt-4 mb-2">
+                                                <button type="button" class="btn w-sm btn-light"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn w-sm btn-warning "
+                                                    id="delete-record">Yes,
+                                                    Restore It!</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -308,6 +464,56 @@
 
     $(function() {
         $('#example1').DataTable({
+            "scrollX": true,
+            "responsive": false,
+            "lengthChange": false,
+            "autoWidth": false,
+            "search": true,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    exportOptions: { columns: ':not(:last-child)' }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: { columns: ':not(:last-child)' }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: { columns: ':not(:last-child)' }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: { columns: ':not(:last-child)' },
+                    customize: function (win) {
+                        var css = '@page { size: landscape; }',
+                            head = win.document.head || win.document.getElementsByTagName('head')[0],
+                            style = win.document.createElement('style');
+
+                        style.type = 'text/css';
+                        style.media = 'print';
+
+                        if (style.styleSheet) {
+                            style.styleSheet.cssText = css;
+                        } else {
+                            style.appendChild(win.document.createTextNode(css));
+                        }
+
+                        head.appendChild(style);
+
+                        $(win.document.body).css('font-size', '10px');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                },
+                {
+                    extend: 'colvis'
+                }
+            ]
+        });
+        $('#example2').DataTable({
             "scrollX": true,
             "responsive": false,
             "lengthChange": false,

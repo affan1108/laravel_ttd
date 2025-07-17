@@ -45,7 +45,7 @@ class PemeriksaanController extends Controller
             $puskesmass = collect();
         if (Auth::user()->role == 'sekolah') {
 
-            $data = Pemeriksaan::whereIn('puskesmas_id', $puskesmasIds)->get();
+            $data = Pemeriksaan::whereIn('sekolah_id', $sekolahIds)->get();
 
             if ($puskesmasIds->contains(null)) {
                 $puskesmass = Puskesmas::whereIn('kecamatan_id', $kecamatanIds)->get();
@@ -112,7 +112,7 @@ class PemeriksaanController extends Controller
             $validator = Validator::make($request->all(), [
                 'nik' => 'required|size:16|unique:pemeriksaans,nik',
                 'g-recaptcha-response' => 'required|captcha',
-                'nomer' => 'required|size:11',
+                'nomer' => 'required|min:11',
             ]);
 
             if ($validator->fails()) {
@@ -124,7 +124,7 @@ class PemeriksaanController extends Controller
         } else {
             $validator = Validator::make($request->all(), [
                 'nik' => 'required|size:16|unique:pemeriksaans,nik',
-                'nomer' => 'required|size:11',
+                'nomer' => 'required|min:11',
             ]);
 
             if ($validator->fails()) {
@@ -220,8 +220,8 @@ class PemeriksaanController extends Controller
 
     public function restore($id)
     {
-        $pemeriksaan = Pemeriksaan::withTrashed()->findOrFail($id);
-        $pemeriksaan->restore();
+        $data = Pemeriksaan::withTrashed()->findOrFail($id);
+        $data->restore();
         return redirect()->back()->with('success', 'Data berhasil dikembalikan.');
     }
 }

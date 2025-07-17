@@ -18,7 +18,8 @@ class SekolahController extends Controller
     {
         $data = Sekolah::all();
         $kecamatans = Kecamatan::all();
-        return view('ttd.master.sekolah', compact('data','kecamatans'));
+        $deletes = Sekolah::onlyTrashed()->get();
+        return view('ttd.master.sekolah', compact('data','kecamatans','deletes'));
     }
 
     public function data()

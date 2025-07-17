@@ -40,7 +40,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="nama" class="form-label">Nama Lengkap</label>
-                                        <input type="text" class="form-control" id="nama" name="nama"
+                                        <input type="text" class="form-control" id="nama" name="nama" value="{{ old('nama') }}"
                                             placeholder="Masukkan Nama Lengkap" required>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                                        <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir"
+                                        <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="{{ old('tempat_lahir') }}"
                                             placeholder="Masukkan Tempat Lahir" required>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="tgl_lahir" class="form-label">Tanggal Lahir</label>
-                                        <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir"
+                                        <input type="date" class="form-control" id="tgl_lahir" name="tgl_lahir" value="{{ old('tgl_lahir') }}"
                                             placeholder="Masukkan Tanggal Lahir" required>
                                     </div>
                                 </div>
@@ -75,7 +75,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="alamat" class="form-label">Alamat Lengkap</label>
-                                        <input type="text" class="form-control" id="alamat" name="alamat"
+                                        <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}"
                                             placeholder="Masukkan Alamat Lengkap" required>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="puskesmas" class="form-label">Puskesmas</label>
-                                        <select class="js-example-basic-single" name="puskesmas_id" required>
+                                        <select class="js-example-basic-single" name="puskesmas_id" value="{{ old('puskesmas_id') }}" required>
                                             @foreach($puskesmass as $puskesmas)
                                                 <option value="{{$puskesmas->id}}">{{$puskesmas->nama}}</option>
                                             @endforeach
@@ -94,7 +94,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                                        <select class="js-example-basic-single" name="sekolah_id" required>
+                                        <select class="js-example-basic-single" name="sekolah_id" value="{{ old('sekolah_id') }}" required>
                                             @foreach($sekolahs as $sekolah)
                                                 <option value="{{$sekolah->id}}">{{$sekolah->nama}}</option>
                                             @endforeach
@@ -105,7 +105,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="id_kecamatan" class="form-label">Kecamatan</label>
-                                        <select class="js-example-basic-single" name="kecamatan_id" required>
+                                        <select class="js-example-basic-single" name="kecamatan_id" value="{{ old('kecamatan_id') }}" required>
                                             @foreach($kecamatans as $kecamatan)
                                                 <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>
                                             @endforeach
@@ -116,7 +116,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="kelas" class="form-label">Kelas</label>
-                                        <select class="js-example-basic-single" name="kelas" id="kelas">
+                                        <select class="js-example-basic-single" name="kelas" id="kelas" value="{{ old('kelas') }}" required>
                                             <!-- <option value="0" selected>Pilih Jenis Kelamin</option> -->
                                             <option value="7">7</option>
                                             <option value="8">8</option>
@@ -131,7 +131,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                        <select class="js-example-basic-single" name="jenis_kelamin" id="jenis_kelamin">
+                                        <select class="js-example-basic-single" name="jenis_kelamin" id="jenis_kelamin" value="{{ old('jenis_kelamin') }}" required>
                                             <!-- <option value="0" selected>Pilih Jenis Kelamin</option> -->
                                             <option value="1">Laki - laki</option>
                                             <option value="2">Perempuan</option>
@@ -142,7 +142,7 @@
                                 <div class="col-xxl-3 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="nama_ortu" class="form-label">Nama Orang Tua</label>
-                                        <input type="text" class="form-control" id="nama_ortu" name="nama_ortu"
+                                        <input type="text" class="form-control" id="nama_ortu" name="nama_ortu" value="{{ old('nama_ortu') }}"
                                             placeholder="Masukkan Nama Orang Tua" required>
                                     </div>
                                 </div>
