@@ -24,10 +24,11 @@ class TambahDarahController extends Controller
             // Jika sudah login, arahkan ke view admin/master
 
 
-            $data = TambahDarah::with('pemeriksaan')->get();
+            $data = TambahDarah::with('pemeriksaan')->where('aktif', '=', 1)->get();
+            $datanonaktif = TambahDarah::with('pemeriksaan')->where('aktif', '=', 0)->get();
 
 
-            return view('ttd.master.tambah_darah', compact('data'));
+            return view('ttd.master.tambah_darah', compact('data', 'datanonaktif'));
         } else {
 
             return view('ttd.dashboard.tablet_tambah_darah', compact('layout'));
@@ -133,7 +134,7 @@ class TambahDarahController extends Controller
         $data = TambahDarah::findOrFail($id);
 
         // Hapus data
-        $data->delete();
+        $data->update(['aktif' => 0]); // Tandai sebagai tidak aktif
 
         // Redirect dengan pesan sukses
         return redirect()->route('tambah-darah.index')->with('success', 'Data berhasil dihapus.');
@@ -165,62 +166,116 @@ class TambahDarahController extends Controller
     public function data(Request $request)
     {
         $isTotal = $request->filter_type === 'total';
+        $isUnactive = $request->filter_type === 'unactive';
 
         $query = DB::table('tablet_tambah_darah as ttd')
             ->join('pemeriksaans as p', 'ttd.id_pemeriksaan', '=', 'p.id')
             ->leftJoin('puskesmas as ps', 'p.puskesmas_id', '=', 'ps.id')
-            ->join('sekolahs as s', 'p.sekolah_id', '=', 's.id');
+            ->leftJoin('kecamatans as k', 'p.kecamatan_id', '=', 'k.id')
+            ->join('sekolahs as s', 'p.sekolah_id', '=', 's.id'); // Hanya ambil data yang aktif
 
         if ($request->has('filter_month') && $request->filter_month !== 'all') {
             $query->whereMonth('ttd.tgl_minum', $request->filter_month);
         }
 
         if ($isTotal) {
-            $query->select(
-                'p.id',
-                'p.nik',
-                'p.nama',
-                DB::raw("CASE 
+            $query
+                ->where('ttd.aktif', 1)
+                ->select(
+                    'p.id',
+                    'p.nik',
+                    'p.nama',
+                    'p.nomer',
+                    'p.tempat_lahir',
+                    'p.tgl_lahir',
+                    'p.alamat',
+                    'p.kelas',
+                    'p.nama_ortu',
+                    'k.nama as kecamatan',
+                    DB::raw("CASE 
                 WHEN p.jenis_kelamin = 1 THEN 'Laki-laki'
                 WHEN p.jenis_kelamin = 2 THEN 'Perempuan'
                 ELSE 'Tidak Diketahui' 
             END as jenis_kelamin"),
-                'ps.nama as nama_puskesmas',
-                's.nama as nama_sekolah',
-                DB::raw('SUM(ttd.jumlah_tablet) as jumlah_tablet'),
-                DB::raw("GROUP_CONCAT(ttd.tgl_minum ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as tgl_minum"),
-                DB::raw("GROUP_CONCAT(ttd.tgl_periksa_ulang ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as tgl_periksa_ulang"),
-                DB::raw("GROUP_CONCAT(DISTINCT ttd.pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as pengawas"),
-                DB::raw("GROUP_CONCAT(DISTINCT ttd.nomor_pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as nomor_pengawas"),
-                DB::raw("GROUP_CONCAT(DISTINCT ttd.keterangan ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as keterangan")
-            )
+                    'ps.nama as nama_puskesmas',
+                    's.nama as nama_sekolah',
+                    DB::raw('SUM(ttd.jumlah_tablet) as jumlah_tablet'),
+                    DB::raw("GROUP_CONCAT(ttd.tgl_minum ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as tgl_minum"),
+                    DB::raw("GROUP_CONCAT(ttd.tgl_periksa_ulang ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as tgl_periksa_ulang"),
+                    DB::raw("GROUP_CONCAT(DISTINCT ttd.pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as pengawas"),
+                    DB::raw("GROUP_CONCAT(DISTINCT ttd.nomor_pengawas ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as nomor_pengawas"),
+                    DB::raw("GROUP_CONCAT(DISTINCT ttd.keterangan ORDER BY ttd.tgl_minum ASC SEPARATOR '\n') as keterangan")
+                )
                 ->groupBy(
                     'p.id',
                     'p.nik',
                     'p.nama',
+                    'p.nomer',
+                    'p.tempat_lahir',
+                    'p.tgl_lahir',
+                    'p.alamat',
+                    'p.kelas',
+                    'p.nama_ortu',
                     'p.jenis_kelamin',
                     'ps.nama',
-                    's.nama'
+                    's.nama',
+                    'k.nama'
                 );
-        } else {
-            $query->select(
-                'ttd.id',
-                'p.nik',
-                'p.nama',
-                DB::raw("CASE 
+        } else if ($isUnactive) {
+            $query
+                ->where('ttd.aktif', 0)
+                ->select(
+                    'ttd.id',
+                    'p.nik',
+                    'p.nama',
+                    'p.nomer',
+                    'p.tempat_lahir',
+                    'p.tgl_lahir',
+                    'p.alamat',
+                    'p.kelas',
+                    'p.nama_ortu',
+                    'k.nama as kecamatan',
+                    DB::raw("CASE 
                 WHEN p.jenis_kelamin = 1 THEN 'Laki-laki'
                 WHEN p.jenis_kelamin = 2 THEN 'Perempuan'
                 ELSE 'Tidak Diketahui'
             END as jenis_kelamin"),
-                'ps.nama as nama_puskesmas',
-                's.nama as nama_sekolah',
-                'ttd.jumlah_tablet',
-                'ttd.tgl_minum',
-                'ttd.tgl_periksa_ulang',
-                'ttd.pengawas',
-                'ttd.nomor_pengawas',
-                'ttd.keterangan'
-            );
+                    'ps.nama as nama_puskesmas',
+                    's.nama as nama_sekolah',
+                    'ttd.jumlah_tablet',
+                    'ttd.tgl_minum',
+                    'ttd.tgl_periksa_ulang',
+                    'ttd.pengawas',
+                    'ttd.nomor_pengawas',
+                    'ttd.keterangan'
+                );
+        } else {
+            $query->where('ttd.aktif', 1)
+                ->select(
+                    'ttd.id',
+                    'p.nik',
+                    'p.nama',
+                    'p.nomer',
+                    'p.tempat_lahir',
+                    'p.tgl_lahir',
+                    'p.alamat',
+                    'p.kelas',
+                    'p.nama_ortu',
+                    'k.nama as kecamatan',
+                    DB::raw("CASE 
+                WHEN p.jenis_kelamin = 1 THEN 'Laki-laki'
+                WHEN p.jenis_kelamin = 2 THEN 'Perempuan'
+                ELSE 'Tidak Diketahui'
+            END as jenis_kelamin"),
+                    'ps.nama as nama_puskesmas',
+                    's.nama as nama_sekolah',
+                    'ttd.jumlah_tablet',
+                    'ttd.tgl_minum',
+                    'ttd.tgl_periksa_ulang',
+                    'ttd.pengawas',
+                    'ttd.nomor_pengawas',
+                    'ttd.keterangan'
+                );
         }
 
         $datatable = DataTables::of($query)
@@ -247,5 +302,19 @@ class TambahDarahController extends Controller
     {
         $ttd = TambahDarah::with('pemeriksaan')->findOrFail($id);
         return response()->json($ttd);
+    }
+    public function restore($id)
+    {
+        // Cari data berdasarkan ID
+        $data = TambahDarah::findOrFail($id);
+
+        // Tandai sebagai aktif
+        $data->update(['aktif' => 1]);
+
+        // Redirect dengan pesan sukses
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ]);
     }
 }

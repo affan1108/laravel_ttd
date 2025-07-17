@@ -33,6 +33,8 @@ return new class extends Migration
 
             // keterangan bisa nullable
             $table->text('keterangan')->nullable();
+            
+            $table->integer('aktif')->default(1); // kolom aktif untuk menandakan apakah data aktif atau tidak
 
             $table->timestamps();
 

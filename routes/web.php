@@ -93,10 +93,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/chart/hasil', [HasilController::class, 'chartData']);
     Route::get('/ttd/chart/donut/hasil/{bulan}/{puskesmas}', [HasilController::class, 'hasilHB'])->name('donutChart');
 
-    Route::put('tambah-darah/{id}/update', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
-    Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');
     Route::get('tambah-darah/data', [TambahDarahController::class, 'data'])->name('tambah-darah.data');
     Route::get('tambah-darah/{id}/edit', [TambahDarahController::class, 'getedit'])->name('tambah-darah.getedit');
+    Route::put('tambah-darah/{id}/update', [TambahDarahController::class, 'update'])->name('tambah-darah.update');
+    Route::delete('tambah-darah/{id}', [TambahDarahController::class, 'destroy'])->name('tambah-darah.destroy');    
+    Route::put('tambah-darah/{id}/restore', [TambahDarahController::class, 'restore'])->name('tambah-darah.restore');
 });
 
 Route::middleware(['auth', 'role:superadmin'])->group(function () {

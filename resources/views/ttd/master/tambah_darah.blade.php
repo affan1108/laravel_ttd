@@ -21,19 +21,7 @@
         <div class="card">
 
             <div class="card-body">
-                @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show material-shadow" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                @endif
 
-                @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show material-shadow" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                @endif
                 <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
                     <h5 class="card-title mb-0 flex-grow-1">Tabel Data Tablet Tambah Darah</h5>
 
@@ -73,7 +61,13 @@
                         <tr>
                             <th>NIK</th>
                             <th>Nama</th>
-                            <!-- <th>Nomer HP</th> -->
+                            <th>Nomer HP</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Alamat Lengkap</th>
+                            <th>Nama Sekolah</th>
+                            <th>Kecamatan</th>
+                            <th>Kelas</th>
                             <th>Jenis Kelamin</th>
                             <th>Puskesmas</th>
                             <th>Pengawas TTD</th>
@@ -89,6 +83,40 @@
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <div class="card">
+
+            <div class="card-body">
+                <div class="card-header d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <h5 class="card-title mb-0 flex-grow-1">Data Yang terhapus</h5>
+                </div>
+                <table id="example2" class="table table-nowrap dt-responsive table-bordered display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>NIK</th>
+                            <th>Nama</th>
+                            <th>Nomer HP</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Alamat Lengkap</th>
+                            <th>Nama Sekolah</th>
+                            <th>Kecamatan</th>
+                            <th>Kelas</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Puskesmas</th>
+                            <th>Pengawas TTD</th>
+                            <th>No HP Pengawas TTD</th>
+                            <th>Jumlah Tablet</th>
+                            <th>Tgl Minum TTD</th>
+                            <th>Tgl Periksa Ulang</th>
+                            <th>Keterangan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
             </div>
         </div>
     </div>
@@ -234,7 +262,7 @@
                             style="width:50px;height:50px"></lord-icon>
                         <div class="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
                             <h4>Konfirmasi</h4>
-                            <p class="text-muted mx-4 mb-0">Apakah anda yakin menghapus data ini.?</p>
+                            <p class="text-muted mx-4 mb-0" id="keterangan_del"></p>
                         </div>
                         <!-- Data Card -->
                         <div class="card border-danger mb-4 shadow-lg" style="border-left: 4px solid #dc3545; border-radius: 8px;">
@@ -608,6 +636,7 @@
                 $('#pengawas_del').html(data2.pengawas);
                 $('#tgl_periksa_ulang_del').html(data2.tgl_periksa_ulang);
                 $('#keterangan_edit').html(data2.keterangan);
+                $('#keterangan_del').html('Apakah Anda yakin ingin menghapus data ini?');
 
 
                 // Tampilkan modal
@@ -620,6 +649,8 @@
                 alert('Gagal memuat data sekolah');
             });
         });
+
+
     });
 
     $(function() {
@@ -639,12 +670,42 @@
                 }
             },
             columns: [{
-                    data: 'nik',
+                      data: 'nik',
                     name: 'nik'
                 },
                 {
                     data: 'nama',
                     name: 'nama'
+                },
+                {
+                    data: 'nomer',
+                    name: 'nomer'
+                },
+                {
+                    data: 'tempat_lahir',
+                    name: 'tempat_lahir'
+                },
+                {
+                    data: 'tgl_lahir',
+                    name: 'tgl_lahir'
+                },
+                {
+                    data: 'alamat',
+                    name: 'alamat'
+                },
+                
+                {
+                    data: 'nama_sekolah',
+                    name: 'sekolah'
+                },
+                {
+                    data: 'kecamatan',
+                    name: 'kecamatan'
+                },
+                
+                {
+                    data: 'kelas',
+                    name: 'kelas'
                 },
                 {
                     data: 'jenis_kelamin',
@@ -738,7 +799,12 @@
                 {
                     extend: 'colvis'
                 }
-            ]
+            ],
+            columnDefs: [{
+                targets: [2,3,4,5,7,10], // indeks kolom 
+                visible: false,
+                searchable: false
+            }]
         });
         // ✅ Fungsi untuk toggle kolom aksi saat filter berubah
         function toggleActionColumn() {
@@ -764,6 +830,187 @@
             table.ajax.reload();
             toggleActionColumn();
         });
+        const table2 = $('#example2').DataTable({
+            scrollX: true,
+            responsive: false,
+            lengthChange: false,
+            autoWidth: false,
+            search: true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('tambah-darah.data') }}",
+                data: function(d) {
+                    d.filter_type = "unactive";
+                }
+            },
+            columns: [{
+                    data: 'nik',
+                    name: 'nik'
+                },
+                {
+                    data: 'nama',
+                    name: 'nama'
+                },
+                {
+                    data: 'nomer',
+                    name: 'nomer'
+                },
+                {
+                    data: 'tempat_lahir',
+                    name: 'tempat_lahir'
+                },
+                {
+                    data: 'tgl_lahir',
+                    name: 'tgl_lahir'
+                },
+                {
+                    data: 'alamat',
+                    name: 'alamat'
+                },
+                
+                {
+                    data: 'nama_sekolah',
+                    name: 'sekolah'
+                },
+                {
+                    data: 'kecamatan',
+                    name: 'kecamatan'
+                },
+                
+                {
+                    data: 'kelas',
+                    name: 'kelas'
+                },
+                {
+                    data: 'jenis_kelamin',
+                    name: 'jenis_kelamin'
+                },
+                {
+                    data: 'nama_puskesmas',
+                    name: 'puskesmas'
+                },
+                {
+                    data: 'pengawas',
+                    name: 'pengawas'
+                },
+                {
+                    data: 'nomor_pengawas',
+                    name: 'nomor_pengawas'
+                },
+                {
+                    data: 'jumlah_tablet',
+                    name: 'jumlah_tablet'
+                },
+                {
+                    data: 'tgl_minum',
+                    name: 'tgl_minum'
+                },
+                {
+                    data: 'tgl_periksa_ulang',
+                    name: 'tgl_periksa_ulang'
+                },
+                {
+                    data: 'keterangan',
+                    name: 'keterangan'
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return `
+                        <button class="btn btn-sm btn-warning btn-restore" data-id="${row.id}">
+                            <i class="fas fa-restore"></i> Restore
+                        </button>
+                    `;
+                    }
+                }
+            ],
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    },
+                    customize: function(win) {
+                        var css = '@page { size: landscape; }',
+                            head = win.document.head || win.document.getElementsByTagName('head')[0],
+                            style = win.document.createElement('style');
+                        style.type = 'text/css';
+                        style.media = 'print';
+                        if (style.styleSheet) {
+                            style.styleSheet.cssText = css;
+                        } else {
+                            style.appendChild(win.document.createTextNode(css));
+                        }
+                        head.appendChild(style);
+                        $(win.document.body).css('font-size', '10px');
+                        $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+                    }
+                },
+                {
+                    extend: 'colvis'
+                }
+            ],
+            columnDefs: [{
+                targets: [2,3,4,5,7,10], // indeks kolom 
+                visible: false,
+                searchable: false
+            }]
+        });
+        $('#example2').on('click', '.btn-restore', function() {
+            var id = $(this).data('id');
+            var restoreUrl = 'tambah-darah/' + id + '/restore'; // sesuai dengan definisi route
+            console.log('Restore uri: ', restoreUrl);
+
+
+            $.ajax({
+                url: restoreUrl,
+                type: 'PUT',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'Data berhasil direstore.',
+                        confirmButtonText: 'OK'
+                    });
+                    table.ajax.reload();
+                    table2.ajax.reload();
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan saat merestore data.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
     });
 </script>
 
