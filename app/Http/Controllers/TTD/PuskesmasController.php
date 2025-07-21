@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\TTD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kecamatan;
 use App\Models\Puskesmas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -14,8 +15,9 @@ class PuskesmasController extends Controller
      */
     public function index()
     {
-        $data = Puskesmas::all();
-        return view('ttd.master.puskesmas', compact('data'));
+        $data = Puskesmas::with('kecamatan')->get();
+        $kecamatans = Kecamatan::all();
+        return view('ttd.master.puskesmas', compact('data','kecamatans'));
     }
 
     /**
@@ -35,6 +37,7 @@ class PuskesmasController extends Controller
             // Validasi data
             $validator = Validator::make($request->all(), [
                 'nama' => ['required', 'string', 'max:255'],
+                'kecamatan_id' => ['required'],
             ]);
 
             // dd($validator, $validator->fails());
@@ -46,6 +49,7 @@ class PuskesmasController extends Controller
             // Simpan user ke database
             Puskesmas::create([
                 'nama' => $request->input('nama'),
+                'kecamatan_id' => $request->input('kecamatan_id'),
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil ditambahkan');
@@ -88,6 +92,7 @@ class PuskesmasController extends Controller
             // Update data
             $data->update([
                 'nama' => $request->nama,
+                'kecamatan_id' => $request->kecamatan_id,
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui!');

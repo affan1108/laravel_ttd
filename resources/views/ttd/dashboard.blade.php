@@ -129,7 +129,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <canvas id="chart" height="100px"></canvas>
+                <div id="chart" height="100px"></div>
             </div>
         </div>
     </div>
@@ -313,6 +313,13 @@
                 chart = new ApexCharts(chartContainer, {
                     chart: {
                         type: 'donut',
+                        toolbar: {
+                            show: true,
+                            offsetY: -10,
+                            tools: {
+                                download: true, // ✅ aktifkan download
+                            }
+                        },
                         height: 350
                     },
                     labels: labels,
@@ -355,46 +362,11 @@
     });
 </script>
 
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch("{{ url('/chart/hasil') }}")
-            .then(res => res.json())
-            .then(res => {
-                console.log(res); // cek response-nya
-                var options = {
-                    chart: {
-                        type: 'donut',
-                        height: 350
-                    },
-                    labels: res.labels,
-                    series: res.data,
-                    colors: ['#e74c3c', '#f39c12', '#3498db', '#2ecc71'],
-                    responsive: [{
-                        breakpoint: 480,
-                        options: {
-                            chart: {
-                                width: 300
-                            },
-                            legend: {
-                                position: 'bottom'
-                            }
-                        }
-                    }]
-                };
-
-                var chart = new ApexCharts(document.querySelector("#donutChart"), options);
-                chart.render();
-            }).catch(error => {
-                console.error('Gagal ambil data chart:', error);
-            });
-    });
-</script> -->
-
 <script>
     const dataByMonth = {!!json_encode($monthlyPuskesmasData) !!};
     const dataByMonthttd = {!!json_encode($monthlyTTDPuskesmasData) !!};
 
-    const ctx1 = document.getElementById('chart').getContext('2d');
+    const ctx1 = document.querySelector("#chart"); // ✅ DOM element
     const ctx2 = document.getElementById('chart2').getContext('2d');
 
     let chart1; // Untuk chart pertama
@@ -432,39 +404,43 @@
 
         if (chart1) chart1.destroy();
 
-        chart1 = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels,
-                datasets: [{
-                        label: 'Laki-laki',
-                        data: dataLaki,
-                        backgroundColor: 'blue'
-                    },
-                    {
-                        label: 'Perempuan',
-                        data: dataPerempuan,
-                        backgroundColor: 'pink'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        labels: {
-                            usePointStyle: true
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
+        chart1 = new ApexCharts(ctx1, {
+            chart: {
+                type: 'bar',
+                height: 400,
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: true
                     }
                 }
+            },
+            series: [
+                {
+                    name: 'Laki-laki',
+                    data: dataLaki
+                },
+                {
+                    name: 'Perempuan',
+                    data: dataPerempuan
+                }
+            ],
+            xaxis: {
+                categories: labels
+            },
+            colors: ['#3498db', '#f78fb3'],
+            legend: {
+                position: 'top'
+            },
+            dataLabels: {
+                enabled: true
+            },
+            yaxis: {
+                min: 0
             }
         });
+
+        chart1.render();
     }
 
     function renderChartttd(month = '00') {
@@ -501,6 +477,12 @@
 
         chart2 = new Chart(ctx2, {
             type: 'bar',
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                }
+            },
             data: {
                 labels,
                 datasets: [{

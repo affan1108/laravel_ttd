@@ -24,4 +24,8 @@ class Puskesmas extends Model
     public function sekolah(){
         return $this->hasMany(Sekolah::class, 'id');
     }
+
+    public function kecamatan(){
+        return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
+    }
 }

@@ -32,6 +32,7 @@
                     <thead>
                         <tr>
                             <th>Nama Puskesmas</th>
+                            <th>Kecamatan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -39,6 +40,7 @@
                         @foreach($data as $row)
                         <tr>
                             <td>{{@$row->nama}}</td>
+                            <td>{{@$row->kecamatan->nama}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
                                                 data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Edit</a>
@@ -66,6 +68,17 @@
                                                     placeholder="Masukkan Puskesmas" name="nama"
                                                     value="{{ old('nama', @$row->nama) }}" required />
                                                 <div class="invalid-feedback">Masukkan Puskesmas</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="nama_kecamatan" class="form-label">Kecamatan</label>
+                                                <select class="js-example-basic-single" name="kecamatan_id" required>
+                                                    @foreach($kecamatans as $kecamatan)
+                                                        <option value="{{ $kecamatan->id }}"
+                                                            {{ old('kecamatan_id', isset($row) ? $row->kecamatan_id : '') == $kecamatan->id ? 'selected' : '' }}>
+                                                            {{ $kecamatan->nama }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -147,6 +160,22 @@
                         @enderror
                         <div class="invalid-feedback">
                             Please enter Puskesmas
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_kecamatan" class="form-label">Kecamatan</label>
+                        <select class="js-example-basic-single" name="kecamatan_id" required>
+                            @foreach($kecamatans as $kecamatan)
+                            <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>
+                            @endforeach
+                        </select>
+                        @error('kecamatan')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                        <div class="invalid-feedback">
+                            Please enter kecamatan
                         </div>
                     </div>
                 </div>

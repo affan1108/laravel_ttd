@@ -17,9 +17,9 @@
 @endcomponent
 
 <div class="row">
-    <div class="col-lg-12">
-        <div class="card" style="background-color: #F5CBCB;">
-            <!-- <div class="card-header align-items-center d-flex">
+        <div class="col-lg-12">
+            <div class="card" style="background-color: #F5CBCB;">
+                <!-- <div class="card-header align-items-center d-flex">
                                 <h4 class="card-title mb-0 flex-grow-1">Input Example</h4>
                                 <div class="flex-shrink-0">
                                     <div class="form-check form-switch form-switch-right form-switch-md">
@@ -29,20 +29,21 @@
                                     </div>
                                 </div>
                             </div> -->
-            <form action="{{route('hasil-pemeriksaan.store')}}" method="post" enctype="multipart/form-data">
-                @csrf
-                <div class="card-body">
-                    <img src="{{ URL::asset('build/images/tambah_darah2.png') }}" alt=""
-                        class="img-fluid move-animation" style="max-height: 200px;">
+                <form action="{{route('hasil-pemeriksaan.store')}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="card-body">
+                        <img src="{{ URL::asset('build/images/tambah_darah2.png') }}" alt=""
+                            class="img-fluid move-animation" style="max-height: 200px;">
 
-                    <div class="live-preview">
-                        <div class="row gx-3 gy-4">
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
+                        <div class="live-preview">
+                            <div class="row gx-3 gy-4">
+                                <div class="col-xxl-4 col-md-6">
+                                    <div class="bg-white p-3 h-100" style="border-radius:10px;">
 
-                                    <label for="id_biodata" class="form-label">NIK</label>
-                                    <select id="id_biodata" name="id_biodata" class="form-control js-nik-search"
-                                        required></select>
+                                        <label for="id_biodata" class="form-label">NIK</label>
+                                        <select id="id_biodata" name="id_biodata" class="form-control js-nik-search"
+                                            required></select>
+                                    </div>
                                 </div>
                                 <!--end col-->
                                 <div class="col-xxl-4 col-md-6">
@@ -57,38 +58,12 @@
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <label for="hasil" class="form-label">HB Hasil Pemeriksaan</label>
                                         <input type="text" class="form-control" id="hasil" name="hasil"
-                                            placeholder="contoh: 9.6" step="0.1" min="0" required>
+                                            placeholder="contoh: 9.6" required>
                                     </div>
                                 </div>
                                 <!--end col-->
                             </div>
-                            <!--end col-->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
-                                    <label for="tgl_pemeriksaan" class="form-label">Tanggal Pemeriksaan</label>
-                                    <input type="date" class="form-control" id="tgl_pemeriksaan" name="tgl_pemeriksaan"
-                                        placeholder="Masukkan Tanggal Pemeriksaan" required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="bg-white p-3 h-100" style="border-radius:10px;">
-                                    <label for="hasil" class="form-label">HB Hasil Pemeriksaan</label>
-                                    <input type="text" class="form-control" id="hasil" name="hasil"
-                                        placeholder="contoh: 9.6" required>
-                                </div>
-                            </div>
-                            <!--end col-->
-                            <div class="col-auto my-3" style="border-radius:10px;">
-                                <div class=" bg-white p-3" style="border-radius:10px;">
-                                    {!! NoCaptcha::display() !!}
-                                    @error('g-recaptcha-response')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="row gy-2 mt-2 mb-3">
+                            <!-- <div class="row gy-2 mt-2 mb-3">
                                 <div class="col-xxl-4 col-md-6">
                                     <div class="bg-white p-3 h-100" style="border-radius:10px;">
                                         <div>Apakah pemeriksaan hb dilakukan di puskesmas sesuai domisili?</div>
@@ -118,20 +93,27 @@
                                     </div>
                                 </div>
                             </div> -->
-
-                        <!--end row-->
+                            <div class="col-auto mt-2 mb-3" style="border-radius:10px;">
+                                <div class=" bg-white p-3" style="border-radius:10px;">
+                                    {!! NoCaptcha::display() !!}
+                                    @error('g-recaptcha-response')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <!--end row-->
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer align-items-right m-3" style="border-radius:10px;">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                </div>
-            </form>
+                    <div class="card-footer align-items-right m-3"  style="border-radius:10px;">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
+        <!--end col-->
     </div>
-    <!--end col-->
-</div>
-<!--end row-->
-{!! NoCaptcha::renderJs() !!}
+    <!--end row-->
+    {!! NoCaptcha::renderJs() !!}
 
 @endsection
 @section('script')
