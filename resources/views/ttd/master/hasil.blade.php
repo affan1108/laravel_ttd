@@ -33,7 +33,16 @@
                         <tr>
                             <th>NIK</th>
                             <th>NAMA</th>
-                            <!-- <th>Puskesmas Pemeriksaan</th> -->
+                            <th>No Hp</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Alamat Lengkap</th>
+                            <th>Nama Orangtua</th>
+                            <th>Nama Sekolah</th>
+                            <th>Kelas</th>
+                            <th>Kecamatan</th>
+                            <th>Puskesmas</th>
                             <th>Tanggal Pemeriksaan</th>
                             <th>Hasil Pemeriksaan</th>
                             <th>Aksi</th>
@@ -44,14 +53,26 @@
                         <tr>
                             <td>{{@$row->pemeriksaan->nik}}</td>
                             <td>{{@$row->pemeriksaan->nama}}</td>
-                            <!-- <td>{{@$row->puskesmas->nama}}</td> -->
+                            <td>{{@$row->pemeriksaan->nomer}}</td>
+                            <td>{{@$row->pemeriksaan->tempat_lahir}}</td>
+                            <td>{{@$row->pemeriksaan->tgl_lahir}}</td>
+                            <td>
+                                {{ @$row->pemeriksaan->jenis_kelamin == 1 ? 'Laki-laki' : ($row->pemeriksaan->jenis_kelamin == 2 ? 'Perempuan' : '-') }}
+                            </td>
+
+                            <td>{{@$row->pemeriksaan->alamat}}</td>
+                            <td>{{@$row->pemeriksaan->nama_ortu}}</td>
+                            <td>{{@$row->pemeriksaan->sekolah->nama}}</td>
+                            <td>{{@$row->pemeriksaan->kelas}}</td>
+                            <td>{{@$row->pemeriksaan->sekolah->puskesmas->nama}}</td>
+                            <td>{{@$row->puskesmas->nama}}</td>
                             <td>{{@$row->tgl_pemeriksaan}}</td>
                             <td>{{@$row->hasil}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
-                                                data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Detail</a>
+                                    data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Detail</a>
                                 <a data-bs-toggle="modal"
-                                                data-bs-target="#deleteRecordModal{{@$row->id}}" class="btn btn-danger">Hapus</a>
+                                    data-bs-target="#deleteRecordModal{{@$row->id}}" class="btn btn-danger">Hapus</a>
                             </td>
                         </tr>
                         <div class="modal fade" id="editModal{{@$row->id}}" tabindex="-1"
@@ -73,9 +94,9 @@
                                                         <label for="id_biodata" class="form-label">NIK</label>
                                                         <select id="id_biodata" name="id_biodata" class="form-control js-nik-search" disabled>
                                                             @if(isset($row->pemeriksaan))
-                                                                <option value="{{ $row->pemeriksaan->id }}" selected>
-                                                                    {{ $row->pemeriksaan->nik }} - {{ $row->pemeriksaan->nama ?? '' }}
-                                                                </option>
+                                                            <option value="{{ $row->pemeriksaan->id }}" selected>
+                                                                {{ $row->pemeriksaan->nik }} - {{ $row->pemeriksaan->nama ?? '' }}
+                                                            </option>
                                                             @endif
                                                         </select>
                                                     </div>
@@ -190,7 +211,16 @@
                         <tr>
                             <th>NIK</th>
                             <th>NAMA</th>
-                            <!-- <th>Puskesmas Pemeriksaan</th> -->
+                            <th>No Hp</th>
+                            <th>Tempat Lahir</th>
+                            <th>Tanggal Lahir</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Alamat Lengkap</th>
+                            <th>Nama Orangtua</th>
+                            <th>Nama Sekolah</th>
+                            <th>Kelas</th>
+                            <th>Kecamatan</th>
+                            <th>Puskesmas</th>
                             <th>Tanggal Pemeriksaan</th>
                             <th>Hasil Pemeriksaan</th>
                             <th>Aksi</th>
@@ -201,14 +231,26 @@
                         <tr>
                             <td>{{@$row->pemeriksaan->nik}}</td>
                             <td>{{@$row->pemeriksaan->nama}}</td>
-                            <!-- <td>{{@$row->puskesmas->nama}}</td> -->
+                            <td>{{@$row->pemeriksaan->nomer}}</td>
+                            <td>{{@$row->pemeriksaan->tempat_lahir}}</td>
+                            <td>{{@$row->pemeriksaan->tgl_lahir}}</td>
+                            <td>
+                                {{ @$row->pemeriksaan->jenis_kelamin == 1 ? 'Laki-laki' : ($row->pemeriksaan->jenis_kelamin == 2 ? 'Perempuan' : '-') }}
+                            </td>
+
+                            <td>{{@$row->pemeriksaan->alamat}}</td>
+                            <td>{{@$row->pemeriksaan->nama_ortu}}</td>
+                            <td>{{@$row->pemeriksaan->sekolah->nama}}</td>
+                            <td>{{@$row->pemeriksaan->kelas}}</td>
+                            <td>{{@$row->pemeriksaan->sekolah->puskesmas->nama}}</td>
+                            <td>{{@$row->puskesmas->nama}}</td>
                             <td>{{@$row->tgl_pemeriksaan}}</td>
                             <td>{{@$row->hasil}}</td>
                             <td>
                                 <a data-bs-toggle="modal"
-                                                data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Detail</a>
+                                    data-bs-target="#editModal{{@$row->id}}" class="btn btn-secondary">Detail</a>
                                 <a data-bs-toggle="modal"
-                                                data-bs-target="#restoreModal{{@$row->id}}" class="btn btn-warning">Restore</a>
+                                    data-bs-target="#restoreModal{{@$row->id}}" class="btn btn-warning">Restore</a>
                             </td>
                         </tr>
                         <div class="modal fade" id="editModal{{@$row->id}}" tabindex="-1"
@@ -230,9 +272,9 @@
                                                         <label for="id_biodata" class="form-label">NIK</label>
                                                         <select id="id_biodata" name="id_biodata" class="form-control js-nik-search" disabled>
                                                             @if(isset($row->pemeriksaan))
-                                                                <option value="{{ $row->pemeriksaan->id }}" selected>
-                                                                    {{ $row->pemeriksaan->nik }} - {{ $row->pemeriksaan->nama ?? '' }}
-                                                                </option>
+                                                            <option value="{{ $row->pemeriksaan->id }}" selected>
+                                                                {{ $row->pemeriksaan->nik }} - {{ $row->pemeriksaan->nama ?? '' }}
+                                                            </option>
                                                             @endif
                                                         </select>
                                                     </div>
@@ -436,8 +478,8 @@
 <script src="{{ URL::asset('build/js/app.js') }}"></script>
 <script>
     $(document).ready(function() {
-        
-        $('#myModal').on('shown.bs.modal', function () {
+
+        $('#myModal').on('shown.bs.modal', function() {
             console.log("Select2 initialized!"); // Debugging
 
             // Pastikan Select2 di dalam modal diinisialisasi ulang
@@ -452,7 +494,7 @@
                 placeholder: "Pilih opsi"
             });
         });
-        $('body').on('shown.bs.modal', '[id^="editModal"]', function () {
+        $('body').on('shown.bs.modal', '[id^="editModal"]', function() {
             console.log("Select2 initialized!");
             $(this).find('.js-example-basic-single').select2({
                 dropdownParent: $(this),
@@ -470,23 +512,30 @@
             "autoWidth": false,
             "search": true,
             dom: 'Bfrtip',
-            buttons: [
-                {
+            buttons: [{
                     extend: 'copy',
-                    exportOptions: { columns: ':not(:last-child)' }
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
                 },
                 {
                     extend: 'csv',
-                    exportOptions: { columns: ':not(:last-child)' }
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
                 },
                 {
                     extend: 'excel',
-                    exportOptions: { columns: ':not(:last-child)' }
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
                 },
                 {
                     extend: 'print',
-                    exportOptions: { columns: ':not(:last-child)' },
-                    customize: function (win) {
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    },
+                    customize: function(win) {
                         var css = '@page { size: landscape; }',
                             head = win.document.head || win.document.getElementsByTagName('head')[0],
                             style = win.document.createElement('style');
@@ -511,7 +560,12 @@
                 {
                     extend: 'colvis'
                 }
-            ]
+            ],
+            columnDefs: [{
+                targets: [2, 3, 4, 7, 11], // indeks kolom 
+                visible: false,
+                searchable: false
+            }]
         });
         $('#example2').DataTable({
             "scrollX": true,
@@ -520,23 +574,30 @@
             "autoWidth": false,
             "search": true,
             dom: 'Bfrtip',
-            buttons: [
-                {
+            buttons: [{
                     extend: 'copy',
-                    exportOptions: { columns: ':not(:last-child)' }
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
                 },
                 {
                     extend: 'csv',
-                    exportOptions: { columns: ':not(:last-child)' }
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
                 },
                 {
                     extend: 'excel',
-                    exportOptions: { columns: ':not(:last-child)' }
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    }
                 },
                 {
                     extend: 'print',
-                    exportOptions: { columns: ':not(:last-child)' },
-                    customize: function (win) {
+                    exportOptions: {
+                        columns: ':not(:last-child)'
+                    },
+                    customize: function(win) {
                         var css = '@page { size: landscape; }',
                             head = win.document.head || win.document.getElementsByTagName('head')[0],
                             style = win.document.createElement('style');
@@ -561,26 +622,31 @@
                 {
                     extend: 'colvis'
                 }
-            ]
+            ],
+            columnDefs: [{
+                targets: [2, 3, 4, 7, 11], // indeks kolom 
+                visible: false,
+                searchable: false
+            }]
         });
     });
 </script>
 <script>
     $(document).ready(function() {
-        $('#myModal').on('shown.bs.modal', function () {
+        $('#myModal').on('shown.bs.modal', function() {
             $(this).find('.js-nik-search').select2({
                 dropdownParent: $(this),
                 placeholder: 'Cari NIK...',
                 allowClear: true,
                 minimumInputLength: 3,
                 language: {
-                    inputTooShort: function () {
+                    inputTooShort: function() {
                         return 'Ketik minimal 3 angka NIK...';
                     },
-                    noResults: function () {
+                    noResults: function() {
                         return 'Data tidak ditemukan';
                     },
-                    searching: function () {
+                    searching: function() {
                         return 'Mencari...';
                     }
                 },
@@ -588,12 +654,12 @@
                     url: '{{ route("biodata.cari-nik") }}',
                     dataType: 'json',
                     delay: 300,
-                    data: function (params) {
+                    data: function(params) {
                         return {
                             q: params.term // input dari user
                         };
                     },
-                    processResults: function (data) {
+                    processResults: function(data) {
                         return {
                             results: data.map(item => ({
                                 id: item.id,

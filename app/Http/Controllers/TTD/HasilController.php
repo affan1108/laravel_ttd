@@ -18,9 +18,9 @@ class HasilController extends Controller
      */
     public function index()
     {
-        $data = Hasil::with('pemeriksaan')->get();
+        $data = Hasil::with('pemeriksaan')->with('puskesmas')->get();
         $puskesmass = Puskesmas::all();
-        return view('ttd.dashboard.hasil', compact('data','puskesmass'));
+        return view('ttd.dashboard.hasil', compact('data', 'puskesmass'));
     }
 
     /**
@@ -74,12 +74,19 @@ class HasilController extends Controller
             $deletes = Hasil::onlyTrashed()->get();
         } else {
             // Untuk role lainnya (superadmin/dinas)
-            $data = Hasil::with('pemeriksaan')->get();
+            $data = Hasil::with([
+                'pemeriksaan.sekolah.puskesmas',
+                'pemeriksaan.sekolah.kecamatan'
+            ])->get();
             $puskesmass = Puskesmas::all();
-            $deletes = Hasil::onlyTrashed()->get();
+            $deletes = Hasil::with([
+                'pemeriksaan.sekolah.puskesmas',
+                'pemeriksaan.sekolah.kecamatan'
+            ])->onlyTrashed()->get();
+            // dd($data);
         }
 
-        return view('ttd.master.hasil', compact('data', 'puskesmass','deletes'));
+        return view('ttd.master.hasil', compact('data', 'puskesmass', 'deletes'));
     }
 
     /**
@@ -162,7 +169,7 @@ class HasilController extends Controller
      */
     public function destroy(string $id)
     {
-        try{
+        try {
             DB::beginTransaction();
 
             $data = Hasil::findOrFail($id);
@@ -181,21 +188,20 @@ class HasilController extends Controller
     {
         $search = $request->q;
 
-        if(auth()->guest()) {
+        if (auth()->guest()) {
             $results = DB::table('pemeriksaans')
-                ->select('id','nik', 'nama')
+                ->select('id', 'nik', 'nama')
                 ->where(function ($query) use ($search) {
                     $query->where('nik', 'like', "%{$search}%")
                         ->orWhere('nama', 'like', "%{$search}%");
                 })
                 ->limit(20)
                 ->get();
-            
         } elseif (Auth::user()->role == 'sekolah') {
             $akses = Akses::where('user_id', Auth::user()->id)->first();
 
             $results = DB::table('pemeriksaans')
-                ->select('id','nik', 'nama')
+                ->select('id', 'nik', 'nama')
                 ->where('sekolah_id', $akses->sekolah_id)
                 ->where(function ($query) use ($search) {
                     $query->where('nik', 'like', "%{$search}%")
@@ -207,7 +213,7 @@ class HasilController extends Controller
             $akses = Akses::where('user_id', Auth::user()->id)->first();
 
             $results = DB::table('pemeriksaans')
-                ->select('id','nik', 'nama')
+                ->select('id', 'nik', 'nama')
                 ->where('puskesmas_id', $akses->puskesmas_id)
                 ->where(function ($query) use ($search) {
                     $query->where('nik', 'like', "%{$search}%")
@@ -218,7 +224,7 @@ class HasilController extends Controller
                 ->get();
         } else {
             $results = DB::table('pemeriksaans')
-                ->select('id','nik', 'nama')
+                ->select('id', 'nik', 'nama')
                 ->where(function ($query) use ($search) {
                     $query->where('nik', 'like', "%{$search}%")
                         ->orWhere('nama', 'like', "%{$search}%");
@@ -287,7 +293,7 @@ class HasilController extends Controller
                 $query->where('p.puskesmas_id', $puskesmasId);
             }
         }
-        
+
         $berat = (clone $query)->where('hasils.hasil', '<', 8)->count();
         $sedang = (clone $query)->whereBetween('hasils.hasil', [8, 10.9])->count();
         $ringan = (clone $query)->whereBetween('hasils.hasil', [11, 11.9])->count();
@@ -305,5 +311,4 @@ class HasilController extends Controller
         $data->restore();
         return redirect()->back()->with('success', 'Data berhasil dikembalikan.');
     }
-
 }

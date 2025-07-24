@@ -22,4 +22,9 @@ class Hasil extends Model
     {
         return $this->belongsTo(Puskesmas::class, 'id_puskesmas');
     }
+
+    public function sekolah()
+    {
+        return $this->belongsTo(Sekolah::class, 'id_sekolah');
+    }
 }
