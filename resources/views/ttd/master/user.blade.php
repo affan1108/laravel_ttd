@@ -80,8 +80,9 @@
                                                         <option value="{{old('name', @$row->role)}}" selected>
                                                             {{@$row->role}}</option>
                                                         <!-- <option value="superadmin">Super Admin</option> -->
-                                                        <option value="admin">Admin</option>
-                                                        <option value="user">User</option>
+                                                        <option value="admin">Super Admin</option>
+                                                        <option value="puskesmas">Admin Puskesmas</option>
+                                                        <option value="sekolah">Admin Sekolah</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -260,7 +261,7 @@
                             <div class="col-xxl-3 col-md-6" id="kecamatan-group">
                                 <label for="customername-field" class="form-label">Kecamatan</label>
                                 <div class="col-lg-12">
-                                    <select class="js-example-basic-single" name="kecamatan_id" required>
+                                    <select class="js-example-basic-single" name="kecamatan_id">
                                         <option value="" selected>Full Akses</option>
                                         @foreach($kecamatans as $kecamatan)
                                         <option value="{{$kecamatan->id}}">{{$kecamatan->nama}}</option>

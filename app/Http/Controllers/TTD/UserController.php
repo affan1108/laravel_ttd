@@ -117,11 +117,21 @@ class UserController extends Controller
             ]);
 
             $akses = Akses::where('user_id', $id)->first();
-            $akses->update([
-                'kecamatan_id' => $request->kecamatan_id,
-                'puskesmas_id' => $request->puskesmas_id,
-                'sekolah_id' => $request->sekolah_id,
-            ]);
+
+            if ($akses) {
+                $akses->update([
+                    'kecamatan_id' => $request->kecamatan_id,
+                    'puskesmas_id' => $request->puskesmas_id,
+                    'sekolah_id'   => $request->sekolah_id,
+                ]);
+            } else {
+                Akses::create([
+                    'user_id'      => $id,
+                    'kecamatan_id' => $request->kecamatan_id,
+                    'puskesmas_id' => $request->puskesmas_id,
+                    'sekolah_id'   => $request->sekolah_id,
+                ]);
+            }
 
             return redirect()->back()->with('success', 'Data berhasil diperbarui!');
         } catch (\Exception $e) {
